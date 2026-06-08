@@ -1,5 +1,6 @@
-import { useState } from 'react'
+ import { useState } from 'react'
 import './App.css'
+import { getWalletData } from './blockchain'
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY
 
@@ -98,49 +99,78 @@ export default function App() {
     setError('')
     setAnswer('')
 
-    const prompt = `You are TxGuard, a blockchain security intelligence AI agent. Analyze this wallet address for security risks.
+    // ── Step 1: Fetch real blockchain data ──
+    let onchainData = null
+    try {
+      onchainData = await getWalletData(wallet.trim(), chain)
+    } catch (e) {
+      console.warn('Blockchain fetch failed, using AI only:', e)
+    }
+
+    // ── Step 2: Build AI prompt with real data ──
+    const chainName = chain === 'bnb' ? 'BNB Chain' : chain.charAt(0).toUpperCase() + chain.slice(1)
+    const dataContext = onchainData ? `
+LIVE BLOCKCHAIN DATA (verified on-chain):
+- Balance: ${onchainData.balance}
+- Total Transactions: ${onchainData.totalTransactions}
+- Wallet Age: ${onchainData.walletAge}
+- Recent transaction categories: ${JSON.stringify(onchainData.categories)}
+` : `LIVE BLOCKCHAIN DATA: Could not fetch live data, use your best security assessment.`
+
+    const prompt = `You are TxGuard, a blockchain security intelligence AI. Analyze this wallet using the live data provided.
 
 Wallet: ${wallet.trim()}
-Chain: ${chain === 'bnb' ? 'BNB Chain' : chain.charAt(0).toUpperCase() + chain.slice(1)}
+Chain: ${chainName}
+${dataContext}
 
-Respond ONLY with a valid JSON object in this exact format (no markdown, no extra text):
+Respond ONLY with a valid JSON object (no markdown, no extra text):
 {
   "riskScore": <number 0-100, where 0=completely safe, 100=extremely dangerous>,
   "riskLabel": "<SAFE | CAUTION | SUSPICIOUS | DANGEROUS>",
-  "walletAge": "<estimated age or 'Unknown'>",
-  "totalTransactions": "<estimated count or range>",
-  "balance": "<estimated or 'Unable to verify without live data'>",
-  "summary": "<2-3 sentence plain English summary of this wallet's security status and activity>",
+  "walletAge": "${onchainData?.walletAge || 'Unknown'}",
+  "totalTransactions": "${onchainData?.totalTransactions || 'Unknown'}",
+  "balance": "${onchainData?.balance || 'Unable to verify'}",
+  "summary": "<2-3 sentence plain English summary using the real data above>",
   "alerts": [
-    { "type": "<warn|danger|info|safe>", "icon": "<single emoji>", "title": "<short alert title>", "text": "<alert detail>" }
+    { "type": "<warn|danger|info|safe>", "icon": "<emoji>", "title": "<title>", "text": "<detail>" }
   ],
-  "categories": [
-    { "name": "<category>", "count": <number>, "percentage": <0-100> }
-  ],
-  "recommendations": [
-    "<actionable recommendation string>"
-  ]
+  "categories": ${onchainData?.categories ? JSON.stringify(onchainData.categories) : '[{"name":"Transfers","count":0,"percentage":0}]'},
+  "recommendations": ["<recommendation>"]
 }
 
-Base your analysis on:
-- The wallet address format and any patterns you can identify
-- Common risk indicators for ${chain} wallets
-- General blockchain security best practices
-- Note clearly when you're making educated assessments vs verified facts
-- Include 3-5 alerts, 3-5 categories (like: Transfers, DeFi, NFT, Bridge, Swap), and 3-4 recommendations`
+Security rules:
+- Score 0-25: SAFE wallet with normal activity
+- Score 26-50: CAUTION some risk indicators
+- Score 51-75: SUSPICIOUS multiple red flags
+- Score 76-100: DANGEROUS confirmed threats
+- A wallet with 0 transactions is not necessarily dangerous
+- Include 3-5 alerts and 3-4 recommendations based on real data`
 
     try {
       const raw = await callGroq(prompt, true)
       const parsed = parseAnalysis(raw)
       if (parsed) {
+        // Override with real blockchain data
+        if (onchainData) {
+          parsed.balance = onchainData.balance
+          parsed.totalTransactions = onchainData.totalTransactions
+          parsed.walletAge = onchainData.walletAge
+          parsed.categories = onchainData.categories
+        }
         setResult(parsed)
       } else {
         const raw2 = await callGroq(prompt, false)
         const parsed2 = parseAnalysis(raw2)
         if (parsed2) {
+          if (onchainData) {
+            parsed2.balance = onchainData.balance
+            parsed2.totalTransactions = onchainData.totalTransactions
+            parsed2.walletAge = onchainData.walletAge
+            parsed2.categories = onchainData.categories
+          }
           setResult(parsed2)
         } else {
-          setError('Could not parse AI response. Make sure your VITE_GROQ_API_KEY is correct in .env and restart npm run dev.')
+          setError('Could not parse AI response. Please try again.')
         }
       }
     } catch (e) {
