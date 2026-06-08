@@ -1,6 +1,7 @@
  import { useState } from 'react'
 import './App.css'
 import { getWalletData } from './blockchain'
+import { calculateRisk } from './riskEngine'
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY
 
@@ -107,7 +108,15 @@ export default function App() {
       console.warn('Blockchain fetch failed, using AI only:', e)
     }
 
-    // ── Step 2: Build AI prompt with real data ──
+    // ── Step 2: Run Risk Engine (GoPlus + behavioral) ──
+    let riskEngineResult = null
+    try {
+      riskEngineResult = await calculateRisk(wallet.trim(), chain, onchainData)
+    } catch (e) {
+      console.warn('Risk engine failed:', e)
+    }
+
+    // ── Step 3: Build AI prompt with real data ──
     const chainName = chain === 'bnb' ? 'BNB Chain' : chain.charAt(0).toUpperCase() + chain.slice(1)
     const dataContext = onchainData ? `
 LIVE BLOCKCHAIN DATA (verified on-chain):
@@ -149,26 +158,27 @@ Security rules:
     try {
       const raw = await callGroq(prompt, true)
       const parsed = parseAnalysis(raw)
-      if (parsed) {
-        // Override with real blockchain data
+      const mergeRealData = (p) => {
         if (onchainData) {
-          parsed.balance = onchainData.balance
-          parsed.totalTransactions = onchainData.totalTransactions
-          parsed.walletAge = onchainData.walletAge
-          parsed.categories = onchainData.categories
+          p.balance = onchainData.balance
+          p.totalTransactions = onchainData.totalTransactions
+          p.walletAge = onchainData.walletAge
+          p.categories = onchainData.categories
         }
-        setResult(parsed)
+        if (riskEngineResult) {
+          p.riskScore = riskEngineResult.riskScore
+          p.riskLabel = riskEngineResult.riskLabel
+          p.alerts = riskEngineResult.alerts.length > 0 ? riskEngineResult.alerts : p.alerts
+        }
+        return p
+      }
+      if (parsed) {
+        setResult(mergeRealData(parsed))
       } else {
         const raw2 = await callGroq(prompt, false)
         const parsed2 = parseAnalysis(raw2)
         if (parsed2) {
-          if (onchainData) {
-            parsed2.balance = onchainData.balance
-            parsed2.totalTransactions = onchainData.totalTransactions
-            parsed2.walletAge = onchainData.walletAge
-            parsed2.categories = onchainData.categories
-          }
-          setResult(parsed2)
+          setResult(mergeRealData(parsed2))
         } else {
           setError('Could not parse AI response. Please try again.')
         }
