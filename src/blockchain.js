@@ -1,7 +1,8 @@
-// ── TxGuard Blockchain Data Service ──
-// Fetches real on-chain data for ETH, BNB, SOL, BTC
+ // ── TxGuard Blockchain Data Service ──
+// Fetches real on-chain data for ETH, BNB, SOL, BTC, CELO
 
 const ETHERSCAN_KEY = import.meta.env.VITE_ETHERSCAN_API_KEY
+const CELO_EXPLORER = 'https://explorer.celo.org/mainnet/api'
 
 // ── Ethereum ──
 export async function getEthereumData(address) {
@@ -12,31 +13,26 @@ export async function getEthereumData(address) {
       fetch(`https://api.etherscan.io/v2/api?chainid=1&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1&sort=asc&apikey=${ETHERSCAN_KEY}`)
     ])
 
-    const balData  = await balRes.json()
-    const txData   = await txRes.json()
+    const balData   = await balRes.json()
+    const txData    = await txRes.json()
     const firstData = await firstTxRes.json()
 
     const balanceWei = balData.result || '0'
     const balanceEth = parseFloat(balanceWei) / 1e18
 
-    // Get total tx count
-    const txCountRes = await fetch(`https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionCount&address=${address}&tag=latest&apikey=${ETHERSCAN_KEY}`)
+    const txCountRes  = await fetch(`https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionCount&address=${address}&tag=latest&apikey=${ETHERSCAN_KEY}`)
     const txCountData = await txCountRes.json()
-    const txCount = parseInt(txCountData.result, 16) || 0
+    const txCount     = parseInt(txCountData.result, 16) || 0
 
-    // Wallet age from first transaction
     let walletAge = 'Unknown'
-    let firstTxDate = null
     if (firstData.result && firstData.result.length > 0) {
-      const ts = parseInt(firstData.result[0].timeStamp) * 1000
-      firstTxDate = new Date(ts)
+      const ts   = parseInt(firstData.result[0].timeStamp) * 1000
       const days = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24))
-      if (days > 365) walletAge = `${Math.floor(days / 365)} year(s) old`
+      if (days > 365)     walletAge = `${Math.floor(days / 365)} year(s) old`
       else if (days > 30) walletAge = `${Math.floor(days / 30)} month(s) old`
-      else walletAge = `${days} day(s) old`
+      else                walletAge = `${days} day(s) old`
     }
 
-    // Categorize recent transactions
     const categories = categorizeTxns(txData.result || [], 'ethereum')
 
     return {
@@ -44,7 +40,6 @@ export async function getEthereumData(address) {
       balanceRaw: balanceEth,
       totalTransactions: txCount.toString(),
       walletAge,
-      firstTxDate,
       recentTxns: txData.result || [],
       categories,
       chain: 'ethereum'
@@ -67,15 +62,15 @@ export async function getBNBData(address) {
     const txData  = await txRes.json()
 
     const balanceBNB = parseFloat(balData.result || '0') / 1e18
+    const txList     = txData.result || []
 
     let walletAge = 'Unknown'
-    const txList = txData.result || []
     if (txList.length > 0) {
-      const ts = parseInt(txList[0].timeStamp) * 1000
+      const ts   = parseInt(txList[0].timeStamp) * 1000
       const days = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24))
-      if (days > 365) walletAge = `${Math.floor(days / 365)} year(s) old`
+      if (days > 365)     walletAge = `${Math.floor(days / 365)} year(s) old`
       else if (days > 30) walletAge = `${Math.floor(days / 30)} month(s) old`
-      else walletAge = `${days} day(s) old`
+      else                walletAge = `${days} day(s) old`
     }
 
     const categories = categorizeTxns(txList, 'bnb')
@@ -95,7 +90,7 @@ export async function getBNBData(address) {
   }
 }
 
-// ── Solana (public RPC — no key needed) ──
+// ── Solana ──
 export async function getSolanaData(address) {
   try {
     const RPC = 'https://api.mainnet-beta.solana.com'
@@ -116,21 +111,20 @@ export async function getSolanaData(address) {
     const balData = await balRes.json()
     const sigData = await sigRes.json()
 
-    const lamports = balData.result?.value || 0
+    const lamports   = balData.result?.value || 0
     const solBalance = lamports / 1e9
-
     const signatures = sigData.result || []
-    const txCount = signatures.length
+    const txCount    = signatures.length
 
     let walletAge = 'Unknown'
     if (signatures.length > 0) {
       const lastSig = signatures[signatures.length - 1]
       if (lastSig.blockTime) {
-        const ts = lastSig.blockTime * 1000
+        const ts   = lastSig.blockTime * 1000
         const days = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24))
-        if (days > 365) walletAge = `${Math.floor(days / 365)} year(s) old`
+        if (days > 365)     walletAge = `${Math.floor(days / 365)} year(s) old`
         else if (days > 30) walletAge = `${Math.floor(days / 30)} month(s) old`
-        else walletAge = `${days} day(s) old`
+        else                walletAge = `${days} day(s) old`
       }
     }
 
@@ -153,15 +147,15 @@ export async function getSolanaData(address) {
   }
 }
 
-// ── Bitcoin (Blockstream — no key needed) ──
+// ── Bitcoin ──
 export async function getBitcoinData(address) {
   try {
-    const res = await fetch(`https://blockstream.info/api/address/${address}`)
+    const res  = await fetch(`https://blockstream.info/api/address/${address}`)
     const data = await res.json()
 
     const balanceSat = (data.chain_stats?.funded_txo_sum || 0) - (data.chain_stats?.spent_txo_sum || 0)
     const balanceBTC = balanceSat / 1e8
-    const txCount = data.chain_stats?.tx_count || 0
+    const txCount    = data.chain_stats?.tx_count || 0
 
     return {
       balance: `${balanceBTC.toFixed(8)} BTC`,
@@ -181,6 +175,45 @@ export async function getBitcoinData(address) {
   }
 }
 
+// ── Celo ──
+export async function getCeloData(address) {
+  try {
+    const [balRes, txRes] = await Promise.all([
+      fetch(`${CELO_EXPLORER}?module=account&action=balance&address=${address}&tag=latest`),
+      fetch(`${CELO_EXPLORER}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=asc`)
+    ])
+
+    const balData    = await balRes.json()
+    const txData     = await txRes.json()
+    const balanceCELO = parseFloat(balData.result || '0') / 1e18
+    const txList     = Array.isArray(txData.result) ? txData.result : []
+
+    let walletAge = 'Unknown'
+    if (txList.length > 0) {
+      const ts   = parseInt(txList[0].timeStamp) * 1000
+      const days = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24))
+      if (days > 365)     walletAge = `${Math.floor(days / 365)} year(s) old`
+      else if (days > 30) walletAge = `${Math.floor(days / 30)} month(s) old`
+      else                walletAge = `${days} day(s) old`
+    }
+
+    const categories = categorizeTxns(txList, 'celo')
+
+    return {
+      balance: `${balanceCELO.toFixed(4)} CELO`,
+      balanceRaw: balanceCELO,
+      totalTransactions: txList.length.toString(),
+      walletAge,
+      recentTxns: txList,
+      categories,
+      chain: 'celo'
+    }
+  } catch (e) {
+    console.error('Celo fetch error:', e)
+    return null
+  }
+}
+
 // ── Transaction Categorizer ──
 function categorizeTxns(txns, chain) {
   if (!txns || txns.length === 0) {
@@ -192,29 +225,26 @@ function categorizeTxns(txns, chain) {
     ]
   }
 
-  let transfers = 0, defi = 0, nft = 0, swap = 0, bridge = 0, other = 0
+  let transfers = 0, defi = 0, nft = 0, swap = 0, stablecoin = 0, other = 0
 
   txns.forEach(tx => {
     const input = (tx.input || tx.data || '').toLowerCase()
-    const to = (tx.to || '').toLowerCase()
-    const value = parseFloat(tx.value || '0')
 
     if (input === '0x' || input === '') {
       transfers++
     } else if (
-      input.startsWith('0x38ed1739') || // swapExactTokensForTokens
-      input.startsWith('0x7ff36ab5') || // swapExactETHForTokens
-      input.startsWith('0x18cbafe5')    // swapExactTokensForETH
+      input.startsWith('0x38ed1739') ||
+      input.startsWith('0x7ff36ab5') ||
+      input.startsWith('0x18cbafe5')
     ) {
       swap++
     } else if (
-      input.startsWith('0xa9059cbb') || // ERC20 transfer
-      input.startsWith('0x23b872dd')    // transferFrom
+      input.startsWith('0xa9059cbb') ||
+      input.startsWith('0x23b872dd')
     ) {
-      transfers++
+      chain === 'celo' ? stablecoin++ : transfers++
     } else if (
-      input.startsWith('0x42842e0e') || // safeTransferFrom (NFT)
-      input.startsWith('0x23b872dd')    // transferFrom (NFT)
+      input.startsWith('0x42842e0e')
     ) {
       nft++
     } else if (input.length > 10) {
@@ -225,16 +255,18 @@ function categorizeTxns(txns, chain) {
   })
 
   const total = txns.length
-  const pct = n => Math.round((n / total) * 100)
+  const pct   = n => Math.round((n / total) * 100)
 
-  return [
-    { name: 'Transfers', count: transfers, percentage: pct(transfers) },
-    { name: 'DeFi',      count: defi,      percentage: pct(defi) },
-    { name: 'NFT',       count: nft,       percentage: pct(nft) },
-    { name: 'Swap',      count: swap,      percentage: pct(swap) },
-    { name: 'Bridge',    count: bridge,    percentage: pct(bridge) },
-    { name: 'Other',     count: other,     percentage: pct(other) },
-  ].filter(c => c.count > 0 || c.name === 'Transfers')
+  const result = [
+    { name: 'Transfers',  count: transfers,  percentage: pct(transfers) },
+    { name: 'DeFi',       count: defi,       percentage: pct(defi) },
+    { name: 'NFT',        count: nft,        percentage: pct(nft) },
+    { name: 'Swap',       count: swap,       percentage: pct(swap) },
+    { name: 'Stablecoin', count: stablecoin, percentage: pct(stablecoin) },
+    { name: 'Other',      count: other,      percentage: pct(other) },
+  ]
+
+  return result.filter(c => c.count > 0 || c.name === 'Transfers')
 }
 
 // ── Main Fetcher ──
@@ -244,6 +276,7 @@ export async function getWalletData(address, chain) {
     case 'bnb':      return await getBNBData(address)
     case 'solana':   return await getSolanaData(address)
     case 'bitcoin':  return await getBitcoinData(address)
+    case 'celo':     return await getCeloData(address)
     default:         return null
   }
 }
