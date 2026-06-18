@@ -1,4 +1,4 @@
- import { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 import { getWalletData } from './blockchain'
 import { calculateRisk } from './riskEngine'
@@ -6,17 +6,18 @@ import { calculateRisk } from './riskEngine'
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY
 
 const CHAINS = [
-  { id: 'ethereum', label: 'Ethereum', icon: '⟠', placeholder: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e' },
-  { id: 'bnb',      label: 'BNB Chain', icon: '⬡', placeholder: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' },
-  { id: 'solana',   label: 'Solana',   icon: '◎', placeholder: 'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm' },
-  { id: 'bitcoin',  label: 'Bitcoin',  icon: '₿', placeholder: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh' },
+  { id: 'ethereum', label: 'Ethereum', placeholder: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e' },
+  { id: 'bnb', label: 'BNB', placeholder: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' },
+  { id: 'solana', label: 'Solana', placeholder: 'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm' },
+  { id: 'bitcoin', label: 'Bitcoin', placeholder: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh' },
+  { id: 'celo', label: 'Celo', placeholder: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e' },
 ]
 
 const SAMPLE_WALLETS = {
   ethereum: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e',
-  bnb:      '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-  solana:   'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm',
-  bitcoin:  'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+  bnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  solana: 'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm',
+  bitcoin: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
 }
 
 async function callGroq(prompt, jsonMode = false) {
@@ -44,24 +45,20 @@ async function callGroq(prompt, jsonMode = false) {
 
 function parseAnalysis(raw) {
   if (!raw) return null
-  // Try 1: direct JSON parse
-  try { return JSON.parse(raw) } catch {}
-  // Try 2: ```json ... ``` block
+  try { return JSON.parse(raw) } catch { }
   try {
     const m = raw.match(/```(?:json)?\s*([\s\S]*?)```/)
     if (m) return JSON.parse(m[1].trim())
-  } catch {}
-  // Try 3: first { ... } block
+  } catch { }
   try {
     const m = raw.match(/\{[\s\S]*\}/)
     if (m) return JSON.parse(m[0])
-  } catch {}
-  // Try 4: strip everything before first {
+  } catch { }
   try {
     const start = raw.indexOf('{')
     const end = raw.lastIndexOf('}')
     if (start !== -1 && end !== -1) return JSON.parse(raw.slice(start, end + 1))
-  } catch {}
+  } catch { }
   return null
 }
 
@@ -73,23 +70,29 @@ function getRiskClass(score) {
 }
 
 function getRiskLabel(score) {
-  if (score <= 25) return 'SAFE'
-  if (score <= 50) return 'CAUTION'
-  if (score <= 75) return 'SUSPICIOUS'
-  return 'DANGEROUS'
+  if (score <= 25) return 'Safe'
+  if (score <= 50) return 'Caution'
+  if (score <= 75) return 'Suspicious'
+  return 'Dangerous'
 }
 
-const CAT_COLORS = ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4']
+function getAlertDotClass(type) {
+  if (type === 'safe') return 'safe'
+  if (type === 'warn') return 'warn'
+  if (type === 'danger') return 'danger'
+  if (type === 'info') return 'info'
+  return 'info'
+}
 
 export default function App() {
-  const [chain, setChain]         = useState('ethereum')
-  const [wallet, setWallet]       = useState('')
-  const [loading, setLoading]     = useState(false)
-  const [result, setResult]       = useState(null)
-  const [error, setError]         = useState('')
-  const [question, setQuestion]   = useState('')
-  const [answer, setAnswer]       = useState('')
-  const [asking, setAsking]       = useState(false)
+  const [chain, setChain] = useState('ethereum')
+  const [wallet, setWallet] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState(null)
+  const [error, setError] = useState('')
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')
+  const [asking, setAsking] = useState(false)
 
   const selectedChain = CHAINS.find(c => c.id === chain)
 
@@ -100,15 +103,13 @@ export default function App() {
     setError('')
     setAnswer('')
 
-    // ── Step 1: Fetch real blockchain data ──
     let onchainData = null
     try {
       onchainData = await getWalletData(wallet.trim(), chain)
     } catch (e) {
-      console.warn('Blockchain fetch failed, using AI only:', e)
+      console.warn('Blockchain fetch failed:', e)
     }
 
-    // ── Step 2: Run Risk Engine (GoPlus + behavioral) ──
     let riskEngineResult = null
     try {
       riskEngineResult = await calculateRisk(wallet.trim(), chain, onchainData)
@@ -116,10 +117,9 @@ export default function App() {
       console.warn('Risk engine failed:', e)
     }
 
-    // ── Step 3: Build AI prompt with real data ──
     const chainName = chain === 'bnb' ? 'BNB Chain' : chain.charAt(0).toUpperCase() + chain.slice(1)
     const dataContext = onchainData ? `
-LIVE BLOCKCHAIN DATA (verified on-chain):
+LIVE BLOCKCHAIN DATA:
 - Balance: ${onchainData.balance}
 - Total Transactions: ${onchainData.totalTransactions}
 - Wallet Age: ${onchainData.walletAge}
@@ -132,32 +132,32 @@ Wallet: ${wallet.trim()}
 Chain: ${chainName}
 ${dataContext}
 
-Respond ONLY with a valid JSON object (no markdown, no extra text):
+Respond ONLY with a valid JSON object:
 {
-  "riskScore": <number 0-100, where 0=completely safe, 100=extremely dangerous>,
-  "riskLabel": "<SAFE | CAUTION | SUSPICIOUS | DANGEROUS>",
+  "riskScore": <number 0-100>,
+  "riskLabel": "<Safe | Caution | Suspicious | Dangerous>",
   "walletAge": "${onchainData?.walletAge || 'Unknown'}",
   "totalTransactions": "${onchainData?.totalTransactions || 'Unknown'}",
   "balance": "${onchainData?.balance || 'Unable to verify'}",
-  "summary": "<2-3 sentence plain English summary using the real data above>",
+  "summary": "<2-3 sentence plain English summary>",
   "alerts": [
-    { "type": "<warn|danger|info|safe>", "icon": "<emoji>", "title": "<title>", "text": "<detail>" }
+    { "type": "<warn|danger|info|safe>", "title": "<title>", "text": "<detail>" }
   ],
   "categories": ${onchainData?.categories ? JSON.stringify(onchainData.categories) : '[{"name":"Transfers","count":0,"percentage":0}]'},
   "recommendations": ["<recommendation>"]
 }
 
 Security rules:
-- Score 0-25: SAFE wallet with normal activity
-- Score 26-50: CAUTION some risk indicators
-- Score 51-75: SUSPICIOUS multiple red flags
-- Score 76-100: DANGEROUS confirmed threats
-- A wallet with 0 transactions is not necessarily dangerous
-- Include 3-5 alerts and 3-4 recommendations based on real data`
+- Score 0-25: Safe
+- Score 26-50: Caution
+- Score 51-75: Suspicious
+- Score 76-100: Dangerous
+- Include 3-5 alerts and 3-4 recommendations`
 
     try {
       const raw = await callGroq(prompt, true)
       const parsed = parseAnalysis(raw)
+
       const mergeRealData = (p) => {
         if (onchainData) {
           p.balance = onchainData.balance
@@ -172,6 +172,7 @@ Security rules:
         }
         return p
       }
+
       if (parsed) {
         setResult(mergeRealData(parsed))
       } else {
@@ -184,7 +185,7 @@ Security rules:
         }
       }
     } catch (e) {
-      setError(`AI Error: ${e.message || 'Check your Groq API key in .env and restart npm run dev'}`)
+      setError(`Error: ${e.message || 'Check your Groq API key in .env'}`)
     }
     setLoading(false)
   }
@@ -193,17 +194,16 @@ Security rules:
     if (!result || !q.trim()) return
     setAsking(true)
     setAnswer('')
-    const prompt = `You are TxGuard, a blockchain security AI. The user has analyzed this wallet:
-
+    const prompt = `You are TxGuard AI. The user analyzed this wallet:
 Wallet: ${wallet}
 Chain: ${chain}
 Risk Score: ${result.riskScore}/100
 Risk Label: ${result.riskLabel}
 Summary: ${result.summary}
 
-The user is now asking: "${q.trim()}"
+User question: "${q.trim()}"
 
-Answer in 2-4 sentences, clearly and helpfully. Focus on security and safety implications.`
+Answer in 2-4 sentences, clearly and helpfully.`
     try {
       const ans = await callGroq(prompt)
       setAnswer(ans)
@@ -216,70 +216,49 @@ Answer in 2-4 sentences, clearly and helpfully. Focus on security and safety imp
   const riskClass = result ? getRiskClass(result.riskScore) : 'safe'
 
   return (
-    <div className="app">
+    <div className="app-root">
 
-      {/* ── Navbar ── */}
+      {/* Navbar */}
       <nav className="navbar">
         <div className="nav-logo">
           <div className="nav-logo-icon">TX</div>
-          <span className="nav-logo-text">Tx<span>Guard</span></span>
-          <span className="nav-badge">AI SECURITY</span>
+          <span className="nav-logo-text">TxGuard</span>
+          <span className="nav-logo-tag">AI Security</span>
         </div>
         <div className="nav-right">
-          <span className="nav-chain-badge">⟠ ETH · ⬡ BNB · ◎ SOL · ₿ BTC</span>
+          {CHAINS.map(c => (
+            <span key={c.id} className="nav-chain-pill">{c.label}</span>
+          ))}
+          <div className="nav-online">
+            <div className="nav-online-dot"></div>
+            Online
+          </div>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section className="hero">
-        <div className="hero-tag">
-          <div className="hero-dot"></div>
-          AI-POWERED BLOCKCHAIN SECURITY
-        </div>
-        <h1>Know Before<br /><span>You Send.</span></h1>
-        <p>Analyze any wallet address across multiple chains. Get instant AI-driven security scores, scam detection, and transaction insights.</p>
+      {/* Hero */}
+      <div className="hero">
+        <h1>Know Before <span>You</span> Send.</h1>
+        <p>AI-powered wallet security across 5 chains. Instant risk scores, scam detection, and behavioral analysis.</p>
+      </div>
 
-        <div className="stats-bar">
-          <div className="stat-item">
-            <div className="stat-value">4+</div>
-            <div className="stat-label">Chains Supported</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value">AI</div>
-            <div className="stat-label">Powered Analysis</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value">0-100</div>
-            <div className="stat-label">Risk Scoring</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-value">FREE</div>
-            <div className="stat-label">To Use</div>
-          </div>
-        </div>
-      </section>
+      {/* Scanner */}
+      <div className="scanner">
 
-      {/* ── Main ── */}
-      <main className="main">
-
-        {/* Search Card */}
-        <div className="search-card">
-          <div className="search-label">SELECT CHAIN</div>
-          <div className="chain-selector">
+        {/* Input card */}
+        <div className="card">
+          <div className="chain-row">
             {CHAINS.map(c => (
               <button
                 key={c.id}
                 className={`chain-btn ${chain === c.id ? 'active' : ''}`}
                 onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
               >
-                <span className="chain-icon">{c.icon}</span>
                 {c.label}
               </button>
             ))}
           </div>
-
-          <div className="search-label" style={{ marginTop: '1rem' }}>WALLET ADDRESS</div>
-          <div className="input-row">
+          <div className="input-wrap">
             <input
               className="wallet-input"
               placeholder={selectedChain.placeholder}
@@ -288,11 +267,11 @@ Answer in 2-4 sentences, clearly and helpfully. Focus on security and safety imp
               onKeyDown={e => e.key === 'Enter' && analyze()}
             />
             <button
-              className="analyze-btn"
+              className="scan-btn"
               onClick={analyze}
               disabled={loading || !wallet.trim()}
             >
-              {loading ? '...' : '🔍 ANALYZE'}
+              {loading ? 'Scanning...' : 'Scan'}
             </button>
           </div>
         </div>
@@ -301,172 +280,160 @@ Answer in 2-4 sentences, clearly and helpfully. Focus on security and safety imp
         {loading && (
           <div className="loading-card">
             <div className="loading-spinner"></div>
-            <div className="loading-title">SCANNING WALLET</div>
+            <div className="loading-title">Scanning Wallet</div>
             <div className="loading-sub">TxGuard AI is analyzing security patterns...</div>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="alert-item alert-danger" style={{ borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1rem' }}>
-            <span className="alert-icon">⚠️</span>
-            <div className="alert-text"><strong>Error: </strong>{error}</div>
+          <div className="error-card">
+            <span>⚠</span>
+            <span>{error}</span>
           </div>
         )}
 
         {/* Results */}
         {result && !loading && (
-          <>
-            <div className="results-grid">
+          <div className="card">
 
-              {/* Risk Score */}
-              <div className="result-card">
-                <div className="card-label">RISK SCORE</div>
-                <div className="risk-score-wrap">
-                  <div className={`risk-circle risk-${riskClass}`}>
-                    <span className="risk-number">{result.riskScore}</span>
-                    <span className="risk-of">/100</span>
-                  </div>
-                  <div className="risk-info">
-                    <div className="risk-label" style={{ color: riskClass === 'safe' ? 'var(--green)' : riskClass === 'caution' ? 'var(--yellow)' : riskClass === 'danger' ? 'var(--orange)' : 'var(--red)' }}>
-                      {getRiskLabel(result.riskScore)}
-                    </div>
-                    <div className="risk-desc">
-                      {result.walletAge !== 'Unknown' && <div>Age: {result.walletAge}</div>}
-                      <div>Txns: {result.totalTransactions}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="result-card">
-                <div className="card-label">SECURITY STATUS</div>
-                <div className={`status-badge status-${riskClass}`}>
-                  {riskClass === 'safe' ? '✅' : riskClass === 'caution' ? '⚠️' : riskClass === 'danger' ? '🚨' : '🔴'}
-                  {' '}{result.riskLabel}
-                </div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                  Chain: <strong style={{ color: 'var(--text-primary)' }}>{selectedChain.icon} {selectedChain.label}</strong><br />
-                  Balance: {result.balance}
-                </div>
-              </div>
-
-              {/* Summary */}
-              <div className="result-card full-width">
-                <div className="card-label">AI SUMMARY</div>
-                <div className="summary-text">{result.summary}</div>
-              </div>
-
-              {/* Alerts */}
-              <div className="result-card">
-                <div className="card-label">SECURITY ALERTS</div>
-                <div className="alerts-list">
-                  {result.alerts?.map((alert, i) => (
-                    <div key={i} className={`alert-item alert-${alert.type}`}>
-                      <span className="alert-icon">{alert.icon}</span>
-                      <div className="alert-text">
-                        <strong>{alert.title}: </strong>{alert.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div className="result-card">
-                <div className="card-label">TRANSACTION CATEGORIES</div>
-                <div className="categories-list">
-                  {result.categories?.map((cat, i) => (
-                    <div key={i} className="category-item">
-                      <div className="category-left">
-                        <div className="category-dot" style={{ background: CAT_COLORS[i % CAT_COLORS.length] }} />
-                        <span className="category-name">{cat.name}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span className="category-count">{cat.count} txns</span>
-                        <div className="category-bar-wrap">
-                          <div className="category-bar" style={{ width: `${cat.percentage}%`, background: CAT_COLORS[i % CAT_COLORS.length] }} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Recommendations */}
-              <div className="result-card full-width">
-                <div className="card-label">RECOMMENDATIONS</div>
-                <div className="recs-list">
-                  {result.recommendations?.map((rec, i) => (
-                    <div key={i} className="rec-item">
-                      <div className="rec-num">{i + 1}</div>
-                      <span>{rec}</span>
-                    </div>
-                  ))}
-                </div>
+            {/* Risk score */}
+            <div className="score-wrap">
+              <div className="score-num">{result.riskScore}</div>
+              <div className="score-meta">
+                <span className="score-of">Risk score / 100</span>
+                <span className={`score-tag ${riskClass}`}>{getRiskLabel(result.riskScore)}</span>
               </div>
             </div>
+            <div className="score-bar-track">
+              <div className="score-bar-fill" style={{ width: `${result.riskScore}%` }}></div>
+            </div>
+
+            <div className="divider"></div>
+
+            {/* Stats */}
+            <div className="stat-grid">
+              <div className="stat-box">
+                <div className="stat-label">Balance</div>
+                <div className="stat-value">{result.balance}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-label">Transactions</div>
+                <div className="stat-value">{result.totalTransactions}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-label">Wallet Age</div>
+                <div className="stat-value">{result.walletAge}</div>
+              </div>
+            </div>
+
+            <div className="divider"></div>
+
+            {/* Summary */}
+            <div className="section-label">AI Summary</div>
+            <div className="summary-text">{result.summary}</div>
+
+            <div className="divider"></div>
+
+            {/* Alerts */}
+            <div className="section-label">Security Alerts</div>
+            {result.alerts?.map((alert, i) => (
+              <div key={i} className="alert-item">
+                <div className={`alert-dot ${getAlertDotClass(alert.type)}`}></div>
+                <div>
+                  <div className="alert-title">{alert.title}</div>
+                  <div className="alert-text">{alert.text}</div>
+                </div>
+              </div>
+            ))}
+
+            <div className="divider"></div>
+
+            {/* Transaction breakdown */}
+            <div className="section-label">Transaction Breakdown</div>
+            {result.categories?.filter(c => c.count > 0).map((cat, i) => (
+              <div key={i} className="bar-row">
+                <span className="bar-label">{cat.name}</span>
+                <div className="bar-track">
+                  <div className="bar-fill" style={{ width: `${cat.percentage}%` }}></div>
+                </div>
+                <span className="bar-pct">{cat.percentage}%</span>
+              </div>
+            ))}
+
+            <div className="divider"></div>
+
+            {/* Recommendations */}
+            <div className="section-label">Recommendations</div>
+            {result.recommendations?.map((rec, i) => (
+              <div key={i} className="rec-item">
+                <span className="rec-num">0{i + 1}</span>
+                <span>{rec}</span>
+              </div>
+            ))}
+
+            <div className="divider"></div>
 
             {/* Ask AI */}
-            <div className="ask-card">
-              <div className="ask-title">ASK TXGUARD AI</div>
-              <div className="quick-questions">
-                {[
-                  'Is this wallet safe to receive from?',
-                  'Should I send funds to this address?',
-                  'What are the biggest red flags?',
-                  'Is this wallet associated with any scams?',
-                ].map(q => (
-                  <button key={q} className="quick-q" onClick={() => { setQuestion(q); askQuestion(q) }}>
-                    {q}
-                  </button>
-                ))}
-              </div>
-              <div className="ask-row">
-                <input
-                  className="ask-input"
-                  placeholder="Ask anything about this wallet..."
-                  value={question}
-                  onChange={e => setQuestion(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && askQuestion(question)}
-                />
-                <button className="ask-btn" onClick={() => askQuestion(question)} disabled={asking || !question.trim()}>
-                  {asking ? '⏳' : '➤'}
+            <div className="section-label">Ask TxGuard AI</div>
+            <div className="quick-questions">
+              {[
+                'Is this wallet safe to receive from?',
+                'Should I send funds to this address?',
+                'What are the biggest red flags?',
+              ].map(q => (
+                <button key={q} className="quick-q" onClick={() => { setQuestion(q); askQuestion(q) }}>
+                  {q}
                 </button>
-              </div>
-              {asking && <div className="ask-answer">TxGuard is thinking...</div>}
-              {answer && !asking && <div className="ask-answer">{answer}</div>}
+              ))}
             </div>
-          </>
+            <div className="ask-row">
+              <input
+                className="ask-input"
+                placeholder="Ask anything about this wallet..."
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && askQuestion(question)}
+              />
+              <button
+                className="ask-btn"
+                onClick={() => askQuestion(question)}
+                disabled={asking || !question.trim()}
+              >
+                {asking ? '...' : 'Ask'}
+              </button>
+            </div>
+            {asking && <div className="ask-answer">TxGuard is thinking...</div>}
+            {answer && !asking && <div className="ask-answer">{answer}</div>}
+
+          </div>
         )}
 
-        {/* Empty State */}
+        {/* Empty state */}
         {!result && !loading && (
           <div className="empty-state">
-            <div className="empty-icon">🛡️</div>
-            <div className="empty-title">READY TO SCAN</div>
-            <div className="empty-sub">Enter a wallet address above to get an instant AI security analysis</div>
+            <div className="empty-icon">🛡</div>
+            <div className="empty-title">Ready to Scan</div>
+            <div className="empty-sub">Paste any wallet address above to get an instant AI security analysis</div>
             <div className="sample-wallets">
               {Object.entries(SAMPLE_WALLETS).map(([c, addr]) => (
                 <div
                   key={c}
                   className="sample-wallet"
                   onClick={() => { setChain(c); setWallet(addr) }}
-                  title={`Try ${c} sample`}
                 >
-                  {CHAINS.find(ch => ch.id === c)?.icon} {addr.slice(0, 8)}...{addr.slice(-6)}
+                  {c.toUpperCase()} · {addr.slice(0, 6)}...{addr.slice(-4)}
                 </div>
               ))}
             </div>
           </div>
         )}
 
-      </main>
+      </div>
 
-      {/* ── Footer ── */}
+      {/* Footer */}
       <footer className="footer">
-        <span>TXGUARD</span> · AI-Powered Blockchain Security · Know Before You Send · Built with Gemini AI
+        TxGuard · AI-Powered Blockchain Security · Know Before You Send
       </footer>
 
     </div>
