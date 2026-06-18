@@ -6,6 +6,10 @@ const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10'
 const SCAN_FEE_SELECTOR = '0xf71d1732' // scanFee() view function selector
 const PAY_SCAN_SELECTOR = '0x0752a777' // payScan() payable function selector
 
+// ── cUSD fee currency address (Celo Mainnet) ──
+// Required by MiniPay to pay gas fees in cUSD instead of CELO
+const CUSD_FEE_CURRENCY = '0x765DE816845861e75A25fCA122bb6898B8B1282a'
+
 // ── MiniPay Detection ──
 const isMiniPay = typeof window !== 'undefined' &&
   window.ethereum?.isMiniPay === true
@@ -71,7 +75,11 @@ export default function App() {
         try {
           const res = await window.ethereum.request({
             method: 'eth_call',
-            params: [{ to: CONTRACT_ADDRESS, data: SCAN_FEE_SELECTOR }, 'latest']
+            params: [{
+              to: CONTRACT_ADDRESS,
+              data: SCAN_FEE_SELECTOR,
+              feeCurrency: CUSD_FEE_CURRENCY  // ✅ Fix: required for MiniPay
+            }, 'latest']
           })
           if (res && res !== '0x') {
             const wei = BigInt(res)
@@ -135,7 +143,7 @@ export default function App() {
 
         try {
           let txValue = BigInt(scanFeeWei)
-          // Safety Fallback: Ensure value is at least 0.01 CELO (10^16 wei) if dynamic loading returned 0 or failed
+          // Safety Fallback: Ensure value is at least 0.01 CELO (10^16 wei)
           if (txValue < 10000000000000000n) {
             txValue = 10000000000000000n
           }
@@ -146,7 +154,8 @@ export default function App() {
               from: userAddress,
               to: CONTRACT_ADDRESS,
               value: '0x' + txValue.toString(16),
-              data: PAY_SCAN_SELECTOR
+              data: PAY_SCAN_SELECTOR,
+              feeCurrency: CUSD_FEE_CURRENCY  // ✅ Fix: tells MiniPay to pay gas in cUSD
             }]
           })
 
@@ -159,7 +168,12 @@ export default function App() {
               params: [txHash]
             })
             if (receipt) {
-              if (receipt.status === '0x1' || receipt.status === '0x01' || receipt.status === 1 || receipt.status === true) {
+              if (
+                receipt.status === '0x1' ||
+                receipt.status === '0x01' ||
+                receipt.status === 1 ||
+                receipt.status === true
+              ) {
                 confirmed = true
                 break
               } else {
@@ -177,7 +191,15 @@ export default function App() {
           setPaying(false)
         } catch (e) {
           console.error('Payment failed:', e)
-          setError(e.message || 'Payment transaction rejected or failed.')
+          const msg = e.message || ''
+          // ✅ Fix: user-friendly error messages instead of raw RPC errors
+          if (msg.includes('Insufficient fee') || msg.includes('fee')) {
+            setError('Your MiniPay wallet needs cUSD to cover the transaction fee. Please top up your cUSD balance.')
+          } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('User denied')) {
+            setError('Payment was cancelled.')
+          } else {
+            setError(msg || 'Payment transaction rejected or failed.')
+          }
           setPaying(false)
           return
         }
