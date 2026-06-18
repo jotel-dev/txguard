@@ -1,16 +1,74 @@
-# React + Vite
+# TxGuard AI — On-Chain Wallet Security Scanner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TxGuard is an AI-powered blockchain security scanner built for the **Celo Mainnet** and optimized for **MiniPay**. It analyzes wallet behavioral history and GoPlus Security databases using an LLM to generate instant risk scores, categorizations, and security alerts.
 
-Currently, two official plugins are available:
+To align with the Celo pay-as-you-go model, TxGuard utilizes an on-chain transaction contract that charges a tiny fee (0.01 CELO) per scan to query the security model, creating real transaction utility and on-chain activity.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+⚡ **Try it inside MiniPay:** Automatically detects the MiniPay environment, connects the user's wallet, and prompts for scan payments.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Deployed Smart Contracts
 
-## Expanding the ESLint configuration
+*   **Network:** Celo Mainnet
+*   **Contract Address:** [`0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10`](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10)
+*   **Contract Type:** `TxGuardPayment.sol` (Pay-per-scan registry)
+*   **Default Fee:** `0.01 CELO` per scan
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Features
+
+1.  **AI-Powered Behavioral Scoring**: Connects to the Groq API running Llama-3 to summarize risk assessments in plain English.
+2.  **GoPlus Security Integration**: Scans addresses against blacklists, malicious history, phishing reports, approval abuse, and honeypots.
+3.  **On-Chain Receipts**: Generates a Celo Mainnet transaction on every scan, displaying the Celoscan receipt link inside the results.
+4.  **MiniPay Optimized**: Mobile-first, lightweight responsive layout, fast load times, and automatic wallet session caching.
+
+---
+
+## Tech Stack
+
+*   **Frontend**: React (Vite)
+*   **Styling**: Premium custom Vanilla CSS (dark mode, glassmorphism, responsive grid layout)
+*   **APIs**: GoPlus Security API, Groq API (Llama-3), Celoscan API (V2)
+*   **Web3 Integration**: Injected `window.ethereum` JSON-RPC provider (optimized for MiniPay and Valora wallets)
+
+---
+
+## Development Setup
+
+### 1. Prerequisites
+Ensure you have Node.js (v18+) installed.
+
+### 2. Environment Variables
+Create a `.env` file inside the `web/` directory:
+```env
+VITE_GROQ_API_KEY=your_groq_api_key
+VITE_ETHERSCAN_API_KEY=your_etherscan_or_celoscan_api_key
+```
+
+### 3. Run Locally
+```bash
+# Navigate to web
+cd web
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+---
+
+## How to Test inside MiniPay Developer Mode
+1. Ensure your local dev server is running (e.g. `localhost:5173`).
+2. Expose your port to the web using `ngrok` or similar:
+   ```bash
+   ngrok http 5173
+   ```
+3. Copy the secure forwarding URL (`https://...ngrok-free.app`).
+4. Open your **MiniPay App** on your mobile device.
+5. Enable **Developer Mode** by tapping the version number in the "About" section repeatedly.
+6. Open **Developer Settings** -> **Load Test Page** and paste the ngrok URL.
+7. Perform a scan and approve the Celo transaction prompt!

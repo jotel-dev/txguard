@@ -1,7 +1,109 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => {
+  // Load env file from the current directory, including non-VITE prefixed keys
+  const env = loadEnv(mode, process.cwd(), '')
+  process.env.GROQ_API_KEY = env.GROQ_API_KEY || process.env.GROQ_API_KEY
+  process.env.ETHERSCAN_API_KEY = env.ETHERSCAN_API_KEY || process.env.ETHERSCAN_API_KEY
+
+  return {
+    plugins: [
+      react(),
+      {
+        name: 'serverless-dev-middleware',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            // Intercept /api/analyze endpoint
+            if (req.url.startsWith('/api/analyze')) {
+              let body = ''
+              req.on('data', chunk => { body += chunk })
+              req.on('end', async () => {
+                try {
+                  req.body = body ? JSON.parse(body) : {}
+                } catch (e) {
+                  req.body = {}
+                }
+
+                // Mock Vercel response helper
+                const mockRes = {
+                  status(code) {
+                    res.statusCode = code
+                    return this
+                  },
+                  json(data) {
+                    res.setHeader('Content-Type', 'application/json')
+                    res.end(JSON.stringify(data))
+                    return this
+                  },
+                  setHeader(name, value) {
+                    res.setHeader(name, value)
+                    return this
+                  },
+                  end(data) {
+                    res.end(data)
+                    return this
+                  }
+                }
+
+                try {
+                  const analyzeHandler = (await import('./api/analyze.js')).default
+                  await analyzeHandler(req, mockRes)
+                } catch (err) {
+                  console.error('Local dev serverless handler error:', err)
+                  res.statusCode = 500
+                  res.end(JSON.stringify({ error: err.message }))
+                }
+              })
+            } 
+            // Intercept /api/ask endpoint
+            else if (req.url.startsWith('/api/ask')) {
+              let body = ''
+              req.on('data', chunk => { body += chunk })
+              req.on('end', async () => {
+                try {
+                  req.body = body ? JSON.parse(body) : {}
+                } catch (e) {
+                  req.body = {}
+                }
+
+                const mockRes = {
+                  status(code) {
+                    res.statusCode = code
+                    return this
+                  },
+                  json(data) {
+                    res.setHeader('Content-Type', 'application/json')
+                    res.end(JSON.stringify(data))
+                    return this
+                  },
+                  setHeader(name, value) {
+                    res.setHeader(name, value)
+                    return this
+                  },
+                  end(data) {
+                    res.end(data)
+                    return this
+                  }
+                }
+
+                try {
+                  const askHandler = (await import('./api/ask.js')).default
+                  await askHandler(req, mockRes)
+                } catch (err) {
+                  console.error('Local dev serverless handler error:', err)
+                  res.statusCode = 500
+                  res.end(JSON.stringify({ error: err.message }))
+                }
+              })
+            } 
+            else {
+              next()
+            }
+          })
+        }
+      }
+    ]
+  }
 })

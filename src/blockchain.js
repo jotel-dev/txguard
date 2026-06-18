@@ -1,7 +1,9 @@
 // ── TxGuard Blockchain Data Service ──
 // Fetches real on-chain data for ETH, BNB, SOL, BTC, CELO
 
-const ETHERSCAN_KEY = import.meta.env.VITE_ETHERSCAN_API_KEY
+const ETHERSCAN_KEY = (typeof process !== 'undefined' && process.env.ETHERSCAN_API_KEY) || 
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_ETHERSCAN_API_KEY) || 
+  '';
 
 
 // ── Ethereum ──

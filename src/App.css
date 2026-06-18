@@ -982,16 +982,54 @@
 
 /* ── Footer ── */
 .footer {
-  text-align: center;
   padding: 32px 24px;
-  font-size: 11px;
-  color: var(--text-muted-dark);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  font-weight: 500;
   background: #ffffff;
   margin-top: 16px;
   position: relative;
   z-index: 10;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-muted-dark);
+  font-weight: 500;
+  text-align: center;
+}
+
+@media (min-width: 600px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: left;
+  }
+}
+
+.feedback-link {
+  color: #ff4d00 !important;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(255, 77, 0, 0.05);
+  border: 1px solid rgba(255, 77, 0, 0.15);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.feedback-link:hover {
+  background: rgba(255, 77, 0, 0.1);
+  border-color: #ff4d00;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(255, 77, 0, 0.05);
 }
 
 /* ── Mobile & Responsive Design ── */
@@ -1115,4 +1153,54 @@
     padding: 10px 12px;
     gap: 10px;
   }
+}
+
+/* ── Payment Integration Styles ── */
+.payment-loading-card {
+  border: 1px dashed rgba(249, 115, 22, 0.4) !important;
+  background: rgba(249, 115, 22, 0.03) !important;
+  box-shadow: 0 20px 40px rgba(249, 115, 22, 0.05) !important;
+}
+
+.payment-spinner {
+  border-top-color: #ff4d00 !important;
+  animation: spin 1s linear infinite;
+}
+
+.payment-receipt-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(249, 115, 22, 0.05);
+  border: 1px solid rgba(249, 115, 22, 0.15);
+  padding: 10px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.04);
+}
+
+.receipt-icon {
+  font-size: 15px;
+  filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.6));
+  animation: pulse 1.5s infinite;
+}
+
+.receipt-text {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.receipt-link {
+  color: #ff4d00;
+  text-decoration: none;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-weight: 700;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.receipt-link:hover {
+  color: #ff7a45;
+  text-shadow: 0 0 8px rgba(255, 77, 0, 0.25);
+  text-decoration: underline;
 }
