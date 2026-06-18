@@ -134,12 +134,18 @@ export default function App() {
         }
 
         try {
+          let txValue = BigInt(scanFeeWei)
+          // Safety Fallback: Ensure value is at least 0.01 CELO (10^16 wei) if dynamic loading returned 0 or failed
+          if (txValue < 10000000000000000n) {
+            txValue = 10000000000000000n
+          }
+
           txHash = await window.ethereum.request({
             method: 'eth_sendTransaction',
             params: [{
               from: userAddress,
               to: CONTRACT_ADDRESS,
-              value: '0x' + BigInt(scanFeeWei).toString(16),
+              value: '0x' + txValue.toString(16),
               data: PAY_SCAN_SELECTOR
             }]
           })
