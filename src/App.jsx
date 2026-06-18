@@ -1,9 +1,13 @@
- import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { getWalletData } from './blockchain'
 import { calculateRisk } from './riskEngine'
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY
+
+// ── MiniPay Detection ──
+const isMiniPay = typeof window !== 'undefined' &&
+  window.ethereum?.isMiniPay === true
 
 const CHAINS = [
   { id: 'ethereum', label: 'Ethereum', placeholder: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e' },
@@ -72,7 +76,7 @@ function getAlertDot(type) {
 }
 
 export default function App() {
-  const [chain, setChain]       = useState('ethereum')
+  const [chain, setChain]       = useState(isMiniPay ? 'celo' : 'ethereum')
   const [wallet, setWallet]     = useState('')
   const [loading, setLoading]   = useState(false)
   const [result, setResult]     = useState(null)
@@ -80,6 +84,22 @@ export default function App() {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer]     = useState('')
   const [asking, setAsking]     = useState(false)
+  const [miniPayAddress, setMiniPayAddress] = useState('')
+
+  // ── Auto-detect MiniPay wallet address ──
+  useEffect(() => {
+    if (isMiniPay && window.ethereum) {
+      window.ethereum.request({ method: 'eth_requestAccounts' })
+        .then(accounts => {
+          if (accounts[0]) {
+            setMiniPayAddress(accounts[0])
+            setWallet(accounts[0])
+            setChain('celo')
+          }
+        })
+        .catch(err => console.warn('MiniPay wallet fetch failed:', err))
+    }
+  }, [])
 
   const selectedChain = CHAINS.find(c => c.id === chain)
 
@@ -147,13 +167,7 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
   const riskClass = result ? getRiskClass(result.riskScore) : 'safe'
 
   return (
-    <div className="app-container">
-      {/* Background visual elements */}
-      <div className="grid-overlay"></div>
-      <div className="glow-bleed"></div>
-      <div className="side-glow-left"></div>
-      <div className="side-glow-right"></div>
-
+    <div>
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-logo">
@@ -167,11 +181,17 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
         </div>
       </nav>
 
+      {/* MiniPay Banner */}
+      {isMiniPay && (
+        <div className="minipay-banner">
+          ⚡ Running inside MiniPay — scan any wallet before you send!
+        </div>
+      )}
+
       {/* Hero */}
       <div className="hero">
-        <div className="hero-bg-image"></div>
         <div className="hero-glow"></div>
-        <h1>Know Before <span className="italic-accent">You Send.</span></h1>
+        <h1>Know Before <span>You Send.</span></h1>
         <p>AI-powered wallet security across 5 chains. Instant risk scores, scam detection, and behavioral analysis.</p>
         <div className="stats-bar">
           <div className="stat-item"><div className="stat-value">5</div><div className="stat-label">Chains</div></div>
@@ -185,37 +205,42 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
       <div className="scanner">
 
         {/* Input */}
-        <div className="card input-card">
-          <div className="chain-row">
-            {CHAINS.map(c => (
-              <button key={c.id} className={`chain-btn ${chain === c.id ? 'active' : ''}`}
-                onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}>
-                {c.label}
-              </button>
-            ))}
-          </div>
-          <div className="input-wrap">
-            <div className="input-inner-container">
-              <input className="wallet-input" placeholder={selectedChain.placeholder}
-                value={wallet} onChange={e => setWallet(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && analyze()} />
-              
-              <div className="mic-icon-wrap">
-                <svg className="mic-icon" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
-                </svg>
-              </div>
+        <div className="card">
+          {/* Hide chain selector in MiniPay — always Celo */}
+          {!isMiniPay && (
+            <div className="chain-row">
+              {CHAINS.map(c => (
+                <button key={c.id} className={`chain-btn ${chain === c.id ? 'active' : ''}`}
+                  onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}>
+                  {c.label}
+                </button>
+              ))}
             </div>
+          )}
 
+          {isMiniPay && (
+            <div className="minipay-chain-badge">
+              🟡 Celo Chain — MiniPay Mode
+            </div>
+          )}
+
+          <div className="input-wrap">
+            <input className="wallet-input"
+              placeholder={selectedChain.placeholder}
+              value={wallet}
+              onChange={e => setWallet(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && analyze()} />
             <button className="scan-btn" onClick={analyze} disabled={loading || !wallet.trim()}>
-              <span>{loading ? 'Scanning...' : 'Scan Wallet'}</span>
-              <div className="arrow-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
+              {loading ? 'Scanning...' : 'Scan Wallet'}
             </button>
           </div>
+
+          {isMiniPay && miniPayAddress && (
+            <div className="minipay-hint">
+              Your wallet: {miniPayAddress.slice(0, 6)}...{miniPayAddress.slice(-4)} —
+              <span className="minipay-hint-link" onClick={() => setWallet(miniPayAddress)}> scan it</span>
+            </div>
+          )}
         </div>
 
         {/* Loading */}
@@ -232,8 +257,7 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
 
         {/* Results */}
         {result && !loading && (
-          <div className="card result-card">
-
+          <div className="card">
             <div className="score-wrap">
               <div className="score-num">{result.riskScore}</div>
               <div className="score-meta">
@@ -307,53 +331,22 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
           <div className="empty-state">
             <div className="empty-icon">🛡️</div>
             <div className="empty-title">Ready to Scan</div>
-            <div className="empty-sub">Paste any wallet address above to get an instant AI security analysis</div>
-            <div className="sample-wallets">
-              {Object.entries(SAMPLE_WALLETS).map(([c, addr]) => (
-                <div key={c} className="sample-wallet" onClick={() => { setChain(c); setWallet(addr) }}>
-                  {c.toUpperCase()} · {addr.slice(0, 6)}...{addr.slice(-4)}
-                </div>
-              ))}
+            <div className="empty-sub">
+              {isMiniPay
+                ? 'Paste any wallet address above to check it before sending'
+                : 'Paste any wallet address above to get an instant AI security analysis'}
             </div>
+            {!isMiniPay && (
+              <div className="sample-wallets">
+                {Object.entries(SAMPLE_WALLETS).map(([c, addr]) => (
+                  <div key={c} className="sample-wallet" onClick={() => { setChain(c); setWallet(addr) }}>
+                    {c.toUpperCase()} · {addr.slice(0, 6)}...{addr.slice(-4)}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
-      </div>
-
-      {/* Supported Chain Logos */}
-      <div className="partner-logos-section">
-        <div className="partner-logos-grid">
-          <div className="partner-logo chain-logo-item">
-            <svg className="chain-logo-svg eth-logo" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L4.63 14.18 12 18.54l7.37-4.36L12 2zm0 17.51l-7.37-4.36L12 22l7.37-4.85-7.37 4.36z"/>
-            </svg>
-            Ethereum
-          </div>
-          <div className="partner-logo chain-logo-item">
-            <svg className="chain-logo-svg bnb-logo" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L8.25 5.75L12 9.5L15.75 5.75L12 2ZM5.75 8.25L2 12L5.75 15.75L9.5 12L5.75 8.25ZM18.25 8.25L14.5 12L18.25 15.75L22 12L18.25 8.25ZM12 14.5L8.25 18.25L12 22L15.75 18.25L12 14.5Z"/>
-            </svg>
-            BNB Chain
-          </div>
-          <div className="partner-logo chain-logo-item">
-            <svg className="chain-logo-svg sol-logo" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.6 15.6h17.8l-3.8 3.8H.8l3.8-3.8zm0-6.8h17.8l-3.8 3.8H.8l3.8-3.8zm14.6-6.8L15.4 5.8H1.6l3.8-3.8h13.8z"/>
-            </svg>
-            Solana
-          </div>
-          <div className="partner-logo chain-logo-item">
-            <svg className="chain-logo-svg btc-logo" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10zm-6.9 1.4c.18-.84-.52-1.3-1.4-1.6.85-.2 1.5-.77 1.34-1.74-.23-1.36-1.55-1.57-2.8-1.76l-.4 1.6h-.93l.4-1.62h-.94l-.4 1.62h-.9l-.42-1.7H8.7l.42 1.7H7.7L7.3 11l.9.22-.38 1.58-.93-.23-.42 1.7.92.23-.38 1.54h.95l.38-1.54.9.22-.38 1.54h.95l.4-1.58c1.38.1 2.8.2 3.12-1.12.26-1.07-.37-1.68-1.2-1.93zM10.8 9.3h1.7c.36 0 .7.12.63.78-.07.72-.45.72-.8.72h-1.53V9.3zm-.26 4.34h1.9c.35 0 .8.15.7 1-.08.8-.52.88-.93.88h-1.67v-1.88z"/>
-            </svg>
-            Bitcoin
-          </div>
-          <div className="partner-logo chain-logo-item">
-            <svg className="chain-logo-svg celo-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <circle cx="9.5" cy="12" r="6" />
-              <circle cx="14.5" cy="12" r="6" />
-            </svg>
-            Celo
-          </div>
-        </div>
       </div>
 
       <footer className="footer">TxGuard · AI-Powered Blockchain Security · Know Before You Send</footer>
