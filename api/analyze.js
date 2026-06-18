@@ -2,10 +2,9 @@ import { getWalletData } from '../src/blockchain.js';
 import { calculateRisk } from '../src/riskEngine.js';
 
 const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10';
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-
 async function callGroq(prompt, jsonMode = false) {
-  if (!GROQ_API_KEY) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
     throw new Error('GROQ_API_KEY is not configured on the server.');
   }
 
@@ -13,7 +12,7 @@ async function callGroq(prompt, jsonMode = false) {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json', 
-      'Authorization': `Bearer ${GROQ_API_KEY}` 
+      'Authorization': `Bearer ${apiKey}` 
     },
     body: JSON.stringify({
       model: 'llama-3.1-8b-instant',
