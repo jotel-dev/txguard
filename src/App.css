@@ -1,26 +1,30 @@
-/* ── TxGuard Premium Redesigned Styles (Deep Slate & Orange Accents) ── */
+/* ── TxGuard High-Fidelity Mockup Redesign ── */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
-/* ── Custom Theme Constants ── */
+/* ── Custom Design Variables ── */
 :root {
   --primary-orange: #ff4d00;
   --accent-orange-hover: #ff7a45;
-  --bg-slate: #0A0B0F;
-  --bg-slate-card: rgba(18, 20, 29, 0.65);
-  --border-slate: rgba(255, 255, 255, 0.08);
-  --text-light: #f3f4f6;
-  --text-muted: rgba(255, 255, 255, 0.5);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --bg-glass-card: rgba(255, 255, 255, 0.08);
+  --text-light: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
   --font-ui: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'Instrument Serif', 'Playfair Display', Georgia, serif;
 }
 
-/* ── Base Layout & Gradients ── */
+/* ── Base Reset & Cover Background ── */
 .app-container {
   position: relative;
   min-height: 100vh;
   width: 100%;
-  background: var(--bg-slate);
+  background: linear-gradient(180deg, rgba(10, 11, 15, 0.35) 0%, rgba(10, 11, 15, 0.2) 100%), 
+              url('/Gemini_Generated_Image_pwgpjipwgpjipwgp.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--text-light);
   font-family: var(--font-ui);
   overflow-x: hidden;
@@ -29,41 +33,30 @@
   flex-direction: column;
 }
 
-/* ── Background Grids & Bleed Glows ── */
+/* Overlay for grid effects matching reference style */
 .grid-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 600px;
+  height: 100%;
   background-image: 
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.003) 0px, rgba(255, 255, 255, 0.003) 1px, transparent 1px, transparent 12px),
-    linear-gradient(rgba(255, 255, 255, 0.008) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+  background-size: 40px 40px;
   pointer-events: none;
   z-index: 1;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
 }
 
 .glow-bleed {
-  position: absolute;
-  top: 250px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 1000px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 77, 0, 0.12) 0%, rgba(255, 77, 0, 0.02) 50%, transparent 75%);
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 2;
+  display: none; /* Removed heavy abstract bleed glows to highlight the custom shield asset background */
 }
 
 @keyframes pulse {
   0% { opacity: 0.65; }
-  50% { opacity: 1; transform: scale(1.05); }
+  50% { opacity: 1; transform: scale(1.03); }
   100% { opacity: 0.65; }
 }
 
@@ -76,15 +69,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 48px;
+  padding: 20px 48px;
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10, 11, 15, 0.65);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid var(--border-slate);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
 }
 
 .nav-logo {
@@ -94,18 +87,18 @@
 }
 
 .nav-logo-icon {
-  background: linear-gradient(135deg, var(--accent-orange-hover), var(--primary-orange));
-  color: #fff;
+  background: #ffffff;
+  color: #0c0d12;
   font-weight: 800;
   font-size: 13px;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 5px 9px;
+  border-radius: 6px;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(255, 77, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-logo-text {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.5px;
@@ -113,11 +106,30 @@
 
 .nav-logo-tag {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  letter-spacing: 0.2px;
+}
+
+.nav-link:hover {
+  color: #ffffff;
 }
 
 .nav-right {
@@ -131,8 +143,8 @@
   gap: 6px;
   font-size: 11px;
   color: var(--accent-orange-hover);
-  background: rgba(255, 122, 69, 0.08);
-  border: 1px solid rgba(255, 122, 69, 0.2);
+  background: rgba(255, 122, 69, 0.1);
+  border: 1px solid rgba(255, 122, 69, 0.22);
   padding: 5px 12px;
   border-radius: 20px;
   font-weight: 600;
@@ -149,7 +161,7 @@
 
 /* ── MiniPay Banner ── */
 .minipay-banner {
-  background: linear-gradient(90deg, rgba(255, 122, 69, 0.12) 0%, rgba(255, 77, 0, 0.03) 100%);
+  background: rgba(255, 122, 69, 0.08);
   border: 1px solid rgba(255, 122, 69, 0.2);
   color: var(--accent-orange-hover);
   padding: 10px 16px;
@@ -161,22 +173,24 @@
   align-self: center;
   width: calc(100% - 48px);
   max-width: 630px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* ── Hero Section ── */
 .hero {
   text-align: center;
-  padding: 60px 24px 24px;
+  padding: 64px 24px 16px;
   position: relative;
   z-index: 10;
 }
 
 .hero h1 {
-  font-size: 40px;
+  font-size: 46px;
   font-weight: 800;
   color: #ffffff;
   margin: 0 0 12px;
-  letter-spacing: -1px;
+  letter-spacing: -0.8px;
   line-height: 1.15;
 }
 
@@ -192,14 +206,57 @@
 }
 
 .hero p {
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text-muted);
-  max-width: 460px;
+  max-width: 500px;
   margin: 0 auto;
   line-height: 1.6;
 }
 
-/* ── Scanner Section ── */
+/* ── Stats Bar ── */
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 580px;
+  margin: 24px auto 0;
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 14px 20px;
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  position: relative;
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-orange-hover);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+/* ── Scanner Wrapper ── */
 .scanner {
   max-width: 630px;
   width: 100%;
@@ -210,17 +267,17 @@
   flex: 1;
 }
 
-/* ── Cards (Glassmorphism Dark) ── */
+/* ── Cards (Glassmorphism Dark-Translucent) ── */
 .card {
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 24px;
   margin-bottom: 16px;
-  background: var(--bg-slate-card);
+  background: var(--bg-glass-card);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-slate);
+  border: 1px solid var(--border-glass);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 20px 40px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -234,7 +291,7 @@
 
 .chain-btn {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--text-muted);
   font-size: 11.5px;
   padding: 6px 14px;
@@ -246,7 +303,7 @@
 }
 
 .chain-btn:hover {
-  border-color: rgba(255, 77, 0, 0.3);
+  border-color: rgba(255, 77, 0, 0.35);
   color: #ffffff;
   background: rgba(255, 255, 255, 0.06);
 }
@@ -254,8 +311,8 @@
 .chain-btn.active {
   border-color: var(--primary-orange);
   color: #ffffff;
-  background: rgba(255, 77, 0, 0.1);
-  box-shadow: 0 0 12px rgba(255, 77, 0, 0.15);
+  background: rgba(255, 77, 0, 0.15);
+  box-shadow: 0 0 12px rgba(255, 77, 0, 0.2);
 }
 
 .minipay-chain-badge {
@@ -285,16 +342,16 @@
   display: flex;
   align-items: center;
   background: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--border-slate);
+  border: 1px solid var(--border-glass);
   border-radius: 100px;
   padding: 4px 4px 4px 16px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-wrap:focus-within {
-  border-color: rgba(255, 77, 0, 0.4);
-  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 77, 0, 0.45);
+  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .input-inner-container {
@@ -318,14 +375,14 @@
 }
 
 .wallet-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.3);
   font-family: var(--font-ui);
 }
 
 .clear-btn {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.45);
   font-size: 12px;
   cursor: pointer;
   padding: 4px;
@@ -342,7 +399,7 @@
 }
 
 .paste-btn {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.85);
   font-size: 11px;
@@ -473,12 +530,12 @@
 .loading-card {
   text-align: center;
   padding: 40px 24px;
-  background: var(--bg-slate-card);
+  background: var(--bg-glass-card);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-slate);
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
 }
 
@@ -530,18 +587,18 @@
 .empty-state {
   text-align: center;
   padding: 40px 24px;
-  background: var(--bg-slate-card);
+  background: var(--bg-glass-card);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-slate);
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
 .empty-icon {
   font-size: 36px;
   margin-bottom: 12px;
-  filter: drop-shadow(0 0 12px rgba(255, 122, 69, 0.25));
+  filter: drop-shadow(0 0 12px rgba(255, 122, 69, 0.2));
 }
 
 .empty-title {
@@ -731,7 +788,7 @@
 .receipt-text {
   font-size: 11px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .receipt-link {
@@ -1078,12 +1135,45 @@
   border-left-color: rgba(255, 255, 255, 0.2);
 }
 
+/* ── Partner Logos Bar ── */
+.partner-logos-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 52px;
+  flex-wrap: wrap;
+  margin: 40px auto 16px;
+  padding: 20px 32px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  width: calc(100% - 48px);
+  max-width: 630px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.partner-logo {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.8px;
+  transition: color 0.2s;
+  cursor: default;
+}
+
+.partner-logo:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* ── Footer ── */
 .footer {
   padding: 32px 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  background: var(--bg-slate);
-  margin-top: 40px;
+  background: transparent;
+  margin-top: 24px;
   position: relative;
   z-index: 10;
 }
@@ -1137,11 +1227,18 @@
   .nav-logo-text {
     font-size: 17px;
   }
+  .nav-links {
+    display: none; /* Hide top links on mobile to avoid overcrowding */
+  }
   .hero {
     padding: 50px 20px 20px;
   }
   .hero h1 {
     font-size: 34px;
+  }
+  .partner-logos-bar {
+    gap: 32px;
+    padding: 16px 20px;
   }
 }
 
@@ -1161,6 +1258,18 @@
   .card {
     padding: 16px;
     border-radius: 16px;
+  }
+  .stats-bar {
+    margin: 16px 16px 0;
+    width: calc(100% - 32px);
+    padding: 12px 10px;
+  }
+  .stat-value {
+    font-size: 15px;
+  }
+  .stat-label {
+    font-size: 8.5px;
+    letter-spacing: 0.5px;
   }
   .input-wrap {
     padding: 3px 3px 3px 12px;
@@ -1201,5 +1310,13 @@
   .minipay-banner {
     margin: 12px 16px 0;
     width: calc(100% - 32px);
+  }
+  .partner-logos-bar {
+    margin: 24px auto 16px;
+    gap: 20px;
+    width: calc(100% - 32px);
+  }
+  .partner-logo {
+    font-size: 12px;
   }
 }

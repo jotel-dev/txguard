@@ -282,6 +282,13 @@ export default function App() {
           <span className="nav-logo-text">TxGuard</span>
           <span className="nav-logo-tag">AI Security</span>
         </div>
+        <div className="nav-links">
+          <span className="nav-link">Ethereum</span>
+          <span className="nav-link">BNB</span>
+          <span className="nav-link">Solana</span>
+          <span className="nav-link">Bitcoin</span>
+          <span className="nav-link">Celo</span>
+        </div>
         <div className="nav-right">
           <div className="nav-online"><div className="nav-online-dot"></div>Online</div>
         </div>
@@ -300,6 +307,28 @@ export default function App() {
           <div className="hero-glow"></div>
           <h1>Know Before <span className="italic-accent">You Send.</span></h1>
           <p>AI-powered wallet threat scanning. Get instant risk scores, scam detection, and transaction history analysis.</p>
+        </div>
+      )}
+
+      {/* Stats Bar */}
+      {!result && (
+        <div className="stats-bar">
+          <div className="stat-item">
+            <div className="stat-value">5</div>
+            <div className="stat-label">Chains</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">AI</div>
+            <div className="stat-label">Powered</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">GoPlus</div>
+            <div className="stat-label">Security OB</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-value">0-100</div>
+            <div className="stat-label">Risk Score</div>
+          </div>
         </div>
       )}
 
@@ -537,6 +566,16 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {!result && (
+        <div className="partner-logos-bar">
+          <span className="partner-logo">vẽsparum.</span>
+          <span className="partner-logo">MODE</span>
+          <span className="partner-logo">INTERCOM</span>
+          <span className="partner-logo">Mosaic</span>
+          <span className="partner-logo">Canopy</span>
+        </div>
+      )}
 
       <footer className="footer">
         <div className="footer-content">
