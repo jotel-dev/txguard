@@ -134,12 +134,18 @@ export default function App() {
         }
 
         try {
+          let txValue = BigInt(scanFeeWei)
+          // Safety Fallback: Ensure value is at least 0.01 CELO (10^16 wei) if dynamic loading returned 0 or failed
+          if (txValue < 10000000000000000n) {
+            txValue = 10000000000000000n
+          }
+
           txHash = await window.ethereum.request({
             method: 'eth_sendTransaction',
             params: [{
               from: userAddress,
               to: CONTRACT_ADDRESS,
-              value: '0x' + BigInt(scanFeeWei).toString(16),
+              value: '0x' + txValue.toString(16),
               data: PAY_SCAN_SELECTOR
             }]
           })
@@ -229,8 +235,24 @@ export default function App() {
 
   const riskClass = result ? getRiskClass(result.riskScore) : 'safe'
 
+  async function handlePaste() {
+    try {
+      const text = await navigator.clipboard.readText()
+      if (text) setWallet(text.trim())
+    } catch (e) {
+      console.warn('Clipboard read failed:', e)
+    }
+  }
+
+  const radius = 30
+  const circumference = 2 * Math.PI * radius
+  const strokeDashoffset = result ? circumference - (result.riskScore / 100) * circumference : 0
+
   return (
-    <div>
+    <div className="app-container">
+      <div className="grid-overlay"></div>
+      <div className="glow-bleed"></div>
+      
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-logo">
@@ -239,7 +261,6 @@ export default function App() {
           <span className="nav-logo-tag">AI Security</span>
         </div>
         <div className="nav-right">
-          {CHAINS.map(c => <span key={c.id} className="nav-chain-pill">{c.label}</span>)}
           <div className="nav-online"><div className="nav-online-dot"></div>Online</div>
         </div>
       </nav>
@@ -247,28 +268,23 @@ export default function App() {
       {/* MiniPay Banner */}
       {isMiniPay && (
         <div className="minipay-banner">
-          ⚡ Running inside MiniPay — scan any wallet before you send!
+          ⚡ Running inside MiniPay · Scan wallet before sending
         </div>
       )}
 
-      {/* Hero */}
-      <div className="hero">
-        <div className="hero-glow"></div>
-        <h1>Know Before <span>You Send.</span></h1>
-        <p>AI-powered wallet security across 5 chains. Instant risk scores, scam detection, and behavioral analysis.</p>
-        <div className="stats-bar">
-          <div className="stat-item"><div className="stat-value">5</div><div className="stat-label">Chains</div></div>
-          <div className="stat-item"><div className="stat-value">AI</div><div className="stat-label">Powered</div></div>
-          <div className="stat-item"><div className="stat-value">GoPlus</div><div className="stat-label">Security DB</div></div>
-          <div className="stat-item"><div className="stat-value">0–100</div><div className="stat-label">Risk Score</div></div>
+      {/* Hero: Hidden when displaying results to save vertical space on mobile */}
+      {!result && (
+        <div className="hero">
+          <div className="hero-glow"></div>
+          <h1>Know Before <span className="italic-accent">You Send.</span></h1>
+          <p>AI-powered wallet threat scanning. Get instant risk scores, scam detection, and transaction history analysis.</p>
         </div>
-      </div>
+      )}
 
-      {/* Scanner */}
+      {/* Scanner Wrapper */}
       <div className="scanner">
-
-        {/* Input */}
-        <div className="card">
+        {/* Input Card */}
+        <div className="card input-card">
           {/* Hide chain selector in MiniPay — always Celo */}
           {!isMiniPay && (
             <div className="chain-row">
@@ -283,26 +299,46 @@ export default function App() {
 
           {isMiniPay && (
             <div className="minipay-chain-badge">
-              🟡 Celo Chain — MiniPay Mode
+              <span className="minipay-badge-dot"></span> Celo Network
             </div>
           )}
 
           <div className="input-wrap">
-            <input className="wallet-input"
-              placeholder={selectedChain.placeholder}
-              value={wallet}
-              disabled={loading || paying}
-              onChange={e => setWallet(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()} />
+            <div className="input-inner-container">
+              <input className="wallet-input"
+                placeholder={selectedChain.placeholder}
+                value={wallet}
+                disabled={loading || paying}
+                onChange={e => setWallet(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()} />
+              {wallet && !loading && !paying && (
+                <button className="clear-btn" onClick={() => setWallet('')}>✕</button>
+              )}
+            </div>
+            {!wallet && (
+              <button className="paste-btn" onClick={handlePaste} disabled={loading || paying}>
+                Paste
+              </button>
+            )}
             <button className="scan-btn" onClick={analyze} disabled={loading || paying || !wallet.trim()}>
-              {paying ? 'Paying...' : loading ? 'Scanning...' : 'Scan Wallet'}
+              {paying ? 'Paying...' : loading ? 'Scan' : 'Scan'}
+              <span className="arrow-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
             </button>
           </div>
 
-          {isMiniPay && miniPayAddress && (
-            <div className="minipay-hint">
-              Your wallet: {miniPayAddress.slice(0, 6)}...{miniPayAddress.slice(-4)} —
-              <span className="minipay-hint-link" onClick={() => setWallet(miniPayAddress)}> scan it</span>
+          {/* Quick Action Suggestion: Scan My MiniPay Wallet */}
+          {isMiniPay && miniPayAddress && wallet.toLowerCase() !== miniPayAddress.toLowerCase() && (
+            <div className="quick-scan-card" onClick={() => { setWallet(miniPayAddress) }}>
+              <div className="quick-scan-icon">⚡</div>
+              <div className="quick-scan-info">
+                <div className="quick-scan-title">Scan My Wallet</div>
+                <div className="quick-scan-addr">{miniPayAddress.slice(0, 6)}...{miniPayAddress.slice(-4)}</div>
+              </div>
+              <div className="quick-scan-arrow">→</div>
             </div>
           )}
         </div>
@@ -320,33 +356,42 @@ export default function App() {
         {loading && (
           <div className="loading-card">
             <div className="loading-spinner"></div>
-            <div className="loading-title">Scanning Wallet</div>
-            <div className="loading-sub">TxGuard AI is analyzing security patterns...</div>
+            <div className="loading-title">Analyzing Wallet</div>
+            <div className="loading-sub">TxGuard AI is fetching and scanning security patterns...</div>
           </div>
         )}
 
         {/* Error */}
         {error && <div className="error-card"><span>⚠</span><span>{error}</span></div>}
 
-        {/* Results */}
+        {/* Results Dashboard */}
         {result && !loading && (
-          <div className="card">
-            <div className="score-wrap">
-              <div className="score-num">{result.riskScore}</div>
-              <div className="score-meta">
-                <span className="score-of">Risk score / 100</span>
-                <span className={`score-tag ${riskClass}`}>{getRiskLabel(result.riskScore)}</span>
+          <div className="card result-card">
+            {/* Dashboard Header: Circular SVG Score Ring + Metadata */}
+            <div className="dashboard-header">
+              <div className="gauge-wrap">
+                <svg className="gauge-svg" viewBox="0 0 80 80">
+                  <circle className="gauge-bg" cx="40" cy="40" r={radius} />
+                  <circle className={`gauge-fill ${riskClass}`} cx="40" cy="40" r={radius}
+                    strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} />
+                </svg>
+                <div className="gauge-score">
+                  <span className="gauge-score-num">{result.riskScore}</span>
+                  <span className="gauge-score-label">/100</span>
+                </div>
+              </div>
+              <div className="dashboard-meta">
+                <span className="dashboard-subtitle">Threat Score</span>
+                <span className={`dashboard-tag ${riskClass}`}>{getRiskLabel(result.riskScore)}</span>
               </div>
             </div>
-            <div className="score-bar-track">
-              <div className="score-bar-fill" style={{ width: `${result.riskScore}%` }}></div>
-            </div>
 
+            {/* Onchain Payment Receipt badge */}
             {result.paymentTx && (
               <div className="payment-receipt-badge">
                 <span className="receipt-icon">⚡</span>
                 <span className="receipt-text">
-                  On-Chain Receipt:{" "}
+                  On-Chain Scan Receipt:{" "}
                   <a
                     href={`https://celoscan.io/tx/${result.paymentTx}`}
                     target="_blank"
@@ -359,44 +404,76 @@ export default function App() {
               </div>
             )}
 
+            {/* Metrics Asset Grid */}
             <div className="stat-grid">
-              <div className="stat-box"><div className="stat-box-label">Balance</div><div className="stat-box-value">{result.balance}</div></div>
-              <div className="stat-box"><div className="stat-box-label">Transactions</div><div className="stat-box-value">{result.totalTransactions}</div></div>
-              <div className="stat-box"><div className="stat-box-label">Wallet Age</div><div className="stat-box-value">{result.walletAge}</div></div>
+              <div className="stat-box">
+                <div className="stat-box-label">Balance</div>
+                <div className="stat-box-value">{result.balance}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-box-label">Transactions</div>
+                <div className="stat-box-value">{result.totalTransactions}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-box-label">Wallet Age</div>
+                <div className="stat-box-value">{result.walletAge}</div>
+              </div>
             </div>
 
             <div className="divider"></div>
+            
+            {/* AI Summary Block */}
             <div className="section-label">AI Summary</div>
-            <div className="summary-text">{result.summary}</div>
+            <div className={`summary-text-box ${riskClass}`}>
+              <p className="summary-text">{result.summary}</p>
+            </div>
 
             <div className="divider"></div>
+
+            {/* Security Alerts Section */}
             <div className="section-label">Security Alerts</div>
-            {result.alerts?.map((alert, i) => (
-              <div key={i} className="alert-item">
-                <div className={`alert-dot ${getAlertDot(alert.type)}`}></div>
-                <div><div className="alert-title">{alert.title}</div><div className="alert-text">{alert.text}</div></div>
-              </div>
-            ))}
+            <div className="alerts-list">
+              {result.alerts?.map((alert, i) => (
+                <div key={i} className="alert-item">
+                  <div className={`alert-dot ${getAlertDot(alert.type)}`}></div>
+                  <div className="alert-content">
+                    <div className="alert-title">{alert.title}</div>
+                    <div className="alert-text">{alert.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <div className="divider"></div>
+
+            {/* Categories Section */}
             <div className="section-label">Transaction Breakdown</div>
-            {result.categories?.filter(c => c.count > 0).map((cat, i) => (
-              <div key={i} className="bar-row">
-                <span className="bar-label">{cat.name}</span>
-                <div className="bar-track"><div className="bar-fill" style={{ width: `${cat.percentage}%` }}></div></div>
-                <span className="bar-pct">{cat.percentage}%</span>
-              </div>
-            ))}
+            <div className="categories-list">
+              {result.categories?.filter(c => c.count > 0).map((cat, i) => (
+                <div key={i} className="bar-row">
+                  <span className="bar-label">{cat.name}</span>
+                  <div className="bar-track"><div className="bar-fill" style={{ width: `${cat.percentage}%` }}></div></div>
+                  <span className="bar-pct">{cat.percentage}%</span>
+                </div>
+              ))}
+            </div>
 
             <div className="divider"></div>
+
+            {/* Recommendations Section */}
             <div className="section-label">Recommendations</div>
-            {result.recommendations?.map((rec, i) => (
-              <div key={i} className="rec-item">
-                <span className="rec-num">0{i + 1}</span><span>{rec}</span>
-              </div>
-            ))}
+            <div className="recs-list">
+              {result.recommendations?.map((rec, i) => (
+                <div key={i} className="rec-item">
+                  <span className="rec-num">0{i + 1}</span>
+                  <span className="rec-text">{rec}</span>
+                </div>
+              ))}
+            </div>
 
             <div className="divider"></div>
+
+            {/* AI Assistant Chat Section */}
             <div className="section-label">Ask TxGuard AI</div>
             <div className="quick-questions">
               {['Is this wallet safe to receive from?', 'Should I send funds to this address?', 'What are the biggest red flags?'].map(q => (
@@ -411,20 +488,20 @@ export default function App() {
                 {asking ? '...' : 'Ask'}
               </button>
             </div>
-            {asking && <div className="ask-answer">TxGuard is thinking...</div>}
+            {asking && <div className="ask-answer thinking">TxGuard is thinking...</div>}
             {answer && !asking && <div className="ask-answer">{answer}</div>}
           </div>
         )}
 
-        {/* Empty */}
+        {/* Empty State when no result */}
         {!result && !loading && (
           <div className="empty-state">
             <div className="empty-icon">🛡️</div>
             <div className="empty-title">Ready to Scan</div>
             <div className="empty-sub">
               {isMiniPay
-                ? 'Paste any wallet address above to check it before sending'
-                : 'Paste any wallet address above to get an instant AI security analysis'}
+                ? 'Enter or paste any Celo wallet address above to check it before sending.'
+                : 'Enter or paste any wallet address above to get an instant AI security analysis.'}
             </div>
             {!isMiniPay && (
               <div className="sample-wallets">
