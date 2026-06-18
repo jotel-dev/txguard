@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { getWalletData } from './blockchain'
-import { calculateRisk } from './riskEngine'
 
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY
+// ── Celo Payment Contract Configuration ──
+const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10'
+const SCAN_FEE_SELECTOR = '0xf71d1732' // scanFee() view function selector
+const PAY_SCAN_SELECTOR = '0x0752a777' // payScan() payable function selector
 
 // ── MiniPay Detection ──
 const isMiniPay = typeof window !== 'undefined' &&
@@ -22,35 +23,6 @@ const SAMPLE_WALLETS = {
   bnb:      '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   solana:   'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm',
   bitcoin:  'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
-}
-
-async function callGroq(prompt, jsonMode = false) {
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-    body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
-      messages: [
-        { role: 'system', content: 'You are TxGuard, a blockchain security intelligence AI. Always respond with valid JSON only, no markdown, no extra text.' },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.4,
-      max_tokens: 1200,
-      ...(jsonMode && { response_format: { type: 'json_object' } })
-    })
-  })
-  const data = await res.json()
-  if (data.error) throw new Error(data.error.message)
-  return data.choices?.[0]?.message?.content || ''
-}
-
-function parseAnalysis(raw) {
-  if (!raw) return null
-  try { return JSON.parse(raw) } catch {}
-  try { const m = raw.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) return JSON.parse(m[1].trim()) } catch {}
-  try { const m = raw.match(/\{[\s\S]*\}/); if (m) return JSON.parse(m[0]) } catch {}
-  try { const s = raw.indexOf('{'), e = raw.lastIndexOf('}'); if (s !== -1 && e !== -1) return JSON.parse(raw.slice(s, e + 1)) } catch {}
-  return null
 }
 
 function getRiskClass(score) {
@@ -86,6 +58,35 @@ export default function App() {
   const [asking, setAsking]     = useState(false)
   const [miniPayAddress, setMiniPayAddress] = useState('')
 
+  // ── Payment & Contract State ──
+  const [scanFeeWei, setScanFeeWei]   = useState('10000000000000000') // Default: 0.01 CELO
+  const [scanFeeCelo, setScanFeeCelo] = useState('0.01')
+  const [paying, setPaying]           = useState(false)
+  const [paidWallets, setPaidWallets] = useState({})
+
+  // ── Fetch Scan Fee from Contract on Mount ──
+  useEffect(() => {
+    async function loadFee() {
+      if (window.ethereum) {
+        try {
+          const res = await window.ethereum.request({
+            method: 'eth_call',
+            params: [{ to: CONTRACT_ADDRESS, data: SCAN_FEE_SELECTOR }, 'latest']
+          })
+          if (res && res !== '0x') {
+            const wei = BigInt(res)
+            setScanFeeWei(wei.toString())
+            const celoVal = Number(wei) / 1e18
+            setScanFeeCelo(celoVal.toString())
+          }
+        } catch (e) {
+          console.warn('Failed to fetch fee from Celo contract:', e)
+        }
+      }
+    }
+    loadFee()
+  }, [])
+
   // ── Auto-detect MiniPay wallet address ──
   useEffect(() => {
     if (isMiniPay && window.ethereum) {
@@ -105,62 +106,124 @@ export default function App() {
 
   async function analyze() {
     if (!wallet.trim()) return
-    setLoading(true); setResult(null); setError(''); setAnswer('')
+    setResult(null); setError(''); setAnswer('')
 
-    let onchainData = null
-    try { onchainData = await getWalletData(wallet.trim(), chain) } catch (e) { console.warn('Blockchain fetch failed:', e) }
+    const targetAddress = wallet.trim().toLowerCase()
+    let txHash = paidWallets[targetAddress] || null
 
-    let riskEngineResult = null
-    try { riskEngineResult = await calculateRisk(wallet.trim(), chain, onchainData) } catch (e) { console.warn('Risk engine failed:', e) }
+    // ── Payment Check for Celo/MiniPay ──
+    if (chain === 'celo' || isMiniPay) {
+      if (!txHash) {
+        setPaying(true)
+        let userAddress = miniPayAddress
+        if (!userAddress && window.ethereum) {
+          try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+            userAddress = accounts[0]
+            setMiniPayAddress(userAddress)
+          } catch (e) {
+            setError('Wallet connection required for payment.')
+            setPaying(false)
+            return
+          }
+        }
+        if (!userAddress) {
+          setError('No Celo wallet detected. Please open inside MiniPay or install a Web3 wallet.')
+          setPaying(false)
+          return
+        }
 
-    const chainName = chain === 'bnb' ? 'BNB Chain' : chain.charAt(0).toUpperCase() + chain.slice(1)
-    const dataContext = onchainData
-      ? `LIVE BLOCKCHAIN DATA:\n- Balance: ${onchainData.balance}\n- Total Transactions: ${onchainData.totalTransactions}\n- Wallet Age: ${onchainData.walletAge}\n- Categories: ${JSON.stringify(onchainData.categories)}`
-      : `LIVE BLOCKCHAIN DATA: Could not fetch live data, use your best security assessment.`
+        try {
+          txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+              from: userAddress,
+              to: CONTRACT_ADDRESS,
+              value: '0x' + BigInt(scanFeeWei).toString(16),
+              data: PAY_SCAN_SELECTOR
+            }]
+          })
 
-    const prompt = `You are TxGuard, a blockchain security AI. Analyze this wallet.
-Wallet: ${wallet.trim()}
-Chain: ${chainName}
-${dataContext}
+          // Poll for receipt
+          let confirmed = false
+          const maxAttempts = 15
+          for (let i = 0; i < maxAttempts; i++) {
+            const receipt = await window.ethereum.request({
+              method: 'eth_getTransactionReceipt',
+              params: [txHash]
+            })
+            if (receipt) {
+              if (receipt.status === '0x1' || receipt.status === '0x01' || receipt.status === 1 || receipt.status === true) {
+                confirmed = true
+                break
+              } else {
+                throw new Error('Payment transaction reverted on-chain.')
+              }
+            }
+            await new Promise(r => setTimeout(r, 2000))
+          }
+          if (!confirmed) {
+            throw new Error('Payment transaction timed out. Please check Celoscan.')
+          }
 
-Respond ONLY with valid JSON:
-{
-  "riskScore": <0-100>,
-  "riskLabel": "<Safe|Caution|Suspicious|Dangerous>",
-  "walletAge": "${onchainData?.walletAge || 'Unknown'}",
-  "totalTransactions": "${onchainData?.totalTransactions || 'Unknown'}",
-  "balance": "${onchainData?.balance || 'Unable to verify'}",
-  "summary": "<2-3 sentence plain English summary>",
-  "alerts": [{ "type": "<warn|danger|info|safe>", "title": "<title>", "text": "<detail>" }],
-  "categories": ${onchainData?.categories ? JSON.stringify(onchainData.categories) : '[{"name":"Transfers","count":0,"percentage":0}]'},
-  "recommendations": ["<recommendation>"]
-}
-Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5 alerts and 3-4 recommendations.`
+          // Cache payment for this address
+          setPaidWallets(prev => ({ ...prev, [targetAddress]: txHash }))
+          setPaying(false)
+        } catch (e) {
+          console.error('Payment failed:', e)
+          setError(e.message || 'Payment transaction rejected or failed.')
+          setPaying(false)
+          return
+        }
+      }
+    }
 
+    setLoading(true)
     try {
-      const raw = await callGroq(prompt, true)
-      const parsed = parseAnalysis(raw)
-      const merge = (p) => {
-        if (onchainData) { p.balance = onchainData.balance; p.totalTransactions = onchainData.totalTransactions; p.walletAge = onchainData.walletAge; p.categories = onchainData.categories }
-        if (riskEngineResult) { p.riskScore = riskEngineResult.riskScore; p.riskLabel = riskEngineResult.riskLabel; if (riskEngineResult.alerts.length > 0) p.alerts = riskEngineResult.alerts }
-        return p
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wallet: wallet.trim(), chain, txHash })
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setResult(data)
+      } else {
+        setError(data.error || 'Server returned an error. Please try again.')
       }
-      if (parsed) { setResult(merge(parsed)) }
-      else {
-        const raw2 = await callGroq(prompt, false)
-        const parsed2 = parseAnalysis(raw2)
-        if (parsed2) setResult(merge(parsed2))
-        else setError('Could not parse AI response. Please try again.')
-      }
-    } catch (e) { setError(`Error: ${e.message || 'Check your Groq API key in .env'}`) }
+    } catch (e) {
+      console.error('Scan request failed:', e)
+      setError('Failed to reach backend server. Please try again.')
+    }
     setLoading(false)
   }
 
   async function askQuestion(q) {
     if (!result || !q.trim()) return
     setAsking(true); setAnswer('')
-    const prompt = `You are TxGuard AI. Wallet: ${wallet}, Chain: ${chain}, Risk: ${result.riskScore}/100 (${result.riskLabel}), Summary: ${result.summary}. User asks: "${q.trim()}". Answer in 2-4 sentences.`
-    try { setAnswer(await callGroq(prompt)) } catch { setAnswer('Failed to get answer. Please try again.') }
+    try {
+      const response = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wallet: wallet.trim(),
+          chain,
+          riskScore: result.riskScore,
+          riskLabel: result.riskLabel,
+          summary: result.summary,
+          question: q.trim()
+        })
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setAnswer(data.answer)
+      } else {
+        setAnswer(data.error || 'Failed to get answer. Please try again.')
+      }
+    } catch (e) {
+      console.error('Ask request failed:', e)
+      setAnswer('Failed to reach server. Please try again.')
+    }
     setAsking(false)
   }
 
@@ -228,10 +291,11 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
             <input className="wallet-input"
               placeholder={selectedChain.placeholder}
               value={wallet}
+              disabled={loading || paying}
               onChange={e => setWallet(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && analyze()} />
-            <button className="scan-btn" onClick={analyze} disabled={loading || !wallet.trim()}>
-              {loading ? 'Scanning...' : 'Scan Wallet'}
+              onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()} />
+            <button className="scan-btn" onClick={analyze} disabled={loading || paying || !wallet.trim()}>
+              {paying ? 'Paying...' : loading ? 'Scanning...' : 'Scan Wallet'}
             </button>
           </div>
 
@@ -242,6 +306,15 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
             </div>
           )}
         </div>
+
+        {/* Paying Loader */}
+        {paying && (
+          <div className="loading-card payment-loading-card">
+            <div className="loading-spinner payment-spinner"></div>
+            <div className="loading-title">Celo Payment Pending</div>
+            <div className="loading-sub">Please approve the {scanFeeCelo} CELO scan fee in your MiniPay wallet...</div>
+          </div>
+        )}
 
         {/* Loading */}
         {loading && (
@@ -268,6 +341,23 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
             <div className="score-bar-track">
               <div className="score-bar-fill" style={{ width: `${result.riskScore}%` }}></div>
             </div>
+
+            {result.paymentTx && (
+              <div className="payment-receipt-badge">
+                <span className="receipt-icon">⚡</span>
+                <span className="receipt-text">
+                  On-Chain Receipt:{" "}
+                  <a
+                    href={`https://celoscan.io/tx/${result.paymentTx}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="receipt-link"
+                  >
+                    {result.paymentTx.slice(0, 10)}...{result.paymentTx.slice(-8)} ↗
+                  </a>
+                </span>
+              </div>
+            )}
 
             <div className="stat-grid">
               <div className="stat-box"><div className="stat-box-label">Balance</div><div className="stat-box-value">{result.balance}</div></div>
@@ -349,7 +439,14 @@ Rules: 0-25=Safe, 26-50=Caution, 51-75=Suspicious, 76-100=Dangerous. Include 3-5
         )}
       </div>
 
-      <footer className="footer">TxGuard · AI-Powered Blockchain Security · Know Before You Send</footer>
+      <footer className="footer">
+        <div className="footer-content">
+          <span>TxGuard · AI-Powered Blockchain Security · Know Before You Send</span>
+          <a href="https://github.com/jotel-dev/txguard/issues" target="_blank" rel="noopener noreferrer" className="feedback-link">
+            💬 Share Feedback / Report Bug
+          </a>
+        </div>
+      </footer>
     </div>
   )
 }
