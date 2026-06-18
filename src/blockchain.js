@@ -1,8 +1,8 @@
- // ── TxGuard Blockchain Data Service ──
+// ── TxGuard Blockchain Data Service ──
 // Fetches real on-chain data for ETH, BNB, SOL, BTC, CELO
 
 const ETHERSCAN_KEY = import.meta.env.VITE_ETHERSCAN_API_KEY
-const CELO_EXPLORER = 'https://explorer.celo.org/mainnet/api'
+
 
 // ── Ethereum ──
 export async function getEthereumData(address) {
@@ -179,8 +179,8 @@ export async function getBitcoinData(address) {
 export async function getCeloData(address) {
   try {
     const [balRes, txRes] = await Promise.all([
-      fetch(`${CELO_EXPLORER}?module=account&action=balance&address=${address}&tag=latest`),
-      fetch(`${CELO_EXPLORER}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=asc`)
+      fetch(`https://api.etherscan.io/v2/api?chainid=42220&module=account&action=balance&address=${address}&tag=latest&apikey=${ETHERSCAN_KEY}`),
+      fetch(`https://api.etherscan.io/v2/api?chainid=42220&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=asc&apikey=${ETHERSCAN_KEY}`)
     ])
 
     const balData    = await balRes.json()
