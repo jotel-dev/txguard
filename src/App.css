@@ -48,8 +48,8 @@ html, body, #root {
 .sidebar {
   width: var(--sidebar-width);
   min-height: 100vh;
-  background: var(--bg-surface);
-  border-right: 0.5px solid var(--border-color);
+  background: #18181b;
+  border-right: 0.5px solid #27272a;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,7 +70,7 @@ html, body, #root {
   justify-content: center;
   margin-bottom: 20px;
   overflow: hidden;
-  border: 0.5px solid var(--border-color);
+  border: 0.5px solid #27272a;
 }
 
 .logo-img {
@@ -97,12 +97,12 @@ html, body, #root {
 }
 
 .sidebar-chain-btn:hover {
-  background: #f8fafc;
+  background: #27272a;
 }
 
 .sidebar-chain-btn.active {
-  background: #eff6ff;
-  border: 0.5px solid #bfdbfe;
+  background: #27272a;
+  border: 0.5px solid #3b82f6;
 }
 
 .sidebar-bottom {
@@ -126,7 +126,7 @@ html, body, #root {
 }
 
 .sidebar-bottom-btn:hover {
-  background: #f8fafc;
+  background: #27272a;
 }
 
 /* MAIN CONTENT */
@@ -169,9 +169,9 @@ html, body, #root {
   font-size: 12px;
   padding: 6px 16px;
   border-radius: 20px;
-  border: 0.5px solid var(--border-color);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
+  border: 0.5px solid #27272a;
+  background: #18181b;
+  color: #f8fafc;
   cursor: pointer;
   font-family: var(--font-ui);
   font-weight: 500;
@@ -179,8 +179,9 @@ html, body, #root {
 }
 
 .chain-tab:hover {
-  border-color: var(--blue-border);
-  color: var(--blue-primary);
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #ffffff;
 }
 
 .chain-tab.active {
@@ -191,8 +192,8 @@ html, body, #root {
 
 /* INPUT BOX */
 .input-card {
-  background: var(--bg-surface);
-  border: 0.5px solid var(--border-color);
+  background: #18181b;
+  border: 0.5px solid #27272a;
   border-radius: var(--border-radius-md);
   padding: 14px 16px;
   width: 100%;
@@ -212,16 +213,16 @@ html, body, #root {
   border: none;
   outline: none;
   font-size: 13px;
-  color: var(--text-primary);
+  color: #ffffff;
   font-family: var(--font-ui);
 }
 
-.wallet-input::placeholder { color: var(--text-hint); }
+.wallet-input::placeholder { color: #a1a1aa; }
 
 .scan-btn {
-  background: var(--blue-primary);
+  background: #27272a;
   color: #fff;
-  border: none;
+  border: 0.5px solid #3f3f46;
   border-radius: var(--border-radius-sm);
   padding: 8px 18px;
   font-size: 12px;
@@ -231,11 +232,14 @@ html, body, #root {
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: opacity 0.15s;
+  transition: all 0.15s;
   white-space: nowrap;
 }
 
-.scan-btn:hover { opacity: 0.88; }
+.scan-btn:hover:not(:disabled) {
+  background: var(--blue-primary);
+  border-color: var(--blue-primary);
+}
 .scan-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .input-icons {
@@ -243,14 +247,14 @@ html, body, #root {
   gap: 12px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 0.5px solid var(--border-color);
+  border-top: 0.5px solid #27272a;
 }
 
 .input-icon-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #a1a1aa;
   font-size: 14px;
   padding: 0;
   display: flex;
@@ -372,19 +376,20 @@ html, body, #root {
 
   .quick-chip {
     font-size: 12px;
-    background: var(--bg-surface);
-    border: 0.5px solid var(--border-color);
+    background: #18181b;
+    border: 0.5px solid #27272a;
     border-radius: 20px;
     padding: 6px 14px;
-    color: var(--text-secondary);
+    color: #ffffff;
     cursor: pointer;
     font-family: var(--font-ui);
     transition: all 0.15s;
   }
 
   .quick-chip:hover {
-    border-color: var(--blue-border);
-    color: var(--blue-primary);
+    background: #27272a;
+    border-color: #3f3f46;
+    color: #ffffff;
   }
 
   /* MOBILE BOTTOM INPUT */
@@ -401,8 +406,8 @@ html, body, #root {
   }
 
   .mobile-input-card {
-    background: var(--bg-surface);
-    border: 0.5px solid var(--border-color);
+    background: #18181b;
+    border: 0.5px solid #27272a;
     border-radius: var(--border-radius-md);
     padding: 10px 12px;
     width: 100%;
@@ -422,11 +427,11 @@ html, body, #root {
     border: none;
     outline: none;
     font-size: 13px;
-    color: var(--text-primary);
+    color: #ffffff;
     font-family: var(--font-ui);
   }
 
-  .mobile-wallet-input::placeholder { color: var(--text-hint); }
+  .mobile-wallet-input::placeholder { color: #a1a1aa; }
 
   .mobile-send-btn {
     width: 32px;
@@ -450,19 +455,53 @@ html, body, #root {
     gap: 16px;
     margin-top: 10px;
     padding-top: 8px;
-    border-top: 0.5px solid var(--border-color);
+    border-top: 0.5px solid #27272a;
   }
 
   .mobile-icon-btn {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--text-secondary);
+    color: #a1a1aa;
     font-size: 16px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* MOBILE CHAIN SELECTOR TEXT */
+  .mobile-chain-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .mobile-chain-text-btn {
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.15s;
+    padding: 2px 6px;
+    color: var(--text-secondary);
+  }
+
+  .mobile-chain-text-btn:hover {
+    color: var(--blue-primary);
+  }
+
+  .mobile-chain-text-btn.active {
+    color: var(--blue-primary);
+    font-weight: 700;
+  }
+
+  .mobile-chain-separator {
+    color: var(--text-hint);
   }
 
   /* RESULTS ON MOBILE */

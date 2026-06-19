@@ -33,15 +33,15 @@ const SAMPLE_WALLETS = {
 
 const EthereumIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2L5 12.5L12 15.5L19 12.5L12 2Z" fill="#627EEA" opacity="0.8"/>
-    <path d="M12 15.5L5 12.5L12 22L19 12.5L12 15.5Z" fill="#627EEA"/>
-    <path d="M12 2L12 9.5L18.5 12.5L12 2Z" fill="#627EEA" opacity="0.4"/>
-    <path d="M12 9.5L5.5 12.5L12 2L12 9.5Z" fill="#627EEA" opacity="0.6"/>
+    <path d="M12 2L5 12.5L12 15.5L19 12.5L12 2Z" fill="#3b82f6" opacity="0.8"/>
+    <path d="M12 15.5L5 12.5L12 22L19 12.5L12 15.5Z" fill="#60a5fa"/>
+    <path d="M12 2L12 9.5L18.5 12.5L12 2Z" fill="#93c5fd" opacity="0.6"/>
+    <path d="M12 9.5L5.5 12.5L12 2L12 9.5Z" fill="#ffffff" opacity="0.9"/>
   </svg>
 )
 
 const BnbIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="#F3BA2F">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="#F0B90B">
     <path d="M12 2L14.5 4.5L9 10L6.5 7.5L12 2Z"/>
     <path d="M16.5 6.5L19 9L12 16L5 9L7.5 6.5L12 11.5L16.5 6.5Z"/>
     <path d="M19 11.5L21.5 14L12 22L2.5 14L5 11.5L12 18L19 11.5Z"/>
@@ -58,17 +58,18 @@ const SolanaIcon = () => (
 )
 
 const BitcoinIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="#F7931A">
-    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM14.5 13.5C14.5 14.88 13.38 16 12 16H9V8H12C13.38 8 14.5 9.12 14.5 10.5C14.5 11.12 14.27 11.68 13.9 12.12C14.27 12.44 14.5 12.94 14.5 13.5Z"/>
+  <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+    <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+    <path d="M22.31 15.65c-.27-1.82-1.76-2.82-3.8-3.13l.77-3.1-1.89-.47-.76 3.07c-.5-.12-1-.24-1.5-.36l.77-3.07-1.89-.47-.77 3.1c-.4-.1-1.1-.22-1.8-.35l0-.01-2.6-.65-.5 2.02s1.4.32 1.37.34c.76.19.9.07.87.27l-.88 3.55c.05.01.12.03.2.05l-.2-.05-.88 3.53c-.09.23-.33.58-.86.44.02.03-1.37-.34-1.37-.34l-.94 2.16 2.45.61c.46.12.9.23 1.34.34l-.77 3.12 1.89.47.77-3.1c.52.14 1.02.27 1.51.39l-.77 3.1 1.89.47.78-3.13c3.22.49 5.64.3 6.66-2.55.82-2.29-.04-3.61-1.7-4.47 1.21-.28 2.12-1.07 2.36-2.72zm-4.22 5.93c-.58 2.34-4.53 1.08-5.81.76l1.04-4.16c1.28.32 5.38.95 4.77 3.4zm.66-5.96c-.53 2.14-3.82 1.05-4.89.78l.94-3.77c1.07.27 4.5.76 3.95 2.99z" fill="#FFFFFF"/>
   </svg>
 )
 
 const CeloIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="10" stroke="#35D07F" strokeWidth="2" fill="none"/>
-    <circle cx="12" cy="12" r="5" fill="#35D07F"/>
-    <circle cx="12" cy="4.5" r="2" fill="#FBCC5C"/>
-    <circle cx="12" cy="19.5" r="2" fill="#FBCC5C"/>
+  <svg width="20" height="20" viewBox="0 0 100 100" fill="none" style={{ borderRadius: '4px' }}>
+    <rect width="100" height="100" fill="#FFF53F"/>
+    <rect x="25" y="25" width="50" height="50" fill="#000000"/>
+    <circle cx="50" cy="50" r="20" fill="#FFF53F"/>
+    <rect x="65" y="40" width="10" height="20" fill="#FFF53F"/>
   </svg>
 )
 
@@ -104,12 +105,19 @@ const PaperclipIcon = () => (
   </svg>
 )
 
-const MicIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5">
-    <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
-    <path d="M19 10v2a7 7 0 01-14 0v-2"/>
-    <line x1="12" y1="19" x2="12" y2="23"/>
-    <line x1="8" y1="23" x2="16" y2="23"/>
+const SpeakerIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+  </svg>
+)
+
+const SpeakerMuteIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+    <line x1="23" y1="9" x2="17" y2="15" />
+    <line x1="17" y1="9" x2="23" y2="15" />
   </svg>
 )
 
@@ -167,6 +175,44 @@ export default function App() {
   const [answer, setAnswer]     = useState('')
   const [asking, setAsking]     = useState(false)
   const [miniPayAddress, setMiniPayAddress] = useState('')
+  const [speaking, setSpeaking] = useState(false)
+
+  // Toggle speaking the summary using window.speechSynthesis
+  const speakSummary = () => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    
+    if (speaking) {
+      window.speechSynthesis.cancel()
+      setSpeaking(false)
+    } else {
+      const textToSpeak = result?.summary || ''
+      if (!textToSpeak) return
+      
+      const utterance = new SpeechSynthesisUtterance(textToSpeak)
+      utterance.onend = () => setSpeaking(false)
+      utterance.onerror = () => setSpeaking(false)
+      
+      setSpeaking(true)
+      window.speechSynthesis.speak(utterance)
+    }
+  }
+
+  // Cancel speech on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
+
+  // Cancel speech when result changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+      setSpeaking(false)
+    }
+  }, [result])
 
   // ── Payment & Contract State ──
   const [scanFeeWei, setScanFeeWei]   = useState('10000000000000000') // Default: 0.01 CELO
@@ -446,7 +492,31 @@ export default function App() {
 
         <div className="divider"></div>
 
-        <div className="section-label">AI Summary</div>
+        <div className="section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>AI Summary</span>
+          <button 
+            onClick={speakSummary}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: speaking ? 'var(--red)' : 'var(--blue-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '4px 8px',
+              borderRadius: '20px',
+              backgroundColor: speaking ? 'var(--red-bg)' : 'var(--blue-bg)',
+              fontSize: '11px',
+              fontWeight: 500,
+              gap: '4px',
+              fontFamily: 'var(--font-ui)'
+            }}
+            title={speaking ? "Stop reading summary" : "Read summary out loud"}
+          >
+            {speaking ? <SpeakerMuteIcon /> : <SpeakerIcon />}
+            <span>{speaking ? 'Stop' : 'Listen'}</span>
+          </button>
+        </div>
         <div className="summary-text-box">
           <p className="summary-text">{result.summary}</p>
         </div>
@@ -601,11 +671,6 @@ export default function App() {
             {CHAIN_ICONS[c.id]}
           </button>
         ))}
-        <div className="sidebar-bottom">
-          <button className="sidebar-bottom-btn" title="Settings">
-            <SettingsIcon />
-          </button>
-        </div>
       </aside>
 
       {/* ── DESKTOP VIEW MAIN CONTENT ── */}
@@ -664,7 +729,6 @@ export default function App() {
             <button className="input-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
             <button className="input-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
             <button className="input-icon-btn" title="Link"><LinkIcon /></button>
-            <button className="input-icon-btn" title="Microphone"><MicIcon /></button>
           </div>
         </div>
 
@@ -693,6 +757,20 @@ export default function App() {
           Know Before <span className="mobile-heading-accent">You Send.</span>
         </h1>
         <p className="mobile-subtitle">AI-powered wallet security · 5 chains</p>
+
+        <div className="mobile-chain-selector">
+          {CHAINS.map((c, index) => (
+            <span key={c.id}>
+              <span
+                className={`mobile-chain-text-btn ${chain === c.id ? 'active' : ''}`}
+                onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
+              >
+                {c.label}
+              </span>
+              {index < CHAINS.length - 1 && <span className="mobile-chain-separator"> · </span>}
+            </span>
+          ))}
+        </div>
 
         <div className="quick-chips">
           <button className="quick-chip" onClick={() => handleQuickChip('scan')}>Scan wallet</button>
@@ -748,7 +826,6 @@ export default function App() {
             <button className="mobile-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
             <button className="mobile-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
             <button className="mobile-icon-btn" title="Link"><LinkIcon /></button>
-            <button className="mobile-icon-btn" title="Microphone"><MicIcon /></button>
           </div>
         </div>
       </div>
