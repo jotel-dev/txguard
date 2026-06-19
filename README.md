@@ -1,9 +1,10 @@
 # 🛡️ TxGuard — Know Before You Send
 
-> AI-powered blockchain wallet security scanner built for **Celo Mainnet** and optimized for **MiniPay**.
+> AI-powered blockchain wallet security scanner built for **Celo & Stacks Mainnet** and optimized for **MiniPay & Bitcoin L2s**.
 
 [![Live App](https://img.shields.io/badge/Live%20App-txguard--gules.vercel.app-orange?style=for-the-badge)](https://txguard-gules.vercel.app)
 [![Celo Mainnet](https://img.shields.io/badge/Celo-Mainnet-35D07F?style=for-the-badge&logo=celo)](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10)
+[![Stacks Mainnet](https://img.shields.io/badge/Stacks-Mainnet-5546FF?style=for-the-badge&logo=stacks)](https://explorer.hiro.so/txid/SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry?chain=mainnet)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![MiniPay Ready](https://img.shields.io/badge/MiniPay-Ready-blue?style=for-the-badge)](https://txguard-gules.vercel.app)
 
@@ -26,9 +27,9 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 | 🤖 **AI Risk Scoring** | Groq Llama-3 generates plain English risk assessments (0–100) |
 | 🛡️ **GoPlus Security** | Scans against blacklists, phishing, honeypots, approval abuse |
 | ⛓️ **5 Chains** | Ethereum, BNB Chain, Solana, Bitcoin, and Celo |
-| 💳 **Pay-per-scan** | 0.01 CELO per scan — no subscription needed |
+| 💳 **Pay-per-scan** | 0.01 CELO per scan on Celo Mainnet |
 | 📱 **MiniPay Native** | Auto-detects MiniPay, connects wallet, handles cUSD gas fees |
-| 🧾 **Onchain Receipts** | Every scan generates a Celo Mainnet transaction receipt |
+| 🧾 **Onchain Receipts** | Scan receipts paid on Celo, and auditable scan records logged to Stacks Mainnet |
 | 💬 **Ask AI** | Chat with TxGuard AI about any scanned wallet |
 | 📊 **Transaction Breakdown** | Categorizes wallet activity — Transfers, DeFi, Swap, NFT, Stablecoin |
 
@@ -46,16 +47,24 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 
 ---
 
-## 📦 Smart Contract
+## 📦 Smart Contracts
 
+### 1. Celo Payment Paywall Contract
 | Property | Value |
 |---|---|
 | **Network** | Celo Mainnet |
-| **Contract** | [`0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10`](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10) |
-| **Verified** | ✅ Source Code Verified — Exact Match |
-| **Type** | `TxGuardPayment.sol` — Pay-per-scan registry |
+| **Contract Address** | [`0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10`](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10) |
+| **Type** | `TxGuardPayment.sol` — Pay-per-scan contract |
 | **Scan Fee** | `0.01 CELO` per scan |
 | **Gas Currency** | cUSD (MiniPay compatible) |
+
+### 2. Stacks Auditing Registry Contract
+| Property | Value |
+|---|---|
+| **Network** | Stacks Mainnet |
+| **Contract Address** | [`SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry`](https://explorer.hiro.so/txid/SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry?chain=mainnet) |
+| **Type** | `registry.clar` — Security scan registry contract |
+| **Functionality** | Public auditing for target chains, wallet address, and risk scores |
 
 ### Contract Functions
 ```solidity
@@ -165,7 +174,7 @@ Score Ranges:
 - [ ] Telegram Bot (@TxGuardBot)
 - [ ] Stuck transaction detection
 - [ ] Multi-wallet dashboard
-- [ ] Stacks / Bitcoin L2 support
+- [x] Stacks / Bitcoin L2 support
 - [ ] Community scam reporting
 
 ---
@@ -193,4 +202,4 @@ MIT © [jotel-dev](https://github.com/jotel-dev)
  
 ---
 
-*Built with ❤️ for the Celo ecosystem · Proof of Ship Season 2*
+*Built with ❤️ for Celo and Stacks ecosystems · Proof of Ship Season 2*
