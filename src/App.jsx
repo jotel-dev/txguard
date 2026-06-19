@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { openContractCall } from '@stacks/connect'
+import { uintCV, stringAsciiCV } from '@stacks/transactions'
+import { createNetwork } from '@stacks/network'
 
 // ── Celo Payment Contract Configuration ──
 const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10'
@@ -219,6 +222,43 @@ export default function App() {
   const [scanFeeCelo, setScanFeeCelo] = useState('0.01')
   const [paying, setPaying]           = useState(false)
   const [paidWallets, setPaidWallets] = useState({})
+  const [loggingStacks, setLoggingStacks] = useState(false)
+  const [stacksTxId, setStacksTxId] = useState('')
+
+  async function logScanToStacks() {
+    if (!result) return
+    setLoggingStacks(true)
+    try {
+      const myAddress = "SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM"
+      const network = createNetwork('mainnet')
+      
+      openContractCall({
+        network,
+        contractAddress: myAddress,
+        contractName: 'registry',
+        functionName: 'log-scan',
+        functionArgs: [
+          stringAsciiCV(chain),
+          stringAsciiCV(wallet.trim()),
+          uintCV(result.riskScore)
+        ],
+        appDetails: {
+          name: 'TxGuard',
+          icon: window.location.origin + '/Gemini_Generated_Image_pwgpjipwgpjipwgp.png',
+        },
+        onFinish: (data) => {
+          setStacksTxId(data.txId)
+          setLoggingStacks(false)
+        },
+        onCancel: () => {
+          setLoggingStacks(false)
+        }
+      })
+    } catch (e) {
+      console.error('Stacks logging failed:', e)
+      setLoggingStacks(false)
+    }
+  }
 
   // ── Fetch Scan Fee from Contract on Mount ──
   useEffect(() => {
@@ -266,7 +306,7 @@ export default function App() {
 
   async function analyze() {
     if (!wallet.trim()) return
-    setResult(null); setError(''); setAnswer('')
+    setResult(null); setError(''); setAnswer(''); setStacksTxId('')
 
     const targetAddress = wallet.trim().toLowerCase()
     let txHash = paidWallets[targetAddress] || null
@@ -474,6 +514,51 @@ export default function App() {
             </span>
           </div>
         )}
+
+        <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+          {stacksTxId ? (
+            <div className="payment-receipt-badge" style={{ backgroundColor: '#ecfdf5', color: '#10b981', border: '1px solid #d1fae5' }}>
+              <span className="receipt-icon">🟩</span>
+              <span className="receipt-text">
+                Logged to Stacks Mainnet:{" "}
+                <a
+                  href={`https://explorer.hiro.so/txid/${stacksTxId}?chain=mainnet`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="receipt-link"
+                  style={{ color: '#10b981', fontWeight: 'bold' }}
+                >
+                  {stacksTxId.slice(0, 10)}...{stacksTxId.slice(-8)} ↗
+                </a>
+              </span>
+            </div>
+          ) : (
+            <button
+              onClick={logScanToStacks}
+              disabled={loggingStacks}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                border: 'none',
+                backgroundColor: '#5546ff',
+                color: 'white',
+                fontWeight: 600,
+                fontSize: '13px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'opacity 0.2s',
+                fontFamily: 'inherit',
+                opacity: loggingStacks ? 0.6 : 1
+              }}
+            >
+              {loggingStacks ? 'Connecting Wallet...' : 'Log Scan to Stacks Mainnet ⚡'}
+            </button>
+          )}
+        </div>
 
         <div className="stat-grid">
           <div className="stat-box">
