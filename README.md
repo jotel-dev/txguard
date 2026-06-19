@@ -1,74 +1,196 @@
-# TxGuard AI — On-Chain Wallet Security Scanner
+# 🛡️ TxGuard — Know Before You Send
 
-TxGuard is an AI-powered blockchain security scanner built for the **Celo Mainnet** and optimized for **MiniPay**. It analyzes wallet behavioral history and GoPlus Security databases using an LLM to generate instant risk scores, categorizations, and security alerts.
+> AI-powered blockchain wallet security scanner built for **Celo Mainnet** and optimized for **MiniPay**.
 
-To align with the Celo pay-as-you-go model, TxGuard utilizes an on-chain transaction contract that charges a tiny fee (0.01 CELO) per scan to query the security model, creating real transaction utility and on-chain activity.
-
-⚡ **Try it inside MiniPay:** Automatically detects the MiniPay environment, connects the user's wallet, and prompts for scan payments.
-
----
-
-## Deployed Smart Contracts
-
-*   **Network:** Celo Mainnet
-*   **Contract Address:** [`0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10`](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10)
-*   **Contract Type:** `TxGuardPayment.sol` (Pay-per-scan registry)
-*   **Default Fee:** `0.01 CELO` per scan
+[![Live App](https://img.shields.io/badge/Live%20App-txguard--gules.vercel.app-orange?style=for-the-badge)](https://txguard-gules.vercel.app)
+[![Celo Mainnet](https://img.shields.io/badge/Celo-Mainnet-35D07F?style=for-the-badge&logo=celo)](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+[![MiniPay Ready](https://img.shields.io/badge/MiniPay-Ready-blue?style=for-the-badge)](https://txguard-gules.vercel.app)
 
 ---
 
-## Features
+## 🔍 What is TxGuard?
 
-1.  **AI-Powered Behavioral Scoring**: Connects to the Groq API running Llama-3 to summarize risk assessments in plain English.
-2.  **GoPlus Security Integration**: Scans addresses against blacklists, malicious history, phishing reports, approval abuse, and honeypots.
-3.  **On-Chain Receipts**: Generates a Celo Mainnet transaction on every scan, displaying the Celoscan receipt link inside the results.
-4.  **MiniPay Optimized**: Mobile-first, lightweight responsive layout, fast load times, and automatic wallet session caching.
+TxGuard is a **pay-as-you-go AI wallet security scanner** that analyzes any blockchain wallet address and returns an instant risk score, scam detection alerts, and behavioral analysis — powered by Groq AI and GoPlus Security.
 
----
+Built for the everyday crypto user — especially those on **MiniPay** across Africa and emerging markets — who need to verify a wallet before sending funds.
 
-## Tech Stack
-
-*   **Frontend**: React (Vite)
-*   **Styling**: Premium custom Vanilla CSS (dark mode, glassmorphism, responsive grid layout)
-*   **APIs**: GoPlus Security API, Groq API (Llama-3), Celoscan API (V2)
-*   **Web3 Integration**: Injected `window.ethereum` JSON-RPC provider (optimized for MiniPay and Valora wallets)
+> "Don't lose your crypto to scams. Scan first."
 
 ---
 
-## Development Setup
+## ✨ Features
 
-### 1. Prerequisites
-Ensure you have Node.js (v18+) installed.
+| Feature | Description |
+|---|---|
+| 🤖 **AI Risk Scoring** | Groq Llama-3 generates plain English risk assessments (0–100) |
+| 🛡️ **GoPlus Security** | Scans against blacklists, phishing, honeypots, approval abuse |
+| ⛓️ **5 Chains** | Ethereum, BNB Chain, Solana, Bitcoin, and Celo |
+| 💳 **Pay-per-scan** | 0.01 CELO per scan — no subscription needed |
+| 📱 **MiniPay Native** | Auto-detects MiniPay, connects wallet, handles cUSD gas fees |
+| 🧾 **Onchain Receipts** | Every scan generates a Celo Mainnet transaction receipt |
+| 💬 **Ask AI** | Chat with TxGuard AI about any scanned wallet |
+| 📊 **Transaction Breakdown** | Categorizes wallet activity — Transfers, DeFi, Swap, NFT, Stablecoin |
 
-### 2. Environment Variables
-Create a `.env` file inside the `web/` directory:
-```env
-VITE_GROQ_API_KEY=your_groq_api_key
-VITE_ETHERSCAN_API_KEY=your_etherscan_or_celoscan_api_key
+---
+
+## 🚀 Live Demo
+
+**Web App:** [txguard-gules.vercel.app](https://txguard-gules.vercel.app)
+
+**Inside MiniPay:**
+1. Open MiniPay app
+2. Tap the browser icon
+3. Go to `txguard-gules.vercel.app`
+4. TxGuard auto-detects MiniPay and switches to Celo mode
+
+---
+
+## 📦 Smart Contract
+
+| Property | Value |
+|---|---|
+| **Network** | Celo Mainnet |
+| **Contract** | [`0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10`](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10) |
+| **Verified** | ✅ Source Code Verified — Exact Match |
+| **Type** | `TxGuardPayment.sol` — Pay-per-scan registry |
+| **Scan Fee** | `0.01 CELO` per scan |
+| **Gas Currency** | cUSD (MiniPay compatible) |
+
+### Contract Functions
+```solidity
+payScan()          // Pay for a wallet scan (payable)
+scanFee()          // Get current scan fee
+totalScans()       // Total scans processed
+updateFee()        // Update fee (owner only)
+withdraw()         // Withdraw collected fees (owner only)
 ```
 
-### 3. Run Locally
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React + Vite |
+| **Styling** | Custom CSS — glassmorphism, dark mode, responsive |
+| **AI** | Groq API — Llama-3.1-8b-instant |
+| **Security DB** | GoPlus Security API |
+| **Blockchain Data** | Etherscan V2 API (ETH, BNB, Celo), Solana RPC, Blockstream (BTC) |
+| **Smart Contract** | Solidity 0.8.20 — deployed on Celo Mainnet |
+| **Web3** | Injected `window.ethereum` — MiniPay & Valora compatible |
+| **Hosting** | Vercel |
+
+---
+
+## ⚙️ Local Development
+
+### Prerequisites
+- Node.js v18+
+- A Groq API key — [console.groq.com](https://console.groq.com)
+- An Etherscan API key — [etherscan.io/apis](https://etherscan.io/apis)
+
+### Setup
+
 ```bash
-# Navigate to web
-cd web
+# Clone the repo
+git clone https://github.com/jotel-dev/txguard.git
+cd txguard/web
 
 # Install dependencies
 npm install
 
-# Start development server
+# Create environment file
+cp .env.example .env
+# Add your API keys to .env
+
+# Start dev server
 npm run dev
+```
+
+### Environment Variables
+
+Create a `.env` file inside `web/`:
+
+```env
+VITE_GROQ_API_KEY=your_groq_api_key
+VITE_ETHERSCAN_API_KEY=your_etherscan_api_key
 ```
 
 ---
 
-## How to Test inside MiniPay Developer Mode
-1. Ensure your local dev server is running (e.g. `localhost:5173`).
-2. Expose your port to the web using `ngrok` or similar:
-   ```bash
-   ngrok http 5173
-   ```
-3. Copy the secure forwarding URL (`https://...ngrok-free.app`).
-4. Open your **MiniPay App** on your mobile device.
-5. Enable **Developer Mode** by tapping the version number in the "About" section repeatedly.
-6. Open **Developer Settings** -> **Load Test Page** and paste the ngrok URL.
-7. Perform a scan and approve the Celo transaction prompt!
+## 📱 Testing Inside MiniPay
+
+1. Start your local dev server (`npm run dev`)
+2. Expose your port using ngrok:
+```bash
+ngrok http 5173
+```
+3. Copy the `https://...ngrok-free.app` URL
+4. Open **MiniPay** on your phone
+5. Enable **Developer Mode** — tap the version number repeatedly in Settings → About
+6. Go to **Developer Settings → Load Test Page** → paste the ngrok URL
+7. Scan a wallet and approve the Celo transaction!
+
+---
+
+## 🔐 How Risk Scoring Works
+
+```
+Final Score = GoPlus Score (70%) + Behavioral Score (30%)
+
+GoPlus Flags:          Behavioral Signals:
+- Blacklisted  +80     - New wallet + high balance  +20
+- Phishing     +75     - Zero transactions          +10
+- Ransomware   +85     - Bot-like volume            +15
+- Mixer        +40     - Established wallet         -10
+- Honeypot     +50     - Normal activity pattern    -5
+
+Score Ranges:
+0–25   → ✅ SAFE
+26–50  → ⚠️ CAUTION
+51–75  → 🚨 SUSPICIOUS
+76–100 → 🔴 DANGEROUS
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [x] AI wallet scanning — ETH, BNB, SOL, BTC, Celo
+- [x] GoPlus security integration
+- [x] Pay-per-scan smart contract on Celo Mainnet
+- [x] MiniPay hook — auto wallet detection + cUSD gas
+- [x] Onchain scan receipts
+- [ ] Telegram Bot (@TxGuardBot)
+- [ ] Stuck transaction detection
+- [ ] Multi-wallet dashboard
+- [ ] Stacks / Bitcoin L2 support
+- [ ] Community scam reporting
+
+---
+
+## 🌍 Why TxGuard?
+
+MiniPay has **14M+ users** across Africa and emerging markets — many of whom are new to crypto and vulnerable to scams. Existing security tools are desktop-first, require subscriptions, and speak to experienced users.
+
+TxGuard is built for **mobile-first, pay-as-you-go, plain language** security — the right tool for the right people.
+
+---
+
+## 📄 License
+
+MIT © [jotel-dev](https://github.com/jotel-dev)
+
+---
+
+## 🔗 Links
+
+- 🌐 **Live App:** [txguard-gules.vercel.app](https://txguard-gules.vercel.app)
+- 📜 **Contract:** [celoscan.io](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10)
+- 🐦 **Twitter:** [@TxGuardBot](https://twitter.com/TxGuardBot) coming soon
+- 💬 **Telegram Bot:** [@TxGuardBot](https://t.me/TxGuardBot) coming soon 
+ 
+---
+
+*Built with ❤️ for the Celo ecosystem · Proof of Ship Season 2*
