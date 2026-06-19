@@ -138,6 +138,24 @@ const LinkIcon = () => (
   </svg>
 )
 
+const ShieldIcon = () => (
+  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" style={{ margin: '0 auto 16px', display: 'block' }}>
+    <defs>
+      <linearGradient id="leftGrad" x1="12" y1="2" x2="3" y2="20" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#3b82f6" />
+        <stop offset="1" stopColor="#1d4ed8" />
+      </linearGradient>
+      <linearGradient id="rightGrad" x1="12" y1="2" x2="21" y2="20" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#fb923c" />
+        <stop offset="1" stopColor="#ea580c" />
+      </linearGradient>
+    </defs>
+    <path d="M12 22C12 22 3 17 3 11V5L12 2V22Z" fill="url(#leftGrad)" opacity="0.9" />
+    <path d="M12 22C12 22 21 17 21 11V5L12 2V22Z" fill="url(#rightGrad)" opacity="0.95" />
+    <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 const CHAIN_ICONS = {
   ethereum: <EthereumIcon />,
   bnb: <BnbIcon />,
@@ -244,7 +262,7 @@ export default function App() {
         ],
         appDetails: {
           name: 'TxGuard',
-          icon: window.location.origin + '/Gemini_Generated_Image_pwgpjipwgpjipwgp.png',
+          icon: window.location.origin + '/logo.png?v=2',
         },
         onFinish: (data) => {
           setStacksTxId(data.txId)
@@ -712,7 +730,7 @@ export default function App() {
     if (result || loading || paying || error) return null
     return (
       <div className="empty-state">
-        <div className="empty-icon">🛡️</div>
+        <ShieldIcon />
         <div className="empty-title">Ready to Scan</div>
         <div className="empty-sub">
           {isMiniPay
@@ -744,7 +762,7 @@ export default function App() {
       {/* ── DESKTOP VIEW SIDEBAR ── */}
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <img src="/Gemini_Generated_Image_pwgpjipwgpjipwgp.png" alt="TxGuard Logo" className="logo-img" />
+          <img src="/logo.png?v=2" alt="TxGuard Logo" className="logo-img" />
         </div>
         {CHAINS.map(c => (
           <button
@@ -834,7 +852,7 @@ export default function App() {
       <div className="mobile-wrapper">
         <div className="mobile-logo-wrap">
           <div className="mobile-logo-inner">
-            <img src="/Gemini_Generated_Image_pwgpjipwgpjipwgp.png" alt="TxGuard Logo" className="logo-img" />
+            <img src="/logo.png?v=2" alt="TxGuard Logo" className="logo-img" />
           </div>
         </div>
 
