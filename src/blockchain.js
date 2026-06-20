@@ -282,3 +282,247 @@ export async function getWalletData(address, chain) {
     default:         return null
   }
 }
+
+// ── EVM Transaction Fetchers ──
+
+export async function getEthereumTransactions(address, page = 1, offset = 20) {
+  try {
+    const res = await fetch(`https://api.etherscan.io/v2/api?chainid=1&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=desc&apikey=${ETHERSCAN_KEY}`);
+    const data = await res.json();
+    return (data.result || []).map(tx => ({
+      hash: tx.hash,
+      from: tx.from,
+      to: tx.to,
+      amount: (parseFloat(tx.value) / 1e18).toString(),
+      asset: 'ETH',
+      timestamp: parseInt(tx.timeStamp) * 1000,
+      status: tx.isError === '1' || tx.txreceipt_status === '0' ? 'Failed' : 'Confirmed'
+    }));
+  } catch (e) {
+    console.error('ETH transactions fetch error:', e);
+    return [];
+  }
+}
+
+export async function getBNBTransactions(address, page = 1, offset = 20) {
+  try {
+    const res = await fetch(`https://api.etherscan.io/v2/api?chainid=56&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=desc&apikey=${ETHERSCAN_KEY}`);
+    const data = await res.json();
+    return (data.result || []).map(tx => ({
+      hash: tx.hash,
+      from: tx.from,
+      to: tx.to,
+      amount: (parseFloat(tx.value) / 1e18).toString(),
+      asset: 'BNB',
+      timestamp: parseInt(tx.timeStamp) * 1000,
+      status: tx.isError === '1' || tx.txreceipt_status === '0' ? 'Failed' : 'Confirmed'
+    }));
+  } catch (e) {
+    console.error('BNB transactions fetch error:', e);
+    return [];
+  }
+}
+
+export async function getCeloTransactions(address, page = 1, offset = 20) {
+  try {
+    const res = await fetch(`https://api.etherscan.io/v2/api?chainid=42220&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=desc&apikey=${ETHERSCAN_KEY}`);
+    const data = await res.json();
+    return (data.result || []).map(tx => ({
+      hash: tx.hash,
+      from: tx.from,
+      to: tx.to,
+      amount: (parseFloat(tx.value) / 1e18).toString(),
+      asset: 'CELO',
+      timestamp: parseInt(tx.timeStamp) * 1000,
+      status: tx.isError === '1' || tx.txreceipt_status === '0' ? 'Failed' : 'Confirmed'
+    }));
+  } catch (e) {
+    console.error('Celo transactions fetch error:', e);
+    return [];
+  }
+}
+
+// ── Solana Transaction Fetcher ──
+
+export async function getSolanaTransactions(address, limit = 15) {
+  try {
+    const RPC = 'https://api.mainnet-beta.solana.com';
+    const sigRes = await fetch(RPC, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getSignaturesForAddress',
+        params: [address, { limit }]
+      })
+    });
+    const sigData = await sigRes.json();
+    const signatures = sigData.result || [];
+    
+    if (signatures.length === 0) return [];
+
+    const txPromises = signatures.map(async (sigInfo) => {
+      try {
+        const txRes = await fetch(RPC, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 2,
+            method: 'getTransaction',
+            params: [
+              sigInfo.signature,
+              { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0 }
+            ]
+          })
+        });
+        const txData = await txRes.json();
+        const tx = txData.result;
+        
+        let from = 'Unknown';
+        let to = 'Unknown';
+        let amount = '0';
+        let asset = 'SOL';
+        
+        if (tx && tx.transaction?.message?.instructions) {
+          const instructions = tx.transaction.message.instructions;
+          const transferInst = instructions.find(inst => 
+            (inst.program === 'system' && inst.parsed?.type === 'transfer') ||
+            (inst.program === 'spl-token' && (inst.parsed?.type === 'transfer' || inst.parsed?.type === 'transferChecked'))
+          );
+          
+          if (transferInst) {
+            const info = transferInst.parsed.info;
+            if (transferInst.program === 'system') {
+              from = info.source || 'Unknown';
+              to = info.destination || 'Unknown';
+              amount = info.lamports ? (info.lamports / 1e9).toFixed(4) : '0';
+              asset = 'SOL';
+            } else {
+              from = info.authority || info.source || 'Unknown';
+              to = info.destination || 'Unknown';
+              amount = info.tokenAmount?.uiAmountString || info.amount || '0';
+              asset = 'Token';
+            }
+          } else {
+            from = tx.transaction.message.accountKeys?.[0]?.pubkey || 'Unknown';
+            to = instructions[0]?.programId || 'Unknown';
+            amount = '0';
+            asset = 'SOL';
+          }
+        }
+        
+        const isFailed = sigInfo.err !== null && sigInfo.err !== undefined;
+        let status = 'Confirmed';
+        if (isFailed) {
+          status = 'Failed';
+        } else if (sigInfo.confirmationStatus !== 'finalized' && sigInfo.confirmationStatus !== 'confirmed') {
+          status = 'Pending';
+        }
+
+        return {
+          hash: sigInfo.signature,
+          from,
+          to,
+          amount,
+          asset,
+          timestamp: sigInfo.blockTime ? sigInfo.blockTime * 1000 : Date.now(),
+          status
+        };
+      } catch (err) {
+        console.warn(`Failed to fetch Solana tx details for ${sigInfo.signature}:`, err);
+        return {
+          hash: sigInfo.signature,
+          from: 'Unknown',
+          to: 'Unknown',
+          amount: '0',
+          asset: 'SOL',
+          timestamp: sigInfo.blockTime ? sigInfo.blockTime * 1000 : Date.now(),
+          status: sigInfo.err ? 'Failed' : 'Confirmed'
+        };
+      }
+    });
+
+    return await Promise.all(txPromises);
+  } catch (e) {
+    console.error('Solana transactions fetch error:', e);
+    return [];
+  }
+}
+
+// ── Bitcoin Transaction Fetcher ──
+
+export async function getBitcoinTransactions(address) {
+  try {
+    const res = await fetch(`https://blockstream.info/api/address/${address}/txs`);
+    const data = await res.json();
+    if (!Array.isArray(data)) return [];
+
+    const LOW_FEE_RATE_THRESHOLD = 10; // 10 sat/vB
+
+    return data.map(tx => {
+      let from = 'Unknown';
+      let to = 'Unknown';
+      let amount = 0;
+      const targetAddr = address.toLowerCase();
+
+      const receivedOutput = tx.vout?.find(out => out.scriptpubkey_address?.toLowerCase() === targetAddr);
+      if (receivedOutput) {
+        amount = receivedOutput.value / 1e8;
+        to = address;
+        from = tx.vin?.[0]?.prevout?.scriptpubkey_address || 'Multiple Inputs';
+      } else {
+        const destOutput = tx.vout?.find(out => out.scriptpubkey_address?.toLowerCase() !== targetAddr);
+        if (destOutput) {
+          amount = destOutput.value / 1e8;
+          to = destOutput.scriptpubkey_address || 'Unknown';
+        } else if (tx.vout?.[0]) {
+          amount = tx.vout[0].value / 1e8;
+          to = tx.vout[0].scriptpubkey_address || 'Unknown';
+        }
+        from = address;
+      }
+
+      const confirmed = tx.status?.confirmed;
+      let status = confirmed ? 'Confirmed' : 'Unconfirmed';
+      let statusDetails = '';
+
+      if (!confirmed) {
+        const fee = tx.fee || 0;
+        const weight = tx.weight || 1;
+        const feeRate = fee / (weight / 4);
+        if (feeRate < LOW_FEE_RATE_THRESHOLD) {
+          statusDetails = 'may be stuck (low fee)';
+        }
+      }
+
+      return {
+        hash: tx.txid,
+        from,
+        to,
+        amount: amount.toString(),
+        asset: 'BTC',
+        timestamp: tx.status?.block_time ? tx.status.block_time * 1000 : Date.now(),
+        status,
+        statusDetails
+      };
+    });
+  } catch (e) {
+    console.error('BTC transactions fetch error:', e);
+    return [];
+  }
+}
+
+// ── Unified Recent Transactions Router ──
+
+export async function getRecentTransactions(address, chain) {
+  switch (chain) {
+    case 'ethereum': return await getEthereumTransactions(address);
+    case 'bnb':      return await getBNBTransactions(address);
+    case 'celo':     return await getCeloTransactions(address);
+    case 'solana':   return await getSolanaTransactions(address);
+    case 'bitcoin':  return await getBitcoinTransactions(address);
+    default:         return [];
+  }
+}

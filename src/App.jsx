@@ -242,9 +242,16 @@ export default function App() {
   const [paidWallets, setPaidWallets] = useState({})
   const [loggingStacks, setLoggingStacks] = useState(false)
   const [stacksTxId, setStacksTxId] = useState('')
+  const [resultTab, setResultTab] = useState('security') // 'security' | 'transactions'
+  const [txHistory, setTxHistory] = useState([])
+  const [txLoading, setTxLoading] = useState(false)
+  const [txError, setTxError] = useState('')
 
-  async function logScanToStacks(targetChain = chain, targetWallet = wallet, targetResult = result) {
-    const activeResult = targetResult || result
+  async function logScanToStacks(targetChain, targetWallet, targetResult) {
+    const activeChain = (typeof targetChain === 'string') ? targetChain : chain
+    const activeWallet = (typeof targetWallet === 'string') ? targetWallet : wallet
+    const activeResult = (targetResult && typeof targetResult === 'object') ? targetResult : result
+
     if (!activeResult) return
     setLoggingStacks(true)
     try {
@@ -257,8 +264,8 @@ export default function App() {
         contractName: 'registry',
         functionName: 'log-scan',
         functionArgs: [
-          stringAsciiCV(targetChain),
-          stringAsciiCV(targetWallet.trim()),
+          stringAsciiCV(activeChain),
+          stringAsciiCV(activeWallet.trim()),
           uintCV(activeResult.riskScore)
         ],
         appDetails: {
@@ -277,6 +284,24 @@ export default function App() {
       console.error('Stacks logging failed:', e)
       setLoggingStacks(false)
     }
+  }
+
+  async function fetchTransactions(addr, ch) {
+    setTxLoading(true)
+    setTxError('')
+    try {
+      const response = await fetch(`/api/transactions?wallet=${addr}&chain=${ch}`)
+      const data = await response.json()
+      if (response.ok) {
+        setTxHistory(data.transactions || [])
+      } else {
+        setTxError(data.error || 'Failed to load transactions.')
+      }
+    } catch (e) {
+      console.error('Fetch transactions failed:', e)
+      setTxError('Failed to load transactions.')
+    }
+    setTxLoading(false)
   }
 
   // ── Fetch Scan Fee from Contract on Mount ──
@@ -427,6 +452,8 @@ export default function App() {
       const data = await response.json()
       if (response.ok) {
         setResult(data)
+        setResultTab('security')
+        fetchTransactions(wallet.trim(), chain)
         // Automatically prompt to log scan to Stacks Registry on mainnet
         setTimeout(() => {
           logScanToStacks(chain, wallet.trim(), data)
@@ -510,191 +537,289 @@ export default function App() {
     if (!result) return null
     return (
       <div className="result-card">
-        <div className="score-wrap">
-          <div className="score-num">{result.riskScore}</div>
-          <div className={`score-tag ${getRiskClass(result.riskScore)}`}>
-            {getRiskLabel(result.riskScore)}
-          </div>
+        <div className="results-tab-header">
+          <button 
+            className={`results-tab-btn ${resultTab === 'security' ? 'active' : ''}`}
+            onClick={() => setResultTab('security')}
+          >
+            Security Report
+          </button>
+          <button 
+            className={`results-tab-btn ${resultTab === 'transactions' ? 'active' : ''}`}
+            onClick={() => setResultTab('transactions')}
+          >
+            Transaction History
+          </button>
         </div>
 
-        <div className="score-bar-track">
-          <div className="score-bar-fill" style={{ width: `${result.riskScore}%` }}></div>
-        </div>
+        {resultTab === 'security' ? (
+          <>
+            <div className="score-wrap">
+              <div className="score-num">{result.riskScore}</div>
+              <div className={`score-tag ${getRiskClass(result.riskScore)}`}>
+                {getRiskLabel(result.riskScore)}
+              </div>
+            </div>
 
-        {result.paymentTx && (
-          <div className="payment-receipt-badge">
-            <span className="receipt-icon">⚡</span>
-            <span className="receipt-text">
-              On-Chain Scan Receipt:{" "}
-              <a
-                href={`https://celoscan.io/tx/${result.paymentTx}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="receipt-link"
+            <div className="score-bar-track">
+              <div className="score-bar-fill" style={{ width: `${result.riskScore}%` }}></div>
+            </div>
+
+            {result.paymentTx && (
+              <div className="payment-receipt-badge">
+                <span className="receipt-icon">⚡</span>
+                <span className="receipt-text">
+                  On-Chain Scan Receipt:{" "}
+                  <a
+                    href={`https://celoscan.io/tx/${result.paymentTx}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="receipt-link"
+                  >
+                    {result.paymentTx.slice(0, 10)}...{result.paymentTx.slice(-8)} ↗
+                  </a>
+                </span>
+              </div>
+            )}
+
+            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+              {stacksTxId ? (
+                <div className="payment-receipt-badge" style={{ backgroundColor: '#ecfdf5', color: '#10b981', border: '1px solid #d1fae5' }}>
+                  <span className="receipt-icon">🟩</span>
+                  <span className="receipt-text">
+                    Logged to Stacks Mainnet:{" "}
+                    <a
+                      href={`https://explorer.hiro.so/txid/${stacksTxId}?chain=mainnet`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="receipt-link"
+                      style={{ color: '#10b981', fontWeight: 'bold' }}
+                    >
+                      {stacksTxId.slice(0, 10)}...{stacksTxId.slice(-8)} ↗
+                    </a>
+                  </span>
+                </div>
+              ) : (
+                <button
+                  onClick={() => logScanToStacks(chain, wallet, result)}
+                  disabled={loggingStacks}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: '#5546ff',
+                    color: 'white',
+                    fontWeight: 600,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'opacity 0.2s',
+                    fontFamily: 'inherit',
+                    opacity: loggingStacks ? 0.6 : 1
+                  }}
+                >
+                  {loggingStacks ? 'Connecting Wallet...' : 'Log Scan to Stacks Mainnet ⚡'}
+                </button>
+              )}
+            </div>
+
+            <div className="stat-grid">
+              <div className="stat-box">
+                <div className="stat-box-label">Balance</div>
+                <div className="stat-box-value">{result.balance}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-box-label">Transactions</div>
+                <div className="stat-box-value">{result.totalTransactions}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-box-label">Wallet Age</div>
+                <div className="stat-box-value">{result.walletAge}</div>
+              </div>
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>AI Summary</span>
+              <button 
+                onClick={speakSummary}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: speaking ? 'var(--red)' : 'var(--blue-primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '4px 8px',
+                  borderRadius: '20px',
+                  backgroundColor: speaking ? 'var(--red-bg)' : 'var(--blue-bg)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  gap: '4px',
+                  fontFamily: 'var(--font-ui)'
+                }}
+                title={speaking ? "Stop reading summary" : "Read summary out loud"}
               >
-                {result.paymentTx.slice(0, 10)}...{result.paymentTx.slice(-8)} ↗
-              </a>
-            </span>
+                {speaking ? <SpeakerMuteIcon /> : <SpeakerIcon />}
+                <span>{speaking ? 'Stop' : 'Listen'}</span>
+              </button>
+            </div>
+            <div className="summary-text-box">
+              <p className="summary-text">{result.summary}</p>
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="section-label">Security Alerts</div>
+            <div className="alerts-list">
+              {result.alerts?.map((alert, i) => (
+                <div key={i} className="alert-item">
+                  <div className={`alert-dot ${getAlertDot(alert.type)}`}></div>
+                  <div className="alert-content">
+                    <div className="alert-title">{alert.title}</div>
+                    <div className="alert-text">{alert.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="section-label">Transaction Breakdown</div>
+            <div className="categories-list">
+              {result.categories?.filter(c => c.count > 0).map((cat, i) => (
+                <div key={i} className="bar-row">
+                  <span className="bar-label">{cat.name}</span>
+                  <div className="bar-track">
+                    <div className="bar-fill" style={{ width: `${cat.percentage}%` }}></div>
+                  </div>
+                  <span className="bar-pct">{cat.percentage}%</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="section-label">Recommendations</div>
+            <div className="recs-list">
+              {result.recommendations?.map((rec, i) => (
+                <div key={i} className="rec-item">
+                  <span className="rec-num">{i + 1}</span>
+                  <span className="rec-text">{rec}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="section-label">Ask TxGuard AI</div>
+            <div className="quick-questions">
+              {['Is this wallet safe to receive from?', 'Should I send funds to this address?', 'What are the biggest red flags?'].map(q => (
+                <button key={q} className="quick-q" onClick={() => { setQuestion(q); askQuestion(q) }}>
+                  {q}
+                </button>
+              ))}
+            </div>
+            <div className="ask-row">
+              <input
+                className="ask-input"
+                placeholder="Ask anything about this wallet..."
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && askQuestion(question)}
+              />
+              <button className="ask-btn" onClick={() => askQuestion(question)} disabled={asking || !question.trim()}>
+                {asking ? '...' : 'Ask'}
+              </button>
+            </div>
+            {asking && <div className="ask-answer thinking">TxGuard is thinking...</div>}
+            {answer && !asking && <div className="ask-answer">{answer}</div>}
+          </>
+        ) : (
+          <div className="tx-history-tab">
+            <div className="section-label">Recent Transactions</div>
+            {txLoading && (
+              <div className="tx-loading">
+                <div className="loading-spinner small"></div>
+                <div>Fetching transaction history...</div>
+              </div>
+            )}
+            {txError && (
+              <div className="error-card small">
+                <span>⚠</span>
+                <span>{txError}</span>
+              </div>
+            )}
+            {!txLoading && !txError && txHistory.length === 0 && (
+              <div className="tx-empty-state">
+                No recent transactions found for this address.
+              </div>
+            )}
+            {!txLoading && !txError && txHistory.length > 0 && (
+              <div className="tx-list">
+                {txHistory.map((tx, idx) => (
+                  <div key={idx} className="tx-item">
+                    <div className="tx-item-header">
+                      <span className="tx-item-hash">
+                        Tx: <a href={getExplorerTxLink(chain, tx.hash)} target="_blank" rel="noopener noreferrer" className="receipt-link">
+                          {tx.hash.slice(0, 8)}...{tx.hash.slice(-6)} ↗
+                        </a>
+                      </span>
+                      <div className="tx-item-status-wrapper">
+                        <span className={`tx-status-badge ${tx.status.toLowerCase()}`}>
+                          {tx.status}
+                        </span>
+                        {tx.statusDetails && (
+                          <span className="tx-status-details">
+                            {tx.statusDetails}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="tx-item-body">
+                      <div className="tx-address-row">
+                        <div className="tx-address-col">
+                          <span className="tx-addr-label">From</span>
+                          <span 
+                            className="tx-addr-value clickable" 
+                            onClick={() => {
+                              navigator.clipboard.writeText(tx.from);
+                            }}
+                            title="Click to copy"
+                          >
+                            {tx.from.slice(0, 6)}...{tx.from.slice(-4)}
+                          </span>
+                        </div>
+                        <div className="tx-arrow-col">➔</div>
+                        <div className="tx-address-col">
+                          <span className="tx-addr-label">To</span>
+                          <span 
+                            className="tx-addr-value clickable" 
+                            onClick={() => {
+                              navigator.clipboard.writeText(tx.to);
+                            }}
+                            title="Click to copy"
+                          >
+                            {tx.to.slice(0, 6)}...{tx.to.slice(-4)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="tx-info-row">
+                        <span className="tx-amount">{tx.amount} {tx.asset}</span>
+                        <span className="tx-time">{formatRelativeTime(tx.timestamp)}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
-
-        <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-          {stacksTxId ? (
-            <div className="payment-receipt-badge" style={{ backgroundColor: '#ecfdf5', color: '#10b981', border: '1px solid #d1fae5' }}>
-              <span className="receipt-icon">🟩</span>
-              <span className="receipt-text">
-                Logged to Stacks Mainnet:{" "}
-                <a
-                  href={`https://explorer.hiro.so/txid/${stacksTxId}?chain=mainnet`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="receipt-link"
-                  style={{ color: '#10b981', fontWeight: 'bold' }}
-                >
-                  {stacksTxId.slice(0, 10)}...{stacksTxId.slice(-8)} ↗
-                </a>
-              </span>
-            </div>
-          ) : (
-            <button
-              onClick={logScanToStacks}
-              disabled={loggingStacks}
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                border: 'none',
-                backgroundColor: '#5546ff',
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                transition: 'opacity 0.2s',
-                fontFamily: 'inherit',
-                opacity: loggingStacks ? 0.6 : 1
-              }}
-            >
-              {loggingStacks ? 'Connecting Wallet...' : 'Log Scan to Stacks Mainnet ⚡'}
-            </button>
-          )}
-        </div>
-
-        <div className="stat-grid">
-          <div className="stat-box">
-            <div className="stat-box-label">Balance</div>
-            <div className="stat-box-value">{result.balance}</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-box-label">Transactions</div>
-            <div className="stat-box-value">{result.totalTransactions}</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-box-label">Wallet Age</div>
-            <div className="stat-box-value">{result.walletAge}</div>
-          </div>
-        </div>
-
-        <div className="divider"></div>
-
-        <div className="section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>AI Summary</span>
-          <button 
-            onClick={speakSummary}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: speaking ? 'var(--red)' : 'var(--blue-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '4px 8px',
-              borderRadius: '20px',
-              backgroundColor: speaking ? 'var(--red-bg)' : 'var(--blue-bg)',
-              fontSize: '11px',
-              fontWeight: 500,
-              gap: '4px',
-              fontFamily: 'var(--font-ui)'
-            }}
-            title={speaking ? "Stop reading summary" : "Read summary out loud"}
-          >
-            {speaking ? <SpeakerMuteIcon /> : <SpeakerIcon />}
-            <span>{speaking ? 'Stop' : 'Listen'}</span>
-          </button>
-        </div>
-        <div className="summary-text-box">
-          <p className="summary-text">{result.summary}</p>
-        </div>
-
-        <div className="divider"></div>
-
-        <div className="section-label">Security Alerts</div>
-        <div className="alerts-list">
-          {result.alerts?.map((alert, i) => (
-            <div key={i} className="alert-item">
-              <div className={`alert-dot ${getAlertDot(alert.type)}`}></div>
-              <div className="alert-content">
-                <div className="alert-title">{alert.title}</div>
-                <div className="alert-text">{alert.text}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="divider"></div>
-
-        <div className="section-label">Transaction Breakdown</div>
-        <div className="categories-list">
-          {result.categories?.filter(c => c.count > 0).map((cat, i) => (
-            <div key={i} className="bar-row">
-              <span className="bar-label">{cat.name}</span>
-              <div className="bar-track">
-                <div className="bar-fill" style={{ width: `${cat.percentage}%` }}></div>
-              </div>
-              <span className="bar-pct">{cat.percentage}%</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="divider"></div>
-
-        <div className="section-label">Recommendations</div>
-        <div className="recs-list">
-          {result.recommendations?.map((rec, i) => (
-            <div key={i} className="rec-item">
-              <span className="rec-num">{i + 1}</span>
-              <span className="rec-text">{rec}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="divider"></div>
-
-        <div className="section-label">Ask TxGuard AI</div>
-        <div className="quick-questions">
-          {['Is this wallet safe to receive from?', 'Should I send funds to this address?', 'What are the biggest red flags?'].map(q => (
-            <button key={q} className="quick-q" onClick={() => { setQuestion(q); askQuestion(q) }}>
-              {q}
-            </button>
-          ))}
-        </div>
-        <div className="ask-row">
-          <input
-            className="ask-input"
-            placeholder="Ask anything about this wallet..."
-            value={question}
-            onChange={e => setQuestion(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && askQuestion(question)}
-          />
-          <button className="ask-btn" onClick={() => askQuestion(question)} disabled={asking || !question.trim()}>
-            {asking ? '...' : 'Ask'}
-          </button>
-        </div>
-        {asking && <div className="ask-answer thinking">TxGuard is thinking...</div>}
-        {answer && !asking && <div className="ask-answer">{answer}</div>}
       </div>
     )
   }
@@ -939,4 +1064,26 @@ export default function App() {
       </div>
     </div>
   )
+}
+
+function getExplorerTxLink(chain, hash) {
+  switch (chain) {
+    case 'ethereum': return `https://etherscan.io/tx/${hash}`;
+    case 'bnb':      return `https://bscscan.com/tx/${hash}`;
+    case 'celo':     return `https://celoscan.io/tx/${hash}`;
+    case 'solana':   return `https://explorer.solana.com/tx/${hash}`;
+    case 'bitcoin':  return `https://blockstream.info/tx/${hash}`;
+    default:         return '#';
+  }
+}
+
+function formatRelativeTime(timestampMs) {
+  const diff = Date.now() - timestampMs;
+  if (diff < 60000) return 'just now';
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }

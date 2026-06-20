@@ -57,6 +57,42 @@ export default defineConfig(({ mode }) => {
                 }
               })
             } 
+            // Intercept /api/transactions endpoint
+            else if (req.url.startsWith('/api/transactions')) {
+              (async () => {
+                const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`)
+                req.query = Object.fromEntries(urlObj.searchParams.entries())
+
+                const mockRes = {
+                  status(code) {
+                    res.statusCode = code
+                    return this
+                  },
+                  json(data) {
+                    res.setHeader('Content-Type', 'application/json')
+                    res.end(JSON.stringify(data))
+                    return this
+                  },
+                  setHeader(name, value) {
+                    res.setHeader(name, value)
+                    return this
+                  },
+                  end(data) {
+                    res.end(data)
+                    return this
+                  }
+                }
+
+                try {
+                  const transactionsHandler = (await import('./api/transactions.js')).default
+                  await transactionsHandler(req, mockRes)
+                } catch (err) {
+                  console.error('Local dev serverless handler error:', err)
+                  res.statusCode = 500
+                  res.end(JSON.stringify({ error: err.message }))
+                }
+              })()
+            }
             // Intercept /api/ask endpoint
             else if (req.url.startsWith('/api/ask')) {
               let body = ''
