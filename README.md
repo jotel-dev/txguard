@@ -67,12 +67,22 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 | **Functionality** | Public auditing for target chains, wallet address, and risk scores |
 
 ### Contract Functions
+
+#### 1. Celo Payment Paywall Contract (Solidity)
 ```solidity
 payScan()          // Pay for a wallet scan (payable)
 scanFee()          // Get current scan fee
 totalScans()       // Total scans processed
 updateFee()        // Update fee (owner only)
 withdraw()         // Withdraw collected fees (owner only)
+```
+
+#### 2. Stacks Auditing Registry Contract (Clarity)
+```clarity
+(log-scan (chain (string-ascii 16)) (target (string-ascii 64)) (risk-score uint)) ;; Log a new scan (public)
+(get-scan (id uint))                                                             ;; Read a single scan by ID (read-only)
+(get-scan-count (chain (string-ascii 16)) (target (string-ascii 64)))            ;; Scans for a given (chain, target) pair (read-only)
+(get-total-scans)                                                                ;; Total scans logged (read-only)
 ```
 
 ---
@@ -171,10 +181,10 @@ Score Ranges:
 - [x] Pay-per-scan smart contract on Celo Mainnet
 - [x] MiniPay hook — auto wallet detection + cUSD gas
 - [x] Onchain scan receipts
+- [x] Stacks / Bitcoin L2 support
 - [ ] Telegram Bot (@TxGuardBot)
 - [ ] Stuck transaction detection
 - [ ] Multi-wallet dashboard
-- [x] Stacks / Bitcoin L2 support
 - [ ] Community scam reporting
 
 ---

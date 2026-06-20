@@ -243,8 +243,9 @@ export default function App() {
   const [loggingStacks, setLoggingStacks] = useState(false)
   const [stacksTxId, setStacksTxId] = useState('')
 
-  async function logScanToStacks() {
-    if (!result) return
+  async function logScanToStacks(targetChain = chain, targetWallet = wallet, targetResult = result) {
+    const activeResult = targetResult || result
+    if (!activeResult) return
     setLoggingStacks(true)
     try {
       const myAddress = "SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM"
@@ -256,9 +257,9 @@ export default function App() {
         contractName: 'registry',
         functionName: 'log-scan',
         functionArgs: [
-          stringAsciiCV(chain),
-          stringAsciiCV(wallet.trim()),
-          uintCV(result.riskScore)
+          stringAsciiCV(targetChain),
+          stringAsciiCV(targetWallet.trim()),
+          uintCV(activeResult.riskScore)
         ],
         appDetails: {
           name: 'TxGuard',
@@ -426,6 +427,10 @@ export default function App() {
       const data = await response.json()
       if (response.ok) {
         setResult(data)
+        // Automatically prompt to log scan to Stacks Registry on mainnet
+        setTimeout(() => {
+          logScanToStacks(chain, wallet.trim(), data)
+        }, 800)
       } else {
         setError(data.error || 'Server returned an error. Please try again.')
       }
