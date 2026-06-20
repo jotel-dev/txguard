@@ -384,30 +384,32 @@ export default function App() {
             txValue = 10000000000000000n
           }
 
-          // Force switch to Celo Mainnet before sending the transaction
-          try {
-            await window.ethereum.request({
-              method: 'wallet_switchEthereumChain',
-              params: [{ chainId: '0xA4EC' }],
-            })
-          } catch (switchError) {
-            if (switchError.code === 4902) {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [{
-                  chainId: '0xA4EC',
-                  chainName: 'Celo Mainnet',
-                  nativeCurrency: { name: 'CELO', symbol: 'CELO', decimals: 18 },
-                  rpcUrls: ['https://forno.celo.org'],
-                  blockExplorerUrls: ['https://celoscan.io']
-                }]
-              })
+          // Only switch chain if NOT inside MiniPay
+          if (!isMiniPay) {
+            try {
               await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: '0xA4EC' }],
               })
-            } else {
-              throw switchError
+            } catch (switchError) {
+              if (switchError.code === 4902) {
+                await window.ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [{
+                    chainId: '0xA4EC',
+                    chainName: 'Celo Mainnet',
+                    nativeCurrency: { name: 'CELO', symbol: 'CELO', decimals: 18 },
+                    rpcUrls: ['https://forno.celo.org'],
+                    blockExplorerUrls: ['https://celoscan.io']
+                  }]
+                })
+                await window.ethereum.request({
+                  method: 'wallet_switchEthereumChain',
+                  params: [{ chainId: '0xA4EC' }],
+                })
+              } else {
+                throw switchError
+              }
             }
           }
 
