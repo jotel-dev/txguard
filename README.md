@@ -32,6 +32,7 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 | 🧾 **Onchain Receipts** | Scan receipts paid on Celo, and auditable scan records logged to Stacks Mainnet |
 | 💬 **Ask AI** | Chat with TxGuard AI about any scanned wallet |
 | 📊 **Transaction Breakdown** | Categorizes wallet activity — Transfers, DeFi, Swap, NFT, Stablecoin |
+| 📜 **Transaction History** | Shows recent transfers with sender/receiver details, amount + asset, relative timestamps, chain-specific status badges, and explorer links |
 
 ---
 
@@ -182,8 +183,9 @@ Score Ranges:
 - [x] MiniPay hook — auto wallet detection + cUSD gas
 - [x] Onchain scan receipts
 - [x] Stacks / Bitcoin L2 support
+- [x] Transaction History tab (transfer list, copy addresses, status badges)
+- [x] Stuck transaction detection (stuck EVM txs & low-fee BTC txs warnings)
 - [ ] Telegram Bot (@TxGuardBot)
-- [ ] Stuck transaction detection
 - [ ] Multi-wallet dashboard
 - [ ] Community scam reporting
 
