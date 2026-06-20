@@ -428,13 +428,13 @@ export default function App() {
             })
           } catch (feeError) {
             const msg = (feeError.message || '').toLowerCase()
-            if (
-              msg.includes('cusd') ||
-              msg.includes('fee currency') ||
-              msg.includes('insufficient fee') ||
-              msg.includes('top up') ||
-              msg.includes('fee')
-            ) {
+            const isUserRejection = 
+              msg.includes('reject') || 
+              msg.includes('deny') || 
+              msg.includes('cancel') ||
+              msg.includes('user denied')
+
+            if (!isUserRejection) {
               // Second attempt: pay gas in native CELO (no feeCurrency)
               txHash = await window.ethereum.request({
                 method: 'eth_sendTransaction',
@@ -514,10 +514,12 @@ export default function App() {
         setResult(data)
         setResultTab('security')
         fetchTransactions(wallet.trim(), chain)
-        // Automatically prompt to log scan to Stacks Registry on mainnet
-        setTimeout(() => {
-          logScanToStacks(chain, wallet.trim(), data)
-        }, 800)
+        // Automatically prompt to log scan to Stacks Registry on mainnet (if not in MiniPay)
+        if (!isMiniPay) {
+          setTimeout(() => {
+            logScanToStacks(chain, wallet.trim(), data)
+          }, 800)
+        }
       } else {
         setError(data.error || 'Server returned an error. Please try again.')
       }
