@@ -384,16 +384,69 @@ export default function App() {
             txValue = 10000000000000000n
           }
 
-          txHash = await window.ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [{
-              from: userAddress,
-              to: CONTRACT_ADDRESS,
-              value: '0x' + txValue.toString(16),
-              data: PAY_SCAN_SELECTOR,
-              feeCurrency: CUSD_FEE_CURRENCY  // ✅ Fix: tells MiniPay to pay gas in cUSD
-            }]
-          })
+          // Force switch to Celo Mainnet before sending the transaction
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: '0xA4EC' }],
+            })
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0xA4EC',
+                  chainName: 'Celo Mainnet',
+                  nativeCurrency: { name: 'CELO', symbol: 'CELO', decimals: 18 },
+                  rpcUrls: ['https://forno.celo.org'],
+                  blockExplorerUrls: ['https://celoscan.io']
+                }]
+              })
+              await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0xA4EC' }],
+              })
+            } else {
+              throw switchError
+            }
+          }
+
+          txHash = null
+          try {
+            // First attempt: pay gas in cUSD (MiniPay preferred)
+            txHash = await window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{
+                from: userAddress,
+                to: CONTRACT_ADDRESS,
+                value: '0x' + txValue.toString(16),
+                data: PAY_SCAN_SELECTOR,
+                feeCurrency: CUSD_FEE_CURRENCY
+              }]
+            })
+          } catch (feeError) {
+            const msg = (feeError.message || '').toLowerCase()
+            if (
+              msg.includes('cusd') ||
+              msg.includes('fee currency') ||
+              msg.includes('insufficient fee') ||
+              msg.includes('top up') ||
+              msg.includes('fee')
+            ) {
+              // Second attempt: pay gas in native CELO (no feeCurrency)
+              txHash = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                  from: userAddress,
+                  to: CONTRACT_ADDRESS,
+                  value: '0x' + txValue.toString(16),
+                  data: PAY_SCAN_SELECTOR
+                }]
+              })
+            } else {
+              throw feeError
+            }
+          }
 
           // Poll for receipt
           let confirmed = false
@@ -427,14 +480,19 @@ export default function App() {
           setPaying(false)
         } catch (e) {
           console.error('Payment failed:', e)
-          const msg = e.message || ''
-          // ✅ Fix: user-friendly error messages instead of raw RPC errors
-          if (msg.includes('Insufficient fee') || msg.includes('fee')) {
-            setError('Your MiniPay wallet needs cUSD to cover the transaction fee. Please top up your cUSD balance.')
-          } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('User denied')) {
+          const msg = (e.message || '').toLowerCase()
+          if (
+            msg.includes('insufficient') || 
+            msg.includes('funds') || 
+            msg.includes('balance') ||
+            msg.includes('cusd') ||
+            msg.includes('fee')
+          ) {
+            setError('Insufficient balance. Please make sure you have at least 0.01 CELO or cUSD in your wallet to pay for the scan.')
+          } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('user denied')) {
             setError('Payment was cancelled.')
           } else {
-            setError(msg || 'Payment transaction rejected or failed.')
+            setError(e.message || 'Payment transaction rejected or failed.')
           }
           setPaying(false)
           return
