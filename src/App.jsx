@@ -313,8 +313,7 @@ export default function App() {
             method: 'eth_call',
             params: [{
               to: CONTRACT_ADDRESS,
-              data: SCAN_FEE_SELECTOR,
-              feeCurrency: CUSD_FEE_CURRENCY  // ✅ Fix: required for MiniPay
+              data: SCAN_FEE_SELECTOR
             }, 'latest']
           })
           if (res && res !== '0x') {
@@ -414,39 +413,52 @@ export default function App() {
           }
 
           txHash = null
-          try {
-            // First attempt: pay gas in cUSD (MiniPay preferred)
+
+          if (isMiniPay) {
+            // MiniPay: pay gas in native CELO directly
+            // Skip cUSD feeCurrency attempt entirely
             txHash = await window.ethereum.request({
               method: 'eth_sendTransaction',
               params: [{
                 from: userAddress,
                 to: CONTRACT_ADDRESS,
                 value: '0x' + txValue.toString(16),
-                data: PAY_SCAN_SELECTOR,
-                feeCurrency: CUSD_FEE_CURRENCY
+                data: PAY_SCAN_SELECTOR
               }]
             })
-          } catch (feeError) {
-            const msg = (feeError.message || '').toLowerCase()
-            const isUserRejection = 
-              msg.includes('reject') || 
-              msg.includes('deny') || 
-              msg.includes('cancel') ||
-              msg.includes('user denied')
-
-            if (!isUserRejection) {
-              // Second attempt: pay gas in native CELO (no feeCurrency)
+          } else {
+            // Non-MiniPay: try cUSD first, fallback to CELO
+            try {
               txHash = await window.ethereum.request({
                 method: 'eth_sendTransaction',
                 params: [{
                   from: userAddress,
                   to: CONTRACT_ADDRESS,
                   value: '0x' + txValue.toString(16),
-                  data: PAY_SCAN_SELECTOR
+                  data: PAY_SCAN_SELECTOR,
+                  feeCurrency: CUSD_FEE_CURRENCY
                 }]
               })
-            } else {
-              throw feeError
+            } catch (feeError) {
+              const msg = (feeError.message || '').toLowerCase()
+              const isUserRejection =
+                msg.includes('reject') ||
+                msg.includes('deny') ||
+                msg.includes('cancel') ||
+                msg.includes('user denied')
+              if (!isUserRejection) {
+                txHash = await window.ethereum.request({
+                  method: 'eth_sendTransaction',
+                  params: [{
+                    from: userAddress,
+                    to: CONTRACT_ADDRESS,
+                    value: '0x' + txValue.toString(16),
+                    data: PAY_SCAN_SELECTOR
+                  }]
+                })
+              } else {
+                throw feeError
+              }
             }
           }
 
