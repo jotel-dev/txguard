@@ -290,7 +290,6 @@ export default function App() {
   const [scanFeeWei, setScanFeeWei]   = useState('10000000000000000') // Default: 0.01 CELO
   const [scanFeeCelo, setScanFeeCelo] = useState('0.01')
   const [paying, setPaying]           = useState(false)
-  const [paidWallets, setPaidWallets] = useState({})
   const [loggingStacks, setLoggingStacks] = useState(false)
   const [stacksTxId, setStacksTxId] = useState('')
   const [resultTab, setResultTab] = useState('security') // 'security' | 'transactions'
@@ -375,9 +374,7 @@ export default function App() {
       try {
         const body = { wallet: w.address, chain: w.chain };
         
-        if (w.chain === 'celo' && paidWallets[w.address.toLowerCase()]) {
-          body.txHash = paidWallets[w.address.toLowerCase()];
-        } else if (w.chain === 'celo') {
+        if (w.chain === 'celo') {
           updated[i].balance = '0.00 CELO';
           updated[i].riskScore = 15;
           updated[i].riskLabel = 'Safe';
@@ -513,10 +510,10 @@ export default function App() {
     setResult(null); setError(''); setAnswer(''); setStacksTxId('')
 
     const targetAddress = targetWallet.toLowerCase()
-    let txHash = paidWallets[targetAddress] || null
+    let txHash = null
 
     // ── Payment Check for Celo/MiniPay ──
-    if (chain === 'celo' || isMiniPay) {
+    if (targetChain === 'celo' || isMiniPay) {
       if (!txHash) {
         setPaying(true)
         let userAddress = miniPayAddress
@@ -650,8 +647,6 @@ export default function App() {
             throw new Error('Payment transaction timed out. Please check Celoscan.')
           }
 
-          // Cache payment for this address
-          setPaidWallets(prev => ({ ...prev, [targetAddress]: txHash }))
           setPaying(false)
         } catch (e) {
           console.error('Payment failed:', e)
