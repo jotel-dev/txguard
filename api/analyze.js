@@ -1,17 +1,23 @@
 import { getWalletData } from '../src/blockchain.js';
 import { calculateRisk } from '../src/riskEngine.js';
+import { createPublicClient, http } from 'viem';
+import { celo } from 'viem/chains';
 import fs from 'fs';
 import path from 'path';
 
 const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10';
 const TMP_FILE = '/tmp/processed_txs.json';
 
+// In-memory cache for processed Celo payment transaction hashes (replay protection)
 const processedTxs = new Set();
 
+// Helper to check if transaction hash was already used
 function isTxProcessed(txHash) {
   if (!txHash) return false;
   const hash = txHash.toLowerCase();
+  
   if (processedTxs.has(hash)) return true;
+
   try {
     if (fs.existsSync(TMP_FILE)) {
       const fileContent = fs.readFileSync(TMP_FILE, 'utf8');
@@ -22,15 +28,17 @@ function isTxProcessed(txHash) {
       }
     }
   } catch (err) {
-    console.error(err);
+    console.error('Failed to read replay protection file:', err);
   }
   return false;
 }
 
+// Helper to register a transaction hash as used
 function markTxProcessed(txHash) {
   if (!txHash) return;
   const hash = txHash.toLowerCase();
   processedTxs.add(hash);
+
   try {
     const dir = path.dirname(TMP_FILE);
     if (!fs.existsSync(dir)) {
@@ -49,7 +57,7 @@ function markTxProcessed(txHash) {
       fs.writeFileSync(TMP_FILE, JSON.stringify(data), 'utf8');
     }
   } catch (err) {
-    console.error(err);
+    console.error('Failed to write replay protection file:', err);
   }
 }
 
@@ -90,6 +98,12 @@ function parseAnalysis(raw) {
   return null;
 }
 
+// Instantiate viem PublicClient for Celo RPC operations
+const publicClient = createPublicClient({
+  chain: celo,
+  transport: http('https://forno.celo.org')
+});
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -117,32 +131,21 @@ export default async function handler(req, res) {
       return res.status(402).json({ error: 'Payment transaction hash (txHash) is required for Celo scans.' });
     }
 
+    // 1. Replay attack protection check
     if (isTxProcessed(txHash)) {
       return res.status(409).json({ error: 'This payment transaction hash has already been used for a scan.' });
     }
 
     try {
-      // 1. Fetch transaction receipt to check status and target address
-      const receiptRes = await fetch('https://forno.celo.org', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'eth_getTransactionReceipt',
-          params: [txHash],
-          id: 1
-        })
-      });
-      const receiptJson = await receiptRes.json();
-      const receipt = receiptJson.result;
+      // 2. Fetch transaction receipt using viem
+      const receipt = await publicClient.getTransactionReceipt({ hash: txHash });
 
       if (!receipt) {
         return res.status(400).json({ error: 'Transaction receipt not found. Transaction might still be pending.' });
       }
 
-      // Check transaction status (0x1 is success)
-      const success = receipt.status === '0x1' || receipt.status === '0x01' || receipt.status === 1 || receipt.status === true;
-      if (!success) {
+      // Check transaction status (success)
+      if (receipt.status !== 'success') {
         return res.status(400).json({ error: 'The Celo payment transaction failed or reverted.' });
       }
 
@@ -151,29 +154,30 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Transaction was not sent to the TxGuard security contract.' });
       }
 
-      // 2. Fetch transaction details to verify the method selector called was payScan()
-      const txRes = await fetch('https://forno.celo.org', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'eth_getTransactionByHash',
-          params: [txHash],
-          id: 2
-        })
-      });
-      const txJson = await txRes.json();
-      const tx = txJson.result;
+      // 3. Fetch transaction details to verify method selector and sender
+      const tx = await publicClient.getTransaction({ hash: txHash });
 
       if (!tx || !tx.input || !tx.input.startsWith('0x0752a777')) {
         return res.status(400).json({ error: 'Invalid transaction: did not invoke the payScan() security function.' });
       }
 
-      // Verify transaction sender matches userAddress (if provided)
+      // 4. Verify transaction sender matches userAddress (if provided)
       if (userAddress && tx.from.toLowerCase() !== userAddress.toLowerCase()) {
         return res.status(400).json({ error: 'Transaction sender does not match the active user address requesting the scan.' });
       }
 
+      // 5. Verify transaction recency (block timestamp check)
+      const block = await publicClient.getBlock({ blockNumber: tx.blockNumber });
+      if (block && block.timestamp) {
+        const txTime = Number(block.timestamp); // viem returns BigInt
+        const now = Math.floor(Date.now() / 1000);
+        const ageInSeconds = now - txTime;
+        if (ageInSeconds > 900) { // 15 minutes limit
+          return res.status(400).json({ error: 'Transaction is too old. Scan payments must be verified within 15 minutes.' });
+        }
+      }
+
+      // Success: mark this transaction hash as processed/used
       markTxProcessed(txHash);
 
     } catch (err) {
