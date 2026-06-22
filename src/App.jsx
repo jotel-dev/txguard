@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { openContractCall } from '@stacks/connect'
 import { uintCV, stringAsciiCV } from '@stacks/transactions'
@@ -197,6 +197,8 @@ export default function App() {
   const [asking, setAsking]     = useState(false)
   const [miniPayAddress, setMiniPayAddress] = useState('')
   const [speaking, setSpeaking] = useState(false)
+  const audioRef = useRef(null)
+  const utteranceRef = useRef(null)
 
   // ── Bug Report States & Handlers ──
   const [isBugModalOpen, setIsBugModalOpen] = useState(false)
@@ -249,24 +251,116 @@ export default function App() {
     setBugSubmitting(false)
   }
 
-  // Toggle speaking the summary using window.speechSynthesis
-  const speakSummary = () => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return
-    
-    if (speaking) {
-      window.speechSynthesis.cancel()
-      setSpeaking(false)
-    } else {
-      const textToSpeak = result?.summary || ''
-      if (!textToSpeak) return
-      
-      const utterance = new SpeechSynthesisUtterance(textToSpeak)
-      utterance.onend = () => setSpeaking(false)
-      utterance.onerror = () => setSpeaking(false)
-      
-      setSpeaking(true)
-      window.speechSynthesis.speak(utterance)
+  // Helper to split text into chunks of max maxLength characters (splitting at spaces)
+  const chunkText = (text, maxLength = 150) => {
+    const words = text.split(' ')
+    const chunks = []
+    let currentChunk = ''
+
+    for (const word of words) {
+      if ((currentChunk + word).length + 1 > maxLength) {
+        if (currentChunk) chunks.push(currentChunk.trim())
+        currentChunk = word
+      } else {
+        currentChunk += (currentChunk ? ' ' : '') + word
+      }
     }
+    if (currentChunk) chunks.push(currentChunk.trim())
+    return chunks
+  }
+
+  // Toggle speaking the summary using window.speechSynthesis or backend audio fallback
+  const speakSummary = () => {
+    const textToSpeak = result?.summary || ''
+    if (!textToSpeak) return
+
+    // Stop speaking if currently active
+    if (speaking) {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
+      setSpeaking(false)
+      return
+    }
+
+    // Attempt native SpeechSynthesis if supported (and not inside restricted MiniPay/WebView)
+    const isSpeechSynthesisSupported = 
+      typeof window !== 'undefined' && 
+      'speechSynthesis' in window && 
+      !isMiniPay; // Force fallback in MiniPay since WebView WebSpeech is typically absent/broken
+
+    if (isSpeechSynthesisSupported) {
+      try {
+        window.speechSynthesis.cancel() // Clear any jammed queue
+
+        const utterance = new SpeechSynthesisUtterance(textToSpeak)
+        utteranceRef.current = utterance // Save ref to prevent garbage collection
+
+        utterance.onend = () => {
+          setSpeaking(false)
+          utteranceRef.current = null
+        }
+        utterance.onerror = (e) => {
+          console.error("SpeechSynthesis error:", e)
+          setSpeaking(false)
+          utteranceRef.current = null
+        }
+
+        setSpeaking(true)
+        window.speechSynthesis.speak(utterance)
+      } catch (err) {
+        console.warn("SpeechSynthesis failed, trying fallback TTS:", err)
+        playFallbackAudio(textToSpeak)
+      }
+    } else {
+      // Fallback path using backend /api/tts endpoint and HTML5 Audio
+      playFallbackAudio(textToSpeak)
+    }
+  }
+
+  // Sequentially play text chunks using the backend TTS proxy and HTML5 Audio
+  const playFallbackAudio = (text) => {
+    const chunks = chunkText(text, 150)
+    if (chunks.length === 0) return
+
+    let currentIndex = 0
+    setSpeaking(true)
+
+    const playNext = () => {
+      if (currentIndex >= chunks.length) {
+        setSpeaking(false)
+        audioRef.current = null
+        return
+      }
+
+      const chunk = chunks[currentIndex]
+      const url = `/api/tts?text=${encodeURIComponent(chunk)}`
+      const audio = new Audio(url)
+      audioRef.current = audio
+
+      audio.onended = () => {
+        currentIndex++
+        playNext()
+      }
+
+      audio.onerror = (e) => {
+        console.error("HTML5 Audio fallback playback error:", e)
+        setSpeaking(false)
+        audioRef.current = null
+      }
+
+      audio.play().catch(err => {
+        console.error("HTML5 Audio play() rejected:", err)
+        setSpeaking(false)
+        audioRef.current = null
+      })
+    }
+
+    playNext()
   }
 
   // Cancel speech on unmount
@@ -275,6 +369,9 @@ export default function App() {
       if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.cancel()
       }
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
     }
   }, [])
 
@@ -282,8 +379,12 @@ export default function App() {
   useEffect(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel()
-      setSpeaking(false)
     }
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+    setSpeaking(false)
   }, [result])
 
   // ── Payment & Contract State ──
