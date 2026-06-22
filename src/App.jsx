@@ -333,9 +333,17 @@ export default function App() {
   const [newWalletAddress, setNewWalletAddress] = useState('');
   const [newWalletChain, setNewWalletChain] = useState('ethereum');
   const [isRefreshingDashboard, setIsRefreshingDashboard] = useState(false);
+  const [dashboardError, setDashboardError] = useState('');
 
   const handleAddWallet = () => {
     if (!newWalletLabel.trim() || !newWalletAddress.trim()) return;
+    setDashboardError('');
+    
+    if (!isValidAddress(newWalletAddress.trim(), newWalletChain)) {
+      const chainName = CHAINS.find(c => c.id === newWalletChain)?.label || newWalletChain;
+      setDashboardError(`Invalid address for ${chainName}.`);
+      return;
+    }
     const newWallet = {
       id: Date.now().toString(),
       label: newWalletLabel.trim(),
@@ -507,6 +515,14 @@ export default function App() {
     const targetWallet = (overrideWallet || wallet).trim()
     const targetChain = overrideChain || chain
     if (!targetWallet) return
+
+    // Address validation check
+    if (!isValidAddress(targetWallet, targetChain)) {
+      const chainName = CHAINS.find(c => c.id === targetChain)?.label || targetChain;
+      setError(`Invalid address format for ${chainName}. Please check and try again.`);
+      return;
+    }
+
     setResult(null); setError(''); setAnswer(''); setStacksTxId('')
 
     const targetAddress = targetWallet.toLowerCase()
@@ -1282,6 +1298,12 @@ export default function App() {
           {/* Add Wallet Card */}
           {isAddingWallet ? (
             <div className="dashboard-card add-wallet-form-card">
+              {dashboardError && (
+                <div className="error-card small" style={{ maxWidth: '100%', margin: '0 0 12px', padding: '8px 12px', fontSize: '11px' }}>
+                  <span>⚠</span>
+                  <span>{dashboardError}</span>
+                </div>
+              )}
               <h3 className="card-form-title">Track Account</h3>
               <div className="form-group">
                 <label className="form-label" htmlFor="dashboard-wallet-label">Label</label>
@@ -1327,6 +1349,7 @@ export default function App() {
               setNewWalletLabel('');
               setNewWalletAddress('');
               setNewWalletChain('ethereum');
+              setDashboardError('');
             }}>
               <span className="add-dotted-icon">＋</span>
               <span className="add-dotted-text">Track New Account</span>
@@ -1650,4 +1673,27 @@ function formatRelativeTime(timestampMs) {
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
+}
+
+function isValidAddress(address, chain) {
+  if (!address) return false;
+  const cleaned = address.trim();
+  
+  switch (chain) {
+    case 'ethereum':
+    case 'bnb':
+    case 'celo':
+      return /^0x[a-fA-F0-9]{40}$/.test(cleaned);
+      
+    case 'solana':
+      return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(cleaned);
+      
+    case 'bitcoin':
+      const isLegacy = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(cleaned);
+      const isBech32 = /^bc1[ac-hj-np-z02-9]{11,71}$/i.test(cleaned);
+      return isLegacy || isBech32;
+      
+    default:
+      return true;
+  }
 }
