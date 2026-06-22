@@ -1,7 +1,58 @@
 import { getWalletData } from '../src/blockchain.js';
 import { calculateRisk } from '../src/riskEngine.js';
+import fs from 'fs';
+import path from 'path';
 
 const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10';
+const TMP_FILE = '/tmp/processed_txs.json';
+
+const processedTxs = new Set();
+
+function isTxProcessed(txHash) {
+  if (!txHash) return false;
+  const hash = txHash.toLowerCase();
+  if (processedTxs.has(hash)) return true;
+  try {
+    if (fs.existsSync(TMP_FILE)) {
+      const fileContent = fs.readFileSync(TMP_FILE, 'utf8');
+      const data = JSON.parse(fileContent);
+      if (Array.isArray(data) && data.map(h => h.toLowerCase()).includes(hash)) {
+        processedTxs.add(hash);
+        return true;
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  return false;
+}
+
+function markTxProcessed(txHash) {
+  if (!txHash) return;
+  const hash = txHash.toLowerCase();
+  processedTxs.add(hash);
+  try {
+    const dir = path.dirname(TMP_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    let data = [];
+    if (fs.existsSync(TMP_FILE)) {
+      const fileContent = fs.readFileSync(TMP_FILE, 'utf8');
+      data = JSON.parse(fileContent);
+    }
+    if (!Array.isArray(data)) {
+      data = [];
+    }
+    if (!data.map(h => h.toLowerCase()).includes(hash)) {
+      data.push(hash);
+      fs.writeFileSync(TMP_FILE, JSON.stringify(data), 'utf8');
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function callGroq(prompt, jsonMode = false) {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
@@ -66,6 +117,10 @@ export default async function handler(req, res) {
       return res.status(402).json({ error: 'Payment transaction hash (txHash) is required for Celo scans.' });
     }
 
+    if (isTxProcessed(txHash)) {
+      return res.status(409).json({ error: 'This payment transaction hash has already been used for a scan.' });
+    }
+
     try {
       // 1. Fetch transaction receipt to check status and target address
       const receiptRes = await fetch('https://forno.celo.org', {
@@ -113,6 +168,8 @@ export default async function handler(req, res) {
       if (!tx || !tx.input || !tx.input.startsWith('0x0752a777')) {
         return res.status(400).json({ error: 'Invalid transaction: did not invoke the payScan() security function.' });
       }
+
+      markTxProcessed(txHash);
 
     } catch (err) {
       console.error('Celo verification failed:', err);
