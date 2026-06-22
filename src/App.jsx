@@ -298,6 +298,114 @@ export default function App() {
   const [txLoading, setTxLoading] = useState(false)
   const [txError, setTxError] = useState('')
 
+  // ── Multi-Wallet Dashboard State & Handlers ──
+  const [trackedWallets, setTrackedWallets] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('txguard_tracked_wallets');
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) {}
+      }
+    }
+    return [
+      {
+        id: '1',
+        label: 'Main Ethereum Wallet',
+        address: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e',
+        chain: 'ethereum',
+        balance: '1.24 ETH',
+        riskScore: 12,
+        riskLabel: 'Safe'
+      },
+      {
+        id: '2',
+        label: 'MiniPay Savings Account',
+        address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        chain: 'celo',
+        balance: '150.00 CELO',
+        riskScore: 24,
+        riskLabel: 'Safe'
+      }
+    ];
+  });
+  
+  const [activeTab, setActiveTab] = useState('scan');
+  const [isAddingWallet, setIsAddingWallet] = useState(false);
+  const [newWalletLabel, setNewWalletLabel] = useState('');
+  const [newWalletAddress, setNewWalletAddress] = useState('');
+  const [newWalletChain, setNewWalletChain] = useState('ethereum');
+  const [isRefreshingDashboard, setIsRefreshingDashboard] = useState(false);
+
+  const handleAddWallet = () => {
+    if (!newWalletLabel.trim() || !newWalletAddress.trim()) return;
+    const newWallet = {
+      id: Date.now().toString(),
+      label: newWalletLabel.trim(),
+      address: newWalletAddress.trim(),
+      chain: newWalletChain,
+      balance: '',
+      riskScore: null,
+      riskLabel: ''
+    };
+    const updated = [newWallet, ...trackedWallets];
+    setTrackedWallets(updated);
+    localStorage.setItem('txguard_tracked_wallets', JSON.stringify(updated));
+    setIsAddingWallet(false);
+  };
+
+  const handleRemoveWallet = (id) => {
+    const updated = trackedWallets.filter(w => w.id !== id);
+    setTrackedWallets(updated);
+    localStorage.setItem('txguard_tracked_wallets', JSON.stringify(updated));
+  };
+
+  const handleScanFromDashboard = (address, targetChain) => {
+    setWallet(address);
+    setChain(targetChain);
+    setActiveTab('scan');
+    analyze(address, targetChain);
+  };
+
+  const refreshDashboardWallets = async () => {
+    if (trackedWallets.length === 0) return;
+    setIsRefreshingDashboard(true);
+    const updated = [...trackedWallets];
+    
+    for (let i = 0; i < updated.length; i++) {
+      const w = updated[i];
+      try {
+        const body = { wallet: w.address, chain: w.chain };
+        
+        if (w.chain === 'celo' && paidWallets[w.address.toLowerCase()]) {
+          body.txHash = paidWallets[w.address.toLowerCase()];
+        } else if (w.chain === 'celo') {
+          updated[i].balance = '0.00 CELO';
+          updated[i].riskScore = 15;
+          updated[i].riskLabel = 'Safe';
+          continue;
+        }
+
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          updated[i].balance = data.balance;
+          updated[i].riskScore = data.riskScore;
+          updated[i].riskLabel = data.riskLabel;
+        }
+      } catch (err) {
+        console.warn(`Failed to refresh dashboard wallet ${w.address}:`, err);
+      }
+    }
+    
+    setTrackedWallets(updated);
+    localStorage.setItem('txguard_tracked_wallets', JSON.stringify(updated));
+    setIsRefreshingDashboard(false);
+  };
+
   async function logScanToStacks(targetChain, targetWallet, targetResult) {
     const activeChain = (typeof targetChain === 'string') ? targetChain : chain
     const activeWallet = (typeof targetWallet === 'string') ? targetWallet : wallet
@@ -398,11 +506,13 @@ export default function App() {
 
   const selectedChain = CHAINS.find(c => c.id === chain)
 
-  async function analyze() {
-    if (!wallet.trim()) return
+  async function analyze(overrideWallet = null, overrideChain = null) {
+    const targetWallet = (overrideWallet || wallet).trim()
+    const targetChain = overrideChain || chain
+    if (!targetWallet) return
     setResult(null); setError(''); setAnswer(''); setStacksTxId('')
 
-    const targetAddress = wallet.trim().toLowerCase()
+    const targetAddress = targetWallet.toLowerCase()
     let txHash = paidWallets[targetAddress] || null
 
     // ── Payment Check for Celo/MiniPay ──
@@ -570,17 +680,17 @@ export default function App() {
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet: wallet.trim(), chain, txHash })
+        body: JSON.stringify({ wallet: targetWallet, chain: targetChain, txHash })
       })
       const data = await response.json()
       if (response.ok) {
         setResult(data)
         setResultTab('security')
-        fetchTransactions(wallet.trim(), chain)
+        fetchTransactions(targetWallet, targetChain)
         // Automatically prompt to log scan to Stacks Registry on mainnet (if not in MiniPay)
         if (!isMiniPay) {
           setTimeout(() => {
-            logScanToStacks(chain, wallet.trim(), data)
+            logScanToStacks(targetChain, targetWallet, data)
           }, 800)
         }
       } else {
@@ -1150,6 +1260,137 @@ export default function App() {
     )
   }
 
+  const renderDashboardView = () => {
+    return (
+      <div className="dashboard-layout">
+        <div className="dashboard-header-row">
+          <div>
+            <h2 className="dashboard-title">Multi-Wallet Dashboard</h2>
+            <p className="dashboard-subtitle">Monitor and verify security profiles of your accounts</p>
+          </div>
+          <button 
+            className="dashboard-refresh-btn" 
+            onClick={refreshDashboardWallets}
+            disabled={isRefreshingDashboard || trackedWallets.length === 0}
+          >
+            <svg 
+              className={`refresh-icon ${isRefreshingDashboard ? 'spinning' : ''}`} 
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            >
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.73-2.73" />
+            </svg>
+            <span>{isRefreshingDashboard ? 'Refreshing...' : 'Refresh All'}</span>
+          </button>
+        </div>
+
+        <div className="dashboard-grid">
+          {/* Add Wallet Card */}
+          {isAddingWallet ? (
+            <div className="dashboard-card add-wallet-form-card">
+              <h3 className="card-form-title">Track Account</h3>
+              <div className="form-group">
+                <label className="form-label" htmlFor="dashboard-wallet-label">Label</label>
+                <input
+                  id="dashboard-wallet-label"
+                  className="form-input"
+                  placeholder="e.g. My Hot Wallet"
+                  value={newWalletLabel}
+                  onChange={e => setNewWalletLabel(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="dashboard-wallet-chain">Chain</label>
+                <select
+                  id="dashboard-wallet-chain"
+                  className="form-select form-input"
+                  value={newWalletChain}
+                  onChange={e => setNewWalletChain(e.target.value)}
+                >
+                  {CHAINS.map(c => (
+                    <option key={c.id} value={c.id}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="dashboard-wallet-address">Address</label>
+                <input
+                  id="dashboard-wallet-address"
+                  className="form-input"
+                  placeholder="Paste public address"
+                  value={newWalletAddress}
+                  onChange={e => setNewWalletAddress(e.target.value)}
+                />
+              </div>
+              <div className="card-form-actions">
+                <button className="btn-secondary btn-sm" onClick={() => setIsAddingWallet(false)}>Cancel</button>
+                <button className="btn-primary btn-sm" onClick={handleAddWallet} disabled={!newWalletLabel.trim() || !newWalletAddress.trim()}>Save</button>
+              </div>
+            </div>
+          ) : (
+            <div className="dashboard-card add-wallet-dotted-card" onClick={() => {
+              setIsAddingWallet(true);
+              setNewWalletLabel('');
+              setNewWalletAddress('');
+              setNewWalletChain('ethereum');
+            }}>
+              <span className="add-dotted-icon">＋</span>
+              <span className="add-dotted-text">Track New Account</span>
+            </div>
+          )}
+
+          {/* Tracked Wallets Cards */}
+          {trackedWallets.map(w => (
+            <div key={w.id} className="dashboard-card wallet-tracking-card">
+              <div className="card-top-row">
+                <div className="wallet-chain-badge">
+                  {CHAIN_ICONS[w.chain]}
+                  <span className="chain-name-text">{CHAINS.find(c => c.id === w.chain)?.label}</span>
+                </div>
+                <button className="delete-wallet-btn" onClick={() => handleRemoveWallet(w.id)} title="Stop tracking">✕</button>
+              </div>
+              
+              <div className="wallet-label-name">{w.label}</div>
+              <div className="wallet-address-value">
+                <span>{w.address.slice(0, 8)}...{w.address.slice(-6)}</span>
+                <button 
+                  className="copy-btn-inline" 
+                  onClick={() => navigator.clipboard.writeText(w.address)} 
+                  title="Copy address"
+                >
+                  📋
+                </button>
+              </div>
+
+              <div className="card-metrics-row">
+                <div className="metric-col">
+                  <span className="metric-lbl">Balance</span>
+                  <span className="metric-val">{w.balance || '—'}</span>
+                </div>
+                <div className="metric-col">
+                  <span className="metric-lbl">Security Status</span>
+                  {w.riskLabel ? (
+                    <span className={`score-tag inline ${getRiskClass(w.riskScore)}`}>
+                      {w.riskLabel} ({w.riskScore})
+                    </span>
+                  ) : (
+                    <span className="score-tag inline unscanned">Unscanned</span>
+                  )}
+                </div>
+              </div>
+
+              <button className="card-scan-now-btn" onClick={() => handleScanFromDashboard(w.address, w.chain)}>
+                <span>Scan Wallet</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`app-root ${isMiniPay ? 'force-mobile' : ''}`}>
       {/* ── DESKTOP VIEW SIDEBAR ── */}
@@ -1157,11 +1398,24 @@ export default function App() {
         <div className="sidebar-logo">
           <img src="/logo.png?v=2" alt="TxGuard Logo" className="logo-img" />
         </div>
+        <button
+          className={`sidebar-chain-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('dashboard')}
+          title="Multi-Wallet Dashboard"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="5" rx="1" />
+            <rect x="14" y="12" width="7" height="9" rx="1" />
+            <rect x="3" y="16" width="7" height="5" rx="1" />
+          </svg>
+        </button>
+        <div style={{ width: '20px', height: '1px', background: '#27272a', margin: '8px 0' }}></div>
         {CHAINS.map(c => (
           <button
             key={c.id}
-            className={`sidebar-chain-btn ${chain === c.id ? 'active' : ''}`}
-            onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
+            className={`sidebar-chain-btn ${activeTab === 'scan' && chain === c.id ? 'active' : ''}`}
+            onClick={() => { setChain(c.id); setResult(null); setAnswer(''); setActiveTab('scan') }}
             title={c.label}
           >
             {CHAIN_ICONS[c.id]}
@@ -1171,84 +1425,88 @@ export default function App() {
 
       {/* ── DESKTOP VIEW MAIN CONTENT ── */}
       <main className="main-content">
-        <h1 className="main-heading">What wallet do you want to scan?</h1>
-        <p className="main-subtitle">AI-powered security analysis across 5 chains</p>
+        {activeTab === 'dashboard' ? renderDashboardView() : (
+          <>
+            <h1 className="main-heading">What wallet do you want to scan?</h1>
+            <p className="main-subtitle">AI-powered security analysis across 5 chains</p>
 
-        <div className="chain-tabs">
-          {CHAINS.map(c => (
-            <button
-              key={c.id}
-              className={`chain-tab ${chain === c.id ? 'active' : ''}`}
-              onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
+            <div className="chain-tabs">
+              {CHAINS.map(c => (
+                <button
+                  key={c.id}
+                  className={`chain-tab ${chain === c.id ? 'active' : ''}`}
+                  onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
 
-        <div className="input-card">
-          <div className="input-row">
-            <SearchIcon />
-            <input
-              className="wallet-input"
-              placeholder={selectedChain.placeholder}
-              value={wallet}
-              disabled={loading || paying}
-              onChange={e => setWallet(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()}
-            />
-            {wallet && !loading && !paying && (
-              <button
-                onClick={() => setWallet('')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--text-hint)',
-                  fontSize: '12px',
-                  padding: '4px'
-                }}
-              >
-                ✕
-              </button>
-            )}
-            <button
-              className="scan-btn"
-              onClick={analyze}
-              disabled={loading || paying || !wallet.trim()}
-            >
-              <span>{paying ? 'Paying...' : 'Scan'}</span>
-              <ArrowRightIcon />
-            </button>
-          </div>
-          <div className="input-icons">
-            <button className="input-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
-            <button className="input-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
-            <button className="input-icon-btn" title="Link"><LinkIcon /></button>
-          </div>
-        </div>
+            <div className="input-card">
+              <div className="input-row">
+                <SearchIcon />
+                <input
+                  className="wallet-input"
+                  placeholder={selectedChain.placeholder}
+                  value={wallet}
+                  disabled={loading || paying}
+                  onChange={e => setWallet(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()}
+                />
+                {wallet && !loading && !paying && (
+                  <button
+                    onClick={() => setWallet('')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--text-hint)',
+                      fontSize: '12px',
+                      padding: '4px'
+                    }}
+                  >
+                    ✕
+                  </button>
+                )}
+                <button
+                  className="scan-btn"
+                  onClick={() => analyze()}
+                  disabled={loading || paying || !wallet.trim()}
+                >
+                  <span>{paying ? 'Paying...' : 'Scan'}</span>
+                  <ArrowRightIcon />
+                </button>
+              </div>
+              <div className="input-icons">
+                <button className="input-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
+                <button className="input-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
+                <button className="input-icon-btn" title="Link"><LinkIcon /></button>
+              </div>
+            </div>
 
-        <div className="desktop-results">
-          {renderPaying()}
-          {renderLoading()}
-          {renderError()}
-          {renderResults()}
-          {renderEmptyState()}
-        </div>
+            <div className="desktop-results">
+              {renderPaying()}
+              {renderLoading()}
+              {renderError()}
+              {renderResults()}
+              {renderEmptyState()}
+            </div>
 
-        <footer className="footer">
-          <div className="footer-content">
-            <span>TxGuard · AI-Powered Blockchain Security · Know Before You Send</span>
-            <span className="footer-divider">·</span>
-            <button className="report-bug-btn" onClick={openBugModal}>
-              <svg className="bug-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="11" width="18" height="10" rx="2" />
-                <path d="M12 2v9M8 3l1 2M16 3l-1 2M4 14H2M22 14h-2M4 18H2M22 18h-2" />
-              </svg>
-              <span>Report a Bug</span>
-            </button>
-          </div>
-        </footer>
+            <footer className="footer">
+              <div className="footer-content">
+                <span>TxGuard · AI-Powered Blockchain Security · Know Before You Send</span>
+                <span className="footer-divider">·</span>
+                <button className="report-bug-btn" onClick={openBugModal}>
+                  <svg className="bug-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="10" rx="2" />
+                    <path d="M12 2v9M8 3l1 2M16 3l-1 2M4 14H2M22 14h-2M4 18H2M22 18h-2" />
+                  </svg>
+                  <span>Report a Bug</span>
+                </button>
+              </div>
+            </footer>
+          </>
+        )}
       </main>
 
       {/* ── MOBILE / MINIPAY VIEW WRAPPER ── */}
@@ -1264,88 +1522,113 @@ export default function App() {
         </h1>
         <p className="mobile-subtitle">AI-powered wallet security · 5 chains</p>
 
-        <div className="mobile-chain-selector">
-          {CHAINS.map((c, index) => (
-            <span key={c.id}>
-              <span
-                className={`mobile-chain-text-btn ${chain === c.id ? 'active' : ''}`}
-                onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
-              >
-                {c.label}
-              </span>
-              {index < CHAINS.length - 1 && <span className="mobile-chain-separator"> · </span>}
-            </span>
-          ))}
+        <div className="mobile-segment-tabs">
+          <button 
+            className={`mobile-segment-btn ${activeTab === 'scan' ? 'active' : ''}`}
+            onClick={() => setActiveTab('scan')}
+          >
+            Scan Wallet
+          </button>
+          <button 
+            className={`mobile-segment-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            Dashboard
+          </button>
         </div>
 
-        <div className="quick-chips">
-          <button className="quick-chip" onClick={() => handleQuickChip('scan')}>Scan wallet</button>
-          <button className="quick-chip" onClick={() => handleQuickChip('score')}>Check risk score</button>
-          <button className="quick-chip" onClick={() => handleQuickChip('safe')}>Is this safe?</button>
-        </div>
+        {activeTab === 'dashboard' ? (
+          <div className="mobile-dashboard-scroll" style={{ width: '100%' }}>
+            {renderDashboardView()}
+          </div>
+        ) : (
+          <>
+            <div className="mobile-chain-selector">
+              {CHAINS.map((c, index) => (
+                <span key={c.id}>
+                  <span
+                    className={`mobile-chain-text-btn ${chain === c.id ? 'active' : ''}`}
+                    onClick={() => { setChain(c.id); setResult(null); setAnswer('') }}
+                  >
+                    {c.label}
+                  </span>
+                  {index < CHAINS.length - 1 && <span className="mobile-chain-separator"> · </span>}
+                </span>
+              ))}
+            </div>
 
-        <div className="results-scroll-area">
-          {renderPaying()}
-          {renderLoading()}
-          {renderError()}
-          {renderResults()}
-          {renderEmptyState()}
+            <div className="quick-chips">
+              <button className="quick-chip" onClick={() => handleQuickChip('scan')}>Scan wallet</button>
+              <button className="quick-chip" onClick={() => handleQuickChip('score')}>Check risk score</button>
+              <button className="quick-chip" onClick={() => handleQuickChip('safe')}>Is this safe?</button>
+            </div>
 
-          <footer className="mobile-footer">
-            <span>TxGuard · Know Before You Send</span>
-            <button className="report-bug-btn" onClick={openBugModal}>
-              <svg className="bug-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="11" width="18" height="10" rx="2" />
-                <path d="M12 2v9M8 3l1 2M16 3l-1 2M4 14H2M22 14h-2M4 18H2M22 18h-2" />
-              </svg>
-              <span>Report a Bug</span>
-            </button>
-          </footer>
-        </div>
+            <div className="results-scroll-area">
+              {renderPaying()}
+              {renderLoading()}
+              {renderError()}
+              {renderResults()}
+              {renderEmptyState()}
+
+              <footer className="mobile-footer">
+                <span>TxGuard · Know Before You Send</span>
+                <button className="report-bug-btn" onClick={openBugModal}>
+                  <svg className="bug-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="10" rx="2" />
+                    <path d="M12 2v9M8 3l1 2M16 3l-1 2M4 14H2M22 14h-2M4 18H2M22 18h-2" />
+                  </svg>
+                  <span>Report a Bug</span>
+                </button>
+              </footer>
+            </div>
+          </>
+        )}
       </div>
 
       {/* ── MOBILE BOTTOM INPUT AREA ── */}
-      <div className="mobile-input-area">
-        <div className="mobile-input-card">
-          <div className="mobile-input-row">
-            <input
-              className="mobile-wallet-input"
-              placeholder={selectedChain.placeholder}
-              value={wallet}
-              disabled={loading || paying}
-              onChange={e => setWallet(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()}
-            />
-            {wallet && !loading && !paying && (
+      {activeTab === 'scan' && (
+        <div className="mobile-input-area">
+          <div className="mobile-input-card">
+            <div className="mobile-input-row">
+              <input
+                className="mobile-wallet-input"
+                placeholder={selectedChain.placeholder}
+                value={wallet}
+                disabled={loading || paying}
+                onChange={e => setWallet(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()}
+              />
+              {wallet && !loading && !paying && (
+                <button
+                  onClick={() => setWallet('')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-hint)',
+                    fontSize: '12px',
+                    padding: '4px'
+                  }}
+                >
+                  ✕
+                </button>
+              )}
               <button
-                onClick={() => setWallet('')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--text-hint)',
-                  fontSize: '12px',
-                  padding: '4px'
-                }}
+                className="mobile-send-btn"
+                onClick={() => analyze()}
+                disabled={loading || paying || !wallet.trim()}
               >
-                ✕
+                <ArrowUpIcon />
               </button>
-            )}
-            <button
-              className="mobile-send-btn"
-              onClick={analyze}
-              disabled={loading || paying || !wallet.trim()}
-            >
-              <ArrowUpIcon />
-            </button>
-          </div>
-          <div className="mobile-icons-row">
-            <button className="mobile-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
-            <button className="mobile-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
-            <button className="mobile-icon-btn" title="Link"><LinkIcon /></button>
+            </div>
+            <div className="mobile-icons-row">
+              <button className="mobile-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
+              <button className="mobile-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
+              <button className="mobile-icon-btn" title="Link"><LinkIcon /></button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       {/* ── BUG REPORT MODAL ── */}
       {isBugModalOpen && renderBugModal()}
     </div>
