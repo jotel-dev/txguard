@@ -104,7 +104,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { wallet, chain, txHash } = req.body;
+  const { wallet, chain, txHash, userAddress } = req.body;
 
   if (!wallet || !chain) {
     return res.status(400).json({ error: 'Wallet and chain parameters are required.' });
@@ -167,6 +167,11 @@ export default async function handler(req, res) {
 
       if (!tx || !tx.input || !tx.input.startsWith('0x0752a777')) {
         return res.status(400).json({ error: 'Invalid transaction: did not invoke the payScan() security function.' });
+      }
+
+      // Verify transaction sender matches userAddress (if provided)
+      if (userAddress && tx.from.toLowerCase() !== userAddress.toLowerCase()) {
+        return res.status(400).json({ error: 'Transaction sender does not match the active user address requesting the scan.' });
       }
 
       markTxProcessed(txHash);
