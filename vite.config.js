@@ -134,6 +134,47 @@ export default defineConfig(({ mode }) => {
                 }
               })
             } 
+            // Intercept /api/report-bug endpoint
+            else if (req.url.startsWith('/api/report-bug')) {
+              let body = ''
+              req.on('data', chunk => { body += chunk })
+              req.on('end', async () => {
+                try {
+                  req.body = body ? JSON.parse(body) : {}
+                } catch (e) {
+                  req.body = {}
+                }
+
+                const mockRes = {
+                  status(code) {
+                    res.statusCode = code
+                    return this
+                  },
+                  json(data) {
+                    res.setHeader('Content-Type', 'application/json')
+                    res.end(JSON.stringify(data))
+                    return this
+                  },
+                  setHeader(name, value) {
+                    res.setHeader(name, value)
+                    return this
+                  },
+                  end(data) {
+                    res.end(data)
+                    return this
+                  }
+                }
+
+                try {
+                  const reportBugHandler = (await import('./api/report-bug.js')).default
+                  await reportBugHandler(req, mockRes)
+                } catch (err) {
+                  console.error('Local dev serverless handler error:', err)
+                  res.statusCode = 500
+                  res.end(JSON.stringify({ error: err.message }))
+                }
+              })
+            }
             else {
               next()
             }

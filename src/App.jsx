@@ -198,6 +198,57 @@ export default function App() {
   const [miniPayAddress, setMiniPayAddress] = useState('')
   const [speaking, setSpeaking] = useState(false)
 
+  // ── Bug Report States & Handlers ──
+  const [isBugModalOpen, setIsBugModalOpen] = useState(false)
+  const [bugEmail, setBugEmail]             = useState('')
+  const [bugCategory, setBugCategory]       = useState('UI/UX')
+  const [bugSeverity, setBugSeverity]       = useState('Medium')
+  const [bugTitle, setBugTitle]             = useState('')
+  const [bugDesc, setBugDesc]               = useState('')
+  const [bugSubmitting, setBugSubmitting]   = useState(false)
+  const [bugSuccess, setBugSuccess]         = useState(false)
+  const [bugError, setBugError]             = useState('')
+
+  const openBugModal = () => {
+    setIsBugModalOpen(true)
+    setBugEmail('')
+    setBugCategory('UI/UX')
+    setBugSeverity('Medium')
+    setBugTitle('')
+    setBugDesc('')
+    setBugSuccess(false)
+    setBugError('')
+  }
+
+  const submitBugReport = async () => {
+    if (!bugTitle.trim() || !bugDesc.trim()) return
+    setBugSubmitting(true)
+    setBugError('')
+    try {
+      const response = await fetch('/api/report-bug', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: bugTitle.trim(),
+          description: bugDesc.trim(),
+          category: bugCategory,
+          severity: bugSeverity,
+          email: bugEmail.trim()
+        })
+      })
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setBugSuccess(true)
+      } else {
+        setBugError(data.error || 'Failed to submit bug report. Please try again.')
+      }
+    } catch (e) {
+      console.error('Bug report submission failed:', e)
+      setBugError('Network error. Failed to reach server.')
+    }
+    setBugSubmitting(false)
+  }
+
   // Toggle speaking the summary using window.speechSynthesis
   const speakSummary = () => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return
@@ -961,6 +1012,144 @@ export default function App() {
     )
   }
 
+  const renderBugModal = () => {
+    return (
+      <div className="modal-overlay" onClick={() => setIsBugModalOpen(false)}>
+        <div className="modal-card" onClick={e => e.stopPropagation()}>
+          <div className="modal-header">
+            <h2 className="modal-title">
+              <span style={{ fontSize: '18px' }}>🐛</span> Report a Bug
+            </h2>
+            <button className="modal-close-btn" onClick={() => setIsBugModalOpen(false)}>✕</button>
+          </div>
+
+          {bugSuccess ? (
+            <div className="success-view">
+              <div className="success-icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M20 6L9 17L4 12" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <h3 className="success-title">Thank You!</h3>
+              <p className="success-desc">
+                Your report has been successfully submitted. We appreciate your feedback to help make TxGuard better.
+              </p>
+              <button 
+                className="btn-secondary" 
+                style={{ marginTop: '12px', width: '100%', maxWidth: '200px' }} 
+                onClick={() => setIsBugModalOpen(false)}
+              >
+                Close Window
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="modal-body">
+                <p className="modal-body-sub">
+                  Found an issue or something not working quite right? Tell us about it and we'll look into it right away.
+                </p>
+
+                {bugError && (
+                  <div className="error-card" style={{ maxWidth: '100%', margin: '0 0 12px' }}>
+                    <span>⚠</span>
+                    <span>{bugError}</span>
+                  </div>
+                )}
+
+                <div className="form-group">
+                  <span className="form-label">Category</span>
+                  <div className="category-chips">
+                    {['UI/UX', 'Scan Error', 'AI / Ask Summary', 'Payment', 'Other'].map(cat => (
+                      <button
+                        key={cat}
+                        type="button"
+                        className={`category-chip ${bugCategory === cat ? 'active' : ''}`}
+                        onClick={() => setBugCategory(cat)}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <span className="form-label">Severity</span>
+                  <div className="severity-selector">
+                    {['Low', 'Medium', 'High', 'Critical'].map(sev => (
+                      <button
+                        key={sev}
+                        type="button"
+                        className={`severity-btn ${sev.toLowerCase()} ${bugSeverity === sev ? 'active' : ''}`}
+                        onClick={() => setBugSeverity(sev)}
+                      >
+                        {sev}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="bug-title-input">Bug Title</label>
+                  <input
+                    id="bug-title-input"
+                    className="form-input"
+                    placeholder="Short summary of the problem"
+                    value={bugTitle}
+                    onChange={e => setBugTitle(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="bug-desc-textarea">Description</label>
+                  <textarea
+                    id="bug-desc-textarea"
+                    className="form-textarea"
+                    placeholder="What happened? What did you expect to happen? Please provide steps to reproduce."
+                    value={bugDesc}
+                    onChange={e => setBugDesc(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="bug-email-input">Contact Email (Optional)</label>
+                  <input
+                    id="bug-email-input"
+                    className="form-input"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={bugEmail}
+                    onChange={e => setBugEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button 
+                  type="button"
+                  className="btn-secondary" 
+                  onClick={() => setIsBugModalOpen(false)}
+                  disabled={bugSubmitting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button"
+                  className="btn-primary" 
+                  onClick={submitBugReport}
+                  disabled={bugSubmitting || !bugTitle.trim() || !bugDesc.trim()}
+                >
+                  {bugSubmitting ? 'Submitting...' : 'Submit Report'}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`app-root ${isMiniPay ? 'force-mobile' : ''}`}>
       {/* ── DESKTOP VIEW SIDEBAR ── */}
@@ -1048,7 +1237,17 @@ export default function App() {
         </div>
 
         <footer className="footer">
-          TxGuard · AI-Powered Blockchain Security · Know Before You Send
+          <div className="footer-content">
+            <span>TxGuard · AI-Powered Blockchain Security · Know Before You Send</span>
+            <span className="footer-divider">·</span>
+            <button className="report-bug-btn" onClick={openBugModal}>
+              <svg className="bug-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="10" rx="2" />
+                <path d="M12 2v9M8 3l1 2M16 3l-1 2M4 14H2M22 14h-2M4 18H2M22 18h-2" />
+              </svg>
+              <span>Report a Bug</span>
+            </button>
+          </div>
         </footer>
       </main>
 
@@ -1091,6 +1290,17 @@ export default function App() {
           {renderError()}
           {renderResults()}
           {renderEmptyState()}
+
+          <footer className="mobile-footer">
+            <span>TxGuard · Know Before You Send</span>
+            <button className="report-bug-btn" onClick={openBugModal}>
+              <svg className="bug-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="10" rx="2" />
+                <path d="M12 2v9M8 3l1 2M16 3l-1 2M4 14H2M22 14h-2M4 18H2M22 18h-2" />
+              </svg>
+              <span>Report a Bug</span>
+            </button>
+          </footer>
         </div>
       </div>
 
@@ -1136,6 +1346,8 @@ export default function App() {
           </div>
         </div>
       </div>
+      {/* ── BUG REPORT MODAL ── */}
+      {isBugModalOpen && renderBugModal()}
     </div>
   )
 }
