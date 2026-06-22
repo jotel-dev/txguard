@@ -628,12 +628,12 @@ export default function App() {
 
     const targetAddress = targetWallet.toLowerCase()
     let txHash = null
+    let userAddress = miniPayAddress
 
     // ── Payment Check (Required for all scans) ──
     if (true) {
       if (!txHash) {
         setPaying(true)
-        let userAddress = miniPayAddress
         if (!userAddress && window.ethereum) {
           try {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -792,7 +792,7 @@ export default function App() {
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet: targetWallet, chain: targetChain, txHash })
+        body: JSON.stringify({ wallet: targetWallet, chain: targetChain, txHash, userAddress })
       })
       const data = await response.json()
       if (response.ok) {
