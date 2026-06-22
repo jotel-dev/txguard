@@ -1,0 +1,14 @@
+{
+  "name": "txguard-simulator",
+  "version": "1.0.0",
+  "description": "Mock blockchain simulator and risk monitoring service for TX Guard testing",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node client-test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
