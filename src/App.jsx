@@ -512,8 +512,8 @@ export default function App() {
     const targetAddress = targetWallet.toLowerCase()
     let txHash = null
 
-    // ── Payment Check for Celo/MiniPay ──
-    if (targetChain === 'celo' || isMiniPay) {
+    // ── Payment Check (Required for all scans) ──
+    if (true) {
       if (!txHash) {
         setPaying(true)
         let userAddress = miniPayAddress
