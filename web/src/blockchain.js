@@ -181,8 +181,8 @@ export async function getBitcoinData(address) {
 export async function getCeloData(address) {
   try {
     const [balRes, txRes] = await Promise.all([
-      fetch(`https://api.etherscan.io/v2/api?chainid=42220&module=account&action=balance&address=${address}&tag=latest&apikey=${ETHERSCAN_KEY}`),
-      fetch(`https://api.etherscan.io/v2/api?chainid=42220&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=asc&apikey=${ETHERSCAN_KEY}`)
+      fetch(`https://explorer.celo.org/api?module=account&action=balance&address=${address}`),
+      fetch(`https://explorer.celo.org/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=asc`)
     ])
 
     const balData    = await balRes.json()
@@ -325,7 +325,7 @@ export async function getBNBTransactions(address, page = 1, offset = 20) {
 
 export async function getCeloTransactions(address, page = 1, offset = 20) {
   try {
-    const res = await fetch(`https://api.etherscan.io/v2/api?chainid=42220&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=desc&apikey=${ETHERSCAN_KEY}`);
+    const res = await fetch(`https://explorer.celo.org/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=desc`);
     const data = await res.json();
     return (data.result || []).map(tx => ({
       hash: tx.hash,
