@@ -20,6 +20,16 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 
 ---
 
+## 📁 Repository Structure
+
+This repository is organized as a monorepo containing three core components:
+
+*   **`web/`**: The main React + Vite frontend application deployed on Vercel. Includes serverless backend API endpoints for secure AI risk scoring, Etherscan fetching, and on-chain Celo payment verification.
+*   **`txguard-stacks/`**: Clarity smart contracts for public audit logs, enabling wallet scan records to be permanently registry-audited on Stacks Mainnet. Includes a comprehensive Vitest test suite.
+*   **`simulator/`**: A lightweight Node.js + Express mock blockchain simulator used to test and verify transaction monitoring and risk engine triggers locally.
+
+---
+
 ## ✨ Features
 
 | Feature | Description |
@@ -33,18 +43,21 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 | 💬 **Ask AI** | Chat with TxGuard AI about any scanned wallet |
 | 📊 **Transaction Breakdown** | Categorizes wallet activity — Transfers, DeFi, Swap, NFT, Stablecoin |
 | 📜 **Transaction History** | Shows recent transfers with sender/receiver details, amount + asset, relative timestamps, chain-specific status badges, and explorer links |
+| 🎛️ **Multi-Wallet Dashboard** | Manage and scan multiple wallets concurrently with persistent local storage caching and live background reloading |
+| 🛡️ **Chain-Specific Validation** | Regex address formatting verification for Ethereum, BNB, Solana, Bitcoin, and Celo formats to prevent erroneous transfers |
+| 🔊 **Hybrid Web TTS** | Hybrid Text-to-Speech system with HTML5 Audio fallback for mobile webview compatibility |
 
 ---
 
-## 🚀 Live Demo
+## 🚀 Celo MiniPay Booster (Security Upgrades)
 
-**Web App:** [txguard-gules.vercel.app](https://txguard-gules.vercel.app)
+To qualify for the Celo Leaderboard and ensure robust protection against payment bypasses, TxGuard integrates **5 critical backend Celo Mainnet security verifications** built using `viem` and `wagmi`:
 
-**Inside MiniPay:**
-1. Open MiniPay app
-2. Tap the browser icon
-3. Go to `txguard-gules.vercel.app`
-4. TxGuard auto-detects MiniPay and switches to Celo mode
+1.  **On-Chain Sender Match Verification:** The backend extracts the transaction sender (`tx.from`) from the Celo blockchain and verifies it matches the active scanning user's address (`userAddress`). This prevents spoofing attacks (e.g. copying someone else's transaction hash).
+2.  **Replay Attack Protection:** A secure backend tracking layer logs every processed Celo transaction hash to memory and disk storage. Re-submitting an already used transaction hash will reject the scan.
+3.  **Block Timestamp Recency Check:** The API retrieves the block header of the Celo transaction and asserts that the block timestamp is within the last 15 minutes of server time, preventing historical transactions from being reused.
+4.  **Viem-Powered Contract Call Assertion:** Rather than relying on simple explorer API lookups, `viem` retrieves the raw contract call data to assert that the transaction invoked the `payScan()` function selector (`0x0752a777`) on the deployed contract, has succeeded, and was sent to the correct contract address.
+5.  **GoPlus Celo Fallback Engine:** Since GoPlus has limited direct Celo DB coverage, TxGuard automatically triggers a fallback local risk engine combined with Llama-3 AI to perform transaction risk assessment.
 
 ---
 
@@ -65,92 +78,53 @@ Built for the everyday crypto user — especially those on **MiniPay** across Af
 | **Network** | Stacks Mainnet |
 | **Contract Address** | [`SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry`](https://explorer.hiro.so/txid/SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry?chain=mainnet) |
 | **Type** | `registry.clar` — Security scan registry contract |
-| **Functionality** | Public auditing for target chains, wallet address, and risk scores |
-
-### Contract Functions
-
-#### 1. Celo Payment Paywall Contract (Solidity)
-```solidity
-payScan()          // Pay for a wallet scan (payable)
-scanFee()          // Get current scan fee
-totalScans()       // Total scans processed
-updateFee()        // Update fee (owner only)
-withdraw()         // Withdraw collected fees (owner only)
-```
-
-#### 2. Stacks Auditing Registry Contract (Clarity)
-```clarity
-(log-scan (chain (string-ascii 16)) (target (string-ascii 64)) (risk-score uint)) ;; Log a new scan (public)
-(get-scan (id uint))                                                             ;; Read a single scan by ID (read-only)
-(get-scan-count (chain (string-ascii 16)) (target (string-ascii 64)))            ;; Scans for a given (chain, target) pair (read-only)
-(get-total-scans)                                                                ;; Total scans logged (read-only)
-```
 
 ---
 
-## 🛠️ Tech Stack
+## ⚙️ Local Development & Setup
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | React + Vite |
-| **Styling** | Custom CSS — glassmorphism, dark mode, responsive |
-| **AI** | Groq API — Llama-3.1-8b-instant |
-| **Security DB** | GoPlus Security API |
-| **Blockchain Data** | Etherscan V2 API (ETH, BNB, Celo), Solana RPC, Blockstream (BTC) |
-| **Smart Contract** | Solidity 0.8.20 — deployed on Celo Mainnet |
-| **Web3** | Injected `window.ethereum` — MiniPay & Valora compatible |
-| **Hosting** | Vercel |
+### 1. React Web Application (`web/`)
 
----
-
-## ⚙️ Local Development
-
-### Prerequisites
+#### Prerequisites
 - Node.js v18+
-- A Groq API key — [console.groq.com](https://console.groq.com)
-- An Etherscan API key — [etherscan.io/apis](https://etherscan.io/apis)
+- Groq API key (from [console.groq.com](https://console.groq.com))
+- Etherscan API key (from [etherscan.io](https://etherscan.io))
 
-### Setup
-
+#### Installation
 ```bash
-# Clone the repo
+# Clone the repository
 git clone https://github.com/jotel-dev/txguard.git
 cd txguard/web
 
-# Install dependencies
+# Install packages
 npm install
 
-# Create environment file
+# Create environment configuration
 cp .env.example .env
-# Add your API keys to .env
+# Open .env and add VITE_GROQ_API_KEY and VITE_ETHERSCAN_API_KEY
 
-# Start dev server
+# Start server
 npm run dev
 ```
 
-### Environment Variables
-
-Create a `.env` file inside `web/`:
-
-```env
-VITE_GROQ_API_KEY=your_groq_api_key
-VITE_ETHERSCAN_API_KEY=your_etherscan_api_key
-```
-
----
-
-## 📱 Testing Inside MiniPay
-
-1. Start your local dev server (`npm run dev`)
-2. Expose your port using ngrok:
+### 2. Stacks Smart Contracts (`txguard-stacks/`)
+To compile, run coverage, and run tests for the Stacks auditing contracts:
 ```bash
-ngrok http 5173
+cd txguard-stacks
+npm install
+npm test
 ```
-3. Copy the `https://...ngrok-free.app` URL
-4. Open **MiniPay** on your phone
-5. Enable **Developer Mode** — tap the version number repeatedly in Settings → About
-6. Go to **Developer Settings → Load Test Page** → paste the ngrok URL
-7. Scan a wallet and approve the Celo transaction!
+
+### 3. Local Mock Blockchain Simulator (`simulator/`)
+To test the transaction lifecycle, block delays, and behavioral risk flags locally:
+```bash
+cd simulator
+npm install
+npm start  # Runs the Express simulator server on port 3000
+
+# In a separate terminal, run integration test validations
+npm test
+```
 
 ---
 
@@ -185,8 +159,9 @@ Score Ranges:
 - [x] Stacks / Bitcoin L2 support
 - [x] Transaction History tab (transfer list, copy addresses, status badges)
 - [x] Stuck transaction detection (stuck EVM txs & low-fee BTC txs warnings)
+- [x] Multi-wallet dashboard with persistence and live refreshing
+- [x] Chain-specific address validation checks (regex formats)
 - [ ] Telegram Bot (@TxGuardBot)
-- [ ] Multi-wallet dashboard
 - [ ] Community scam reporting
 
 ---
@@ -210,8 +185,8 @@ MIT © [jotel-dev](https://github.com/jotel-dev)
 - 🌐 **Live App:** [txguard-gules.vercel.app](https://txguard-gules.vercel.app)
 - 📜 **Contract:** [celoscan.io](https://celoscan.io/address/0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10)
 - 🐦 **Twitter:** [@TxGuardBot](https://twitter.com/TxGuardBot) coming soon
-- 💬 **Telegram Bot:** [@TxGuardBot](https://t.me/TxGuardBot) coming soon 
- 
+- 💬 **Telegram Bot:** [@TxGuardBot](https://t.me/TxGuardBot) coming soon
+
 ---
 
 *Built with ❤️ for Celo and Stacks ecosystems · Proof of Ship Season 2*
