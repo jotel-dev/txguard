@@ -40,13 +40,13 @@ export async function goplusCheck(address, chain) {
       }
     }
 
-    // For Solana / Bitcoin / Celo — GoPlus has limited/no support
-    if (chain === 'celo') {
+    // For Solana / Bitcoin / Stacks — GoPlus has limited/no support
+    if (chain === 'stacks') {
       return {
         isBlacklisted: false,
         isMalicious: false,
-        flags: [{ severity: 'info', label: 'Celo Local Fallback' }],
-        note: 'Celo Address Security is evaluated via TxGuard AI and on-chain behavioral engine. GoPlus DB check bypassed.',
+        flags: [{ severity: 'info', label: 'Stacks Local Fallback' }],
+        note: 'Stacks Address Security is evaluated via TxGuard AI and on-chain behavioral engine. GoPlus DB check bypassed.',
         raw: {}
       }
     }
@@ -156,12 +156,12 @@ export async function calculateRisk(address, chain, onchainData) {
 
   // GoPlus alerts (highest priority)
   security.flags.forEach(flag => {
-    if (flag.label === 'Celo Local Fallback') {
+    if (flag.label === 'Stacks Local Fallback') {
       alerts.push({
         type: 'info',
         icon: 'ℹ️',
-        title: 'Celo Mainnet Evaluation',
-        text: 'Threat analysis relies on TxGuard local risk engine and Llama-3 AI. GoPlus Security DB does not support Celo.'
+        title: 'Stacks Mainnet Evaluation',
+        text: 'Threat analysis relies on TxGuard local risk engine and Llama-3 AI. GoPlus Security DB does not support Stacks.'
       })
     } else {
       alerts.push({
