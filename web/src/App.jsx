@@ -1,31 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { openContractCall } from '@stacks/connect'
+import { AppConfig, UserSession, showConnect, openContractCall } from '@stacks/connect'
 import { uintCV, stringAsciiCV } from '@stacks/transactions'
 import { createNetwork } from '@stacks/network'
 
-// ── Celo Payment Contract Configuration ──
-const CONTRACT_ADDRESS = '0x20FFa15Ca89AfA1b855fD2ff4f0A4D453FfB0C10'
-const SCAN_FEE_SELECTOR = '0xf71d1732' // scanFee() view function selector
-const PAY_SCAN_SELECTOR = '0x0752a777' // payScan() payable function selector
+const appConfig = new AppConfig(['store_write', 'publish_data'])
+const userSession = new UserSession({ appConfig })
 
-// ── cUSD fee currency address (Celo Mainnet) ──
-// Required by MiniPay to pay gas fees in cUSD instead of CELO
-const CUSD_FEE_CURRENCY = '0x765DE816845861e75A25fCA122bb6898B8B1282a'
 
-// ── MiniPay Detection ──
-const isMiniPay = typeof window !== 'undefined' &&
-  window.ethereum?.isMiniPay === true
+// ── MiniPay Detection (Removed) ──
+const isMiniPay = false
 
 const CHAINS = [
+  { id: 'stacks',   label: 'Stacks',   placeholder: 'SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM' },
   { id: 'ethereum', label: 'Ethereum', placeholder: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e' },
   { id: 'bnb',      label: 'BNB',      placeholder: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' },
   { id: 'solana',   label: 'Solana',   placeholder: 'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm' },
   { id: 'bitcoin',  label: 'Bitcoin',  placeholder: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh' },
-  { id: 'celo',     label: 'Celo',     placeholder: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e' },
 ]
 
 const SAMPLE_WALLETS = {
+  stacks:   'SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM',
   ethereum: '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e',
   bnb:      '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   solana:   'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm',
@@ -67,12 +62,12 @@ const BitcoinIcon = () => (
   </svg>
 )
 
-const CeloIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 100 100" fill="none" style={{ borderRadius: '4px' }}>
-    <rect width="100" height="100" fill="#FFF53F"/>
-    <rect x="25" y="25" width="50" height="50" fill="#000000"/>
-    <circle cx="50" cy="50" r="20" fill="#FFF53F"/>
-    <rect x="65" y="40" width="10" height="20" fill="#FFF53F"/>
+const StacksIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" fill="#5546ff" />
+    <path d="M7 9L12 6L17 9L12 12L7 9Z" fill="white" />
+    <path d="M7 13L12 10L17 13L12 16L7 13Z" fill="white" opacity="0.8" />
+    <path d="M7 17L12 14L17 17L12 20L7 17Z" fill="white" opacity="0.6" />
   </svg>
 )
 
@@ -161,7 +156,7 @@ const CHAIN_ICONS = {
   bnb: <BnbIcon />,
   solana: <SolanaIcon />,
   bitcoin: <BitcoinIcon />,
-  celo: <CeloIcon />
+  stacks: <StacksIcon />
 }
 
 function getRiskClass(score) {
@@ -187,7 +182,7 @@ function getAlertDot(type) {
 }
 
 export default function App() {
-  const [chain, setChain]       = useState(isMiniPay ? 'celo' : 'ethereum')
+  const [chain, setChain]       = useState('stacks')
   const [wallet, setWallet]     = useState('')
   const [loading, setLoading]   = useState(false)
   const [result, setResult]     = useState(null)
@@ -196,6 +191,7 @@ export default function App() {
   const [answer, setAnswer]     = useState('')
   const [asking, setAsking]     = useState(false)
   const [miniPayAddress, setMiniPayAddress] = useState('')
+  const [stacksAddress, setStacksAddress] = useState('')
   const [speaking, setSpeaking] = useState(false)
   const audioRef = useRef(null)
   const utteranceRef = useRef(null)
@@ -375,6 +371,19 @@ export default function App() {
     }
   }, [])
 
+  // Initialize Stacks Wallet session on mount
+  useEffect(() => {
+    if (userSession.isUserSignedIn()) {
+      try {
+        const userData = userSession.loadUserData()
+        const addr = userData.profile?.stxAddress?.mainnet || userData.profile?.stxAddress?.testnet || ''
+        setStacksAddress(addr)
+      } catch (e) {
+        console.warn('Failed to load Stacks user data:', e)
+      }
+    }
+  }, [])
+
   // Cancel speech when result changes
   useEffect(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -388,9 +397,6 @@ export default function App() {
   }, [result])
 
   // ── Payment & Contract State ──
-  const [scanFeeWei, setScanFeeWei]   = useState('10000000000000000') // Default: 0.01 CELO
-  const [scanFeeCelo, setScanFeeCelo] = useState('0.01')
-  const [paying, setPaying]           = useState(false)
   const [loggingStacks, setLoggingStacks] = useState(false)
   const [stacksTxId, setStacksTxId] = useState('')
   const [resultTab, setResultTab] = useState('security') // 'security' | 'transactions'
@@ -418,11 +424,11 @@ export default function App() {
       },
       {
         id: '2',
-        label: 'MiniPay Savings Account',
-        address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-        chain: 'celo',
-        balance: '150.00 CELO',
-        riskScore: 24,
+        label: 'Stacks Audit Wallet',
+        address: 'SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM',
+        chain: 'stacks',
+        balance: '55.20 STX',
+        riskScore: 5,
         riskLabel: 'Safe'
       }
     ];
@@ -483,12 +489,7 @@ export default function App() {
       try {
         const body = { wallet: w.address, chain: w.chain };
         
-        if (w.chain === 'celo') {
-          updated[i].balance = '0.00 CELO';
-          updated[i].riskScore = 15;
-          updated[i].riskLabel = 'Safe';
-          continue;
-        }
+        // No custom Celo simulation needed
 
         const res = await fetch('/api/analyze', {
           method: 'POST',
@@ -518,12 +519,43 @@ export default function App() {
     const activeResult = (targetResult && typeof targetResult === 'object') ? targetResult : result
 
     if (!activeResult) return
+
+    // If not signed into Stacks, trigger connect dialog first
+    if (!userSession.isUserSignedIn()) {
+      setLoggingStacks(true)
+      showConnect({
+        appDetails: {
+          name: 'TxGuard',
+          icon: window.location.origin + '/logo.png?v=2',
+        },
+        onFinish: () => {
+          try {
+            const userData = userSession.loadUserData()
+            const addr = userData.profile?.stxAddress?.mainnet || userData.profile?.stxAddress?.testnet || ''
+            setStacksAddress(addr)
+            setLoggingStacks(false)
+            // Re-trigger scanning log execution
+            logScanToStacks(activeChain, activeWallet, activeResult)
+          } catch (err) {
+            console.error('Error loading Stacks user data:', err)
+            setLoggingStacks(false)
+          }
+        },
+        onCancel: () => {
+          setLoggingStacks(false)
+        },
+        userSession,
+      })
+      return
+    }
+
     setLoggingStacks(true)
     try {
       const myAddress = "SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM"
       const network = createNetwork('mainnet')
       
       openContractCall({
+        userSession,
         network,
         contractAddress: myAddress,
         contractName: 'registry',
@@ -569,46 +601,7 @@ export default function App() {
     setTxLoading(false)
   }
 
-  // ── Fetch Scan Fee from Contract on Mount ──
-  useEffect(() => {
-    async function loadFee() {
-      if (window.ethereum) {
-        try {
-          const res = await window.ethereum.request({
-            method: 'eth_call',
-            params: [{
-              to: CONTRACT_ADDRESS,
-              data: SCAN_FEE_SELECTOR
-            }, 'latest']
-          })
-          if (res && res !== '0x') {
-            const wei = BigInt(res)
-            setScanFeeWei(wei.toString())
-            const celoVal = Number(wei) / 1e18
-            setScanFeeCelo(celoVal.toString())
-          }
-        } catch (e) {
-          console.warn('Failed to fetch fee from Celo contract:', e)
-        }
-      }
-    }
-    loadFee()
-  }, [])
-
-  // ── Auto-detect MiniPay wallet address ──
-  useEffect(() => {
-    if (isMiniPay && window.ethereum) {
-      window.ethereum.request({ method: 'eth_requestAccounts' })
-        .then(accounts => {
-          if (accounts[0]) {
-            setMiniPayAddress(accounts[0])
-            setWallet(accounts[0])
-            setChain('celo')
-          }
-        })
-        .catch(err => console.warn('MiniPay wallet fetch failed:', err))
-    }
-  }, [])
+  // No Celo/MiniPay auto-detect triggers needed
 
   const selectedChain = CHAINS.find(c => c.id === chain)
 
@@ -626,185 +619,22 @@ export default function App() {
 
     setResult(null); setError(''); setAnswer(''); setStacksTxId('')
 
-    const targetAddress = targetWallet.toLowerCase()
-    let txHash = null
-    let userAddress = miniPayAddress
-
-    // ── Payment Check (Required for all scans) ──
-    if (true) {
-      if (!txHash) {
-        setPaying(true)
-        if (!userAddress && window.ethereum) {
-          try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-            userAddress = accounts[0]
-            setMiniPayAddress(userAddress)
-          } catch (e) {
-            setError('Wallet connection required for payment.')
-            setPaying(false)
-            return
-          }
-        }
-        if (!userAddress) {
-          setError('No Celo wallet detected. Please open inside MiniPay or install a Web3 wallet.')
-          setPaying(false)
-          return
-        }
-
-        try {
-          let txValue = BigInt(scanFeeWei)
-          // Safety Fallback: Ensure value is at least 0.01 CELO (10^16 wei)
-          if (txValue < 10000000000000000n) {
-            txValue = 10000000000000000n
-          }
-
-          // Only switch chain if NOT inside MiniPay
-          if (!isMiniPay) {
-            try {
-              await window.ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0xA4EC' }],
-              })
-            } catch (switchError) {
-              if (switchError.code === 4902) {
-                await window.ethereum.request({
-                  method: 'wallet_addEthereumChain',
-                  params: [{
-                    chainId: '0xA4EC',
-                    chainName: 'Celo Mainnet',
-                    nativeCurrency: { name: 'CELO', symbol: 'CELO', decimals: 18 },
-                    rpcUrls: ['https://forno.celo.org'],
-                    blockExplorerUrls: ['https://celoscan.io']
-                  }]
-                })
-                await window.ethereum.request({
-                  method: 'wallet_switchEthereumChain',
-                  params: [{ chainId: '0xA4EC' }],
-                })
-              } else {
-                throw switchError
-              }
-            }
-          }
-
-          txHash = null
-
-          if (isMiniPay) {
-            // MiniPay: pay gas in native CELO directly
-            // Skip cUSD feeCurrency attempt entirely
-            txHash = await window.ethereum.request({
-              method: 'eth_sendTransaction',
-              params: [{
-                from: userAddress,
-                to: CONTRACT_ADDRESS,
-                value: '0x' + txValue.toString(16),
-                data: PAY_SCAN_SELECTOR
-              }]
-            })
-          } else {
-            // Non-MiniPay: try cUSD first, fallback to CELO
-            try {
-              txHash = await window.ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [{
-                  from: userAddress,
-                  to: CONTRACT_ADDRESS,
-                  value: '0x' + txValue.toString(16),
-                  data: PAY_SCAN_SELECTOR,
-                  feeCurrency: CUSD_FEE_CURRENCY
-                }]
-              })
-            } catch (feeError) {
-              const msg = (feeError.message || '').toLowerCase()
-              const isUserRejection =
-                msg.includes('reject') ||
-                msg.includes('deny') ||
-                msg.includes('cancel') ||
-                msg.includes('user denied')
-              if (!isUserRejection) {
-                txHash = await window.ethereum.request({
-                  method: 'eth_sendTransaction',
-                  params: [{
-                    from: userAddress,
-                    to: CONTRACT_ADDRESS,
-                    value: '0x' + txValue.toString(16),
-                    data: PAY_SCAN_SELECTOR
-                  }]
-                })
-              } else {
-                throw feeError
-              }
-            }
-          }
-
-          // Poll for receipt
-          let confirmed = false
-          const maxAttempts = 15
-          for (let i = 0; i < maxAttempts; i++) {
-            const receipt = await window.ethereum.request({
-              method: 'eth_getTransactionReceipt',
-              params: [txHash]
-            })
-            if (receipt) {
-              if (
-                receipt.status === '0x1' ||
-                receipt.status === '0x01' ||
-                receipt.status === 1 ||
-                receipt.status === true
-              ) {
-                confirmed = true
-                break
-              } else {
-                throw new Error('Payment transaction reverted on-chain.')
-              }
-            }
-            await new Promise(r => setTimeout(r, 2000))
-          }
-          if (!confirmed) {
-            throw new Error('Payment transaction timed out. Please check Celoscan.')
-          }
-
-          setPaying(false)
-        } catch (e) {
-          console.error('Payment failed:', e)
-          const msg = (e.message || '').toLowerCase()
-          if (
-            msg.includes('insufficient') || 
-            msg.includes('funds') || 
-            msg.includes('balance') ||
-            msg.includes('cusd') ||
-            msg.includes('fee')
-          ) {
-            setError('Insufficient balance. Please make sure you have at least 0.01 CELO or cUSD in your wallet to pay for the scan.')
-          } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('user denied')) {
-            setError('Payment was cancelled.')
-          } else {
-            setError(e.message || 'Payment transaction rejected or failed.')
-          }
-          setPaying(false)
-          return
-        }
-      }
-    }
-
     setLoading(true)
     try {
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet: targetWallet, chain: targetChain, txHash, userAddress })
+        body: JSON.stringify({ wallet: targetWallet, chain: targetChain })
       })
       const data = await response.json()
       if (response.ok) {
         setResult(data)
         setResultTab('security')
         fetchTransactions(targetWallet, targetChain)
-        // Automatically prompt to log scan to Stacks Registry on mainnet (if not in MiniPay)
-        if (!isMiniPay) {
-          setTimeout(() => {
-            logScanToStacks(targetChain, targetWallet, data)
-          }, 800)
-        }
+        // Automatically prompt to log scan to Stacks Registry on mainnet
+        setTimeout(() => {
+          logScanToStacks(targetChain, targetWallet, data)
+        }, 800)
       } else {
         setError(data.error || 'Server returned an error. Please try again.')
       }
@@ -930,6 +760,17 @@ export default function App() {
             )}
 
             <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+              {stacksAddress && (
+                <div style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 4px' }}>
+                  <span>Connected: {stacksAddress.slice(0, 6)}...{stacksAddress.slice(-4)}</span>
+                  <button 
+                    onClick={() => { userSession.signUserOut(); setStacksAddress(''); }}
+                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: 0, fontSize: '11px' }}
+                  >
+                    Disconnect
+                  </button>
+                </div>
+              )}
               {stacksTxId ? (
                 <div className="payment-receipt-badge" style={{ backgroundColor: '#ecfdf5', color: '#10b981', border: '1px solid #d1fae5' }}>
                   <span className="receipt-icon">🟩</span>
@@ -1182,17 +1023,7 @@ export default function App() {
     )
   }
 
-  const renderPaying = () => {
-    if (!paying) return null
-    return (
-      <div className="loading-card payment-loading-card">
-        <div className="loading-spinner"></div>
-        <div className="loading-title">Celo Payment Pending</div>
-        <div className="loading-sub">Please approve the {scanFeeCelo} CELO scan fee in your MiniPay wallet...</div>
-      </div>
-    )
-  }
-
+  const renderPaying = () => null
   const renderError = () => {
     if (!error) return null
     return (
@@ -1204,32 +1035,28 @@ export default function App() {
   }
 
   const renderEmptyState = () => {
-    if (result || loading || paying || error) return null
+    if (result || loading || error) return null
     return (
       <div className="empty-state">
         <ShieldIcon />
         <div className="empty-title">Ready to Scan</div>
         <div className="empty-sub">
-          {isMiniPay
-            ? 'Enter or paste any Celo wallet address above to check it before sending.'
-            : 'Enter or paste any wallet address above to get an instant AI security analysis.'}
+          Enter or paste any wallet address above to get an instant AI security analysis.
         </div>
-        {!isMiniPay && (
-          <div className="sample-wallets">
-            {Object.entries(SAMPLE_WALLETS).map(([c, addr]) => (
-              <div
-                key={c}
-                className="sample-wallet"
-                onClick={() => {
-                  setChain(c)
-                  setWallet(addr)
-                }}
-              >
-                {c.toUpperCase()} · {addr.slice(0, 6)}...{addr.slice(-4)}
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="sample-wallets">
+          {Object.entries(SAMPLE_WALLETS).map(([c, addr]) => (
+            <div
+              key={c}
+              className="sample-wallet"
+              onClick={() => {
+                setChain(c)
+                setWallet(addr)
+              }}
+            >
+              {c.toUpperCase()} · {addr.slice(0, 6)}...{addr.slice(-4)}
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -1568,11 +1395,9 @@ export default function App() {
                   className="wallet-input"
                   placeholder={selectedChain.placeholder}
                   value={wallet}
-                  disabled={loading || paying}
-                  onChange={e => setWallet(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()}
+                  disabled={loading}
                 />
-                {wallet && !loading && !paying && (
+                {wallet && !loading && (
                   <button
                     onClick={() => setWallet('')}
                     style={{
@@ -1590,9 +1415,9 @@ export default function App() {
                 <button
                   className="scan-btn"
                   onClick={() => analyze()}
-                  disabled={loading || paying || !wallet.trim()}
+                  disabled={loading || !wallet.trim()}
                 >
-                  <span>{paying ? 'Paying...' : 'Scan'}</span>
+                  <span>Scan</span>
                   <ArrowRightIcon />
                 </button>
               </div>
@@ -1604,7 +1429,6 @@ export default function App() {
             </div>
 
             <div className="desktop-results">
-              {renderPaying()}
               {renderLoading()}
               {renderError()}
               {renderResults()}
@@ -1683,7 +1507,6 @@ export default function App() {
             </div>
 
             <div className="results-scroll-area">
-              {renderPaying()}
               {renderLoading()}
               {renderError()}
               {renderResults()}
@@ -1713,11 +1536,11 @@ export default function App() {
                 className="mobile-wallet-input"
                 placeholder={selectedChain.placeholder}
                 value={wallet}
-                disabled={loading || paying}
+                disabled={loading}
                 onChange={e => setWallet(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && !loading && !paying && analyze()}
+                onKeyDown={e => e.key === 'Enter' && !loading && analyze()}
               />
-              {wallet && !loading && !paying && (
+              {wallet && !loading && (
                 <button
                   onClick={() => setWallet('')}
                   style={{
@@ -1735,7 +1558,7 @@ export default function App() {
               <button
                 className="mobile-send-btn"
                 onClick={() => analyze()}
-                disabled={loading || paying || !wallet.trim()}
+                disabled={loading || !wallet.trim()}
               >
                 <ArrowUpIcon />
               </button>
@@ -1783,7 +1606,6 @@ function isValidAddress(address, chain) {
   switch (chain) {
     case 'ethereum':
     case 'bnb':
-    case 'celo':
       return /^0x[a-fA-F0-9]{40}$/.test(cleaned);
       
     case 'solana':
@@ -1793,6 +1615,9 @@ function isValidAddress(address, chain) {
       const isLegacy = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(cleaned);
       const isBech32 = /^bc1[ac-hj-np-z02-9]{11,71}$/i.test(cleaned);
       return isLegacy || isBech32;
+
+    case 'stacks':
+      return /^S[A-HP-Z0-9]{39,40}$/i.test(cleaned);
       
     default:
       return true;
