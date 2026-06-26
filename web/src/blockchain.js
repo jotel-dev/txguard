@@ -1,5 +1,5 @@
 // ── TxGuard Blockchain Data Service ──
-// Fetches real on-chain data for ETH, BNB, SOL, BTC, CELO
+// Fetches real on-chain data for ETH, BNB, SOL, BTC, STACKS
 
 const ETHERSCAN_KEY = (typeof process !== 'undefined' && process.env.ETHERSCAN_API_KEY) || 
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_ETHERSCAN_API_KEY) || 
@@ -177,41 +177,46 @@ export async function getBitcoinData(address) {
   }
 }
 
-// ── Celo ──
-export async function getCeloData(address) {
+// ── Stacks ──
+export async function getStacksData(address) {
   try {
     const [balRes, txRes] = await Promise.all([
-      fetch(`https://explorer.celo.org/api?module=account&action=balance&address=${address}`),
-      fetch(`https://explorer.celo.org/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=asc`)
+      fetch(`https://api.hiro.so/extended/v1/address/${address}/balances`),
+      fetch(`https://api.hiro.so/extended/v1/address/${address}/transactions?limit=10`)
     ])
 
-    const balData    = await balRes.json()
-    const txData     = await txRes.json()
-    const balanceCELO = parseFloat(balData.result || '0') / 1e18
-    const txList     = Array.isArray(txData.result) ? txData.result : []
+    const balData = await balRes.json()
+    const txData  = await txRes.json()
+
+    const balanceSTX = parseFloat(balData.stx?.balance || '0') / 1e6
+    const txList     = txData.results || []
 
     let walletAge = 'Unknown'
     if (txList.length > 0) {
-      const ts   = parseInt(txList[0].timeStamp) * 1000
-      const days = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24))
-      if (days > 365)     walletAge = `${Math.floor(days / 365)} year(s) old`
-      else if (days > 30) walletAge = `${Math.floor(days / 30)} month(s) old`
-      else                walletAge = `${days} day(s) old`
+      const ts   = parseInt(txList[txList.length - 1].burn_block_time) * 1000
+      if (ts) {
+        const days = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24))
+        if (days > 365)     walletAge = `${Math.floor(days / 365)} year(s) old`
+        else if (days > 30) walletAge = `${Math.floor(days / 30)} month(s) old`
+        else                walletAge = `${days} day(s) old`
+      } else {
+        walletAge = 'Active wallet'
+      }
     }
-
-    const categories = categorizeTxns(txList, 'celo')
 
     return {
-      balance: `${balanceCELO.toFixed(4)} CELO`,
-      balanceRaw: balanceCELO,
-      totalTransactions: txList.length.toString(),
+      balance: `${balanceSTX.toFixed(4)} STX`,
+      balanceRaw: balanceSTX,
+      totalTransactions: txData.total?.toString() || txList.length.toString(),
       walletAge,
       recentTxns: txList,
-      categories,
-      chain: 'celo'
+      categories: [
+        { name: 'Transfers', count: txList.length, percentage: 100 }
+      ],
+      chain: 'stacks'
     }
   } catch (e) {
-    console.error('Celo fetch error:', e)
+    console.error('Stacks fetch error:', e)
     return null
   }
 }
@@ -278,7 +283,7 @@ export async function getWalletData(address, chain) {
     case 'bnb':      return await getBNBData(address)
     case 'solana':   return await getSolanaData(address)
     case 'bitcoin':  return await getBitcoinData(address)
-    case 'celo':     return await getCeloData(address)
+    case 'stacks':   return await getStacksData(address)
     default:         return null
   }
 }
@@ -323,21 +328,41 @@ export async function getBNBTransactions(address, page = 1, offset = 20) {
   }
 }
 
-export async function getCeloTransactions(address, page = 1, offset = 20) {
+export async function getStacksTransactions(address, limit = 20) {
   try {
-    const res = await fetch(`https://explorer.celo.org/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=desc`);
+    const res = await fetch(`https://api.hiro.so/extended/v1/address/${address}/transactions?limit=${limit}`);
     const data = await res.json();
-    return (data.result || []).map(tx => ({
-      hash: tx.hash,
-      from: tx.from,
-      to: tx.to,
-      amount: (parseFloat(tx.value) / 1e18).toString(),
-      asset: 'CELO',
-      timestamp: parseInt(tx.timeStamp) * 1000,
-      status: tx.isError === '1' || tx.txreceipt_status === '0' ? 'Failed' : 'Confirmed'
-    }));
+    return (data.results || []).map(tx => {
+      const isContractCall = tx.tx_type === 'contract_call';
+      const isTokenTransfer = tx.tx_type === 'token_transfer';
+      
+      let amount = '0';
+      let asset = 'STX';
+      let to = 'Unknown';
+      let from = tx.sender_address || 'Unknown';
+
+      if (isTokenTransfer) {
+        amount = (parseInt(tx.token_transfer?.amount || '0') / 1e6).toString();
+        to = tx.token_transfer?.recipient_address || 'Unknown';
+      } else if (tx.stx_transfers && tx.stx_transfers.length > 0) {
+        const transfer = tx.stx_transfers[0];
+        amount = (parseInt(transfer.amount) / 1e6).toString();
+        to = transfer.recipient || 'Unknown';
+        from = transfer.sender || tx.sender_address || 'Unknown';
+      }
+
+      return {
+        hash: tx.tx_id,
+        from,
+        to,
+        amount,
+        asset,
+        timestamp: tx.burn_block_time * 1000 || Date.now(),
+        status: tx.tx_status === 'success' ? 'Confirmed' : 'Failed'
+      };
+    });
   } catch (e) {
-    console.error('Celo transactions fetch error:', e);
+    console.error('Stacks transactions fetch error:', e);
     return [];
   }
 }
@@ -520,7 +545,7 @@ export async function getRecentTransactions(address, chain) {
   switch (chain) {
     case 'ethereum': return await getEthereumTransactions(address);
     case 'bnb':      return await getBNBTransactions(address);
-    case 'celo':     return await getCeloTransactions(address);
+    case 'stacks':   return await getStacksTransactions(address);
     case 'solana':   return await getSolanaTransactions(address);
     case 'bitcoin':  return await getBitcoinTransactions(address);
     default:         return [];
