@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { AppConfig, UserSession, showConnect, openContractCall } from '@stacks/connect'
+import { AppConfig, UserSession, authenticate, openContractCall, isStacksWalletInstalled } from '@stacks/connect'
 import { uintCV, stringAsciiCV } from '@stacks/transactions'
 import { createNetwork } from '@stacks/network'
 
@@ -399,6 +399,7 @@ export default function App() {
   // ── Payment & Contract State ──
   const [loggingStacks, setLoggingStacks] = useState(false)
   const [stacksTxId, setStacksTxId] = useState('')
+  const [stacksError, setStacksError] = useState('')
   const [resultTab, setResultTab] = useState('security') // 'security' | 'transactions'
   const [txHistory, setTxHistory] = useState([])
   const [txLoading, setTxLoading] = useState(false)
@@ -520,8 +521,10 @@ export default function App() {
 
     if (!activeResult) return
 
-    if (typeof window !== 'undefined' && !window.StacksProvider) {
-      alert('Please install a Stacks wallet (like Leather or Xverse) to continue.')
+    setStacksError('')
+
+    if (typeof window !== 'undefined' && !isStacksWalletInstalled()) {
+      setStacksError('No Stacks wallet detected. Please install Leather or Xverse browser extension and refresh the page.')
       return
     }
 
@@ -529,7 +532,7 @@ export default function App() {
     if (!userSession.isUserSignedIn()) {
       setLoggingStacks(true)
       try {
-        showConnect({
+        authenticate({
           appDetails: {
             name: 'TxGuard',
             icon: window.location.origin + '/logo.png?v=2',
@@ -540,10 +543,11 @@ export default function App() {
               const addr = userData.profile?.stxAddress?.mainnet || userData.profile?.stxAddress?.testnet || ''
               setStacksAddress(addr)
               setLoggingStacks(false)
-              // Re-trigger scanning log execution
+              // Re-trigger scanning log execution after successful connection
               logScanToStacks(activeChain, activeWallet, activeResult)
             } catch (err) {
               console.error('Error loading Stacks user data:', err)
+              setStacksError('Failed to load wallet data. Please try again.')
               setLoggingStacks(false)
             }
           },
@@ -553,7 +557,8 @@ export default function App() {
           userSession,
         })
       } catch (e) {
-        console.error('showConnect error:', e)
+        console.error('authenticate error:', e)
+        setStacksError(`Failed to open wallet connection dialog. Please check your wallet extension.`)
         setLoggingStacks(false)
       }
       return
@@ -580,15 +585,17 @@ export default function App() {
           icon: window.location.origin + '/logo.png?v=2',
         },
         onFinish: (data) => {
-          setStacksTxId(data.txId)
+          setStacksTxId(data.txId || data.txid || '')
           setLoggingStacks(false)
         },
-        onCancel: () => {
+        onCancel: (err) => {
+          console.warn('Stacks contract call cancelled:', err)
           setLoggingStacks(false)
         }
       })
     } catch (e) {
       console.error('Stacks logging failed:', e)
+      setStacksError('Transaction failed to start. Please try again.')
       setLoggingStacks(false)
     }
   }
@@ -641,6 +648,7 @@ export default function App() {
         setResult(data)
         setResultTab('security')
         fetchTransactions(targetWallet, targetChain)
+        setStacksError('')
         // Automatically prompt to log scan to Stacks Registry on mainnet
         setTimeout(() => {
           logScanToStacks(targetChain, targetWallet, data)
@@ -764,6 +772,12 @@ export default function App() {
                   </button>
                 </div>
               )}
+              {stacksError && (
+                <div className="error-card small" style={{ padding: '10px 12px', fontSize: '12px' }}>
+                  <span>⚠</span>
+                  <span>{stacksError}</span>
+                </div>
+              )}
               {stacksTxId ? (
                 <div className="payment-receipt-badge" style={{ backgroundColor: '#ecfdf5', color: '#10b981', border: '1px solid #d1fae5' }}>
                   <span className="receipt-icon">🟩</span>
@@ -782,7 +796,7 @@ export default function App() {
                 </div>
               ) : (
                 <button
-                  onClick={() => logScanToStacks(chain, wallet, result)}
+                  onClick={() => { setStacksError(''); logScanToStacks(chain, wallet, result); }}
                   disabled={loggingStacks}
                   style={{
                     width: '100%',
