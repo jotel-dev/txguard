@@ -148,8 +148,8 @@ export async function calculateRisk(address, chain, onchainData) {
 
   // ── Final score = GoPlus (weighted 70%) + Behavior (30%) ──
   const finalScore = goplusScore > 0
-    ? Math.min(100, goplusScore + behavior.score * 0.3)
-    : Math.min(100, Math.max(0, behavior.score))
+    ? Math.round(Math.min(100, goplusScore + behavior.score * 0.3))
+    : Math.round(Math.min(100, Math.max(0, behavior.score)))
 
   // ── Build security alerts from real data ──
   const alerts = []

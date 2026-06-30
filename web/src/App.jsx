@@ -573,7 +573,7 @@ export default function App() {
         functionArgs: [
           stringAsciiCV(activeChain),
           stringAsciiCV(activeWallet.trim()),
-          uintCV(activeResult.riskScore)
+          uintCV(Math.round(activeResult.riskScore))
         ],
         appDetails: {
           name: 'TxGuard',
