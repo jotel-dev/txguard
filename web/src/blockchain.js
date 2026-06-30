@@ -223,7 +223,7 @@ export async function getStacksData(address) {
 
 // ── Transaction Categorizer ──
 function categorizeTxns(txns, chain) {
-  if (!txns || txns.length === 0) {
+  if (!Array.isArray(txns) || txns.length === 0) {
     return [
       { name: 'Transfers', count: 0, percentage: 0 },
       { name: 'DeFi',      count: 0, percentage: 0 },
@@ -491,22 +491,20 @@ export async function getBitcoinTransactions(address) {
       let to = 'Unknown';
       let amount = 0;
       const targetAddr = address.toLowerCase();
+      const isSender = tx.vin?.some(vin => vin.prevout?.scriptpubkey_address?.toLowerCase() === targetAddr);
 
-      const receivedOutput = tx.vout?.find(out => out.scriptpubkey_address?.toLowerCase() === targetAddr);
-      if (receivedOutput) {
-        amount = receivedOutput.value / 1e8;
-        to = address;
-        from = tx.vin?.[0]?.prevout?.scriptpubkey_address || 'Multiple Inputs';
-      } else {
-        const destOutput = tx.vout?.find(out => out.scriptpubkey_address?.toLowerCase() !== targetAddr);
-        if (destOutput) {
-          amount = destOutput.value / 1e8;
-          to = destOutput.scriptpubkey_address || 'Unknown';
-        } else if (tx.vout?.[0]) {
-          amount = tx.vout[0].value / 1e8;
-          to = tx.vout[0].scriptpubkey_address || 'Unknown';
-        }
+      if (isSender) {
         from = address;
+        const externalOutputs = tx.vout?.filter(out => out.scriptpubkey_address?.toLowerCase() !== targetAddr) || [];
+        amount = externalOutputs.reduce((sum, out) => sum + out.value, 0) / 1e8;
+        to = externalOutputs.length > 0 ? (externalOutputs[0].scriptpubkey_address || 'Unknown') : 'Self Transfer';
+      } else {
+        const receivedOutput = tx.vout?.find(out => out.scriptpubkey_address?.toLowerCase() === targetAddr);
+        if (receivedOutput) {
+          amount = receivedOutput.value / 1e8;
+          to = address;
+          from = tx.vin?.[0]?.prevout?.scriptpubkey_address || 'Multiple Inputs';
+        }
       }
 
       const confirmed = tx.status?.confirmed;
