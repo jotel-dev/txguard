@@ -55,7 +55,7 @@ export async function goplusCheck(address, chain) {
 
   } catch (e) {
     console.warn('GoPlus check failed:', e)
-    return { isBlacklisted: false, isMalicious: false, flags: [], raw: {} }
+    return { isBlacklisted: false, isMalicious: false, flags: [{ severity: 'warn', label: 'GoPlus API Offline' }], raw: {} }
   }
 }
 
@@ -81,7 +81,7 @@ export function scoreBehavior(onchainData, chain) {
 
   if (!onchainData) return { score: 30, signals: ['Unable to fetch on-chain data'] }
 
-  const txCount    = parseInt(onchainData.totalTransactions) || 0
+  const txCount    = parseInt(String(onchainData.totalTransactions || '').replace(/[^0-9]/g, ''), 10) || 0
   const balanceRaw = onchainData.balanceRaw || 0
   const walletAge  = onchainData.walletAge  || 'Unknown'
 
@@ -137,13 +137,15 @@ export async function calculateRisk(address, chain, onchainData) {
 
   // ── Base score from GoPlus flags ──
   let goplusScore = 0
-  if (security.isMalicious  || security.isBlacklisted) goplusScore += 80
+  if (security.isMalicious)  goplusScore += 80
+  if (security.isBlacklisted) goplusScore += 80
   if (security.isPhishing)   goplusScore += 75
   if (security.isRansomware) goplusScore += 85
   if (security.isStealer)    goplusScore += 80
   if (security.isMixer)      goplusScore += 40
   if (security.isHoneypot)   goplusScore += 50
   if (security.isFakeToken)  goplusScore += 45
+  if (security.isDataTheft)  goplusScore += 60
   if (security.isApprovalAbuse) goplusScore += 30
 
   // ── Final score = GoPlus (weighted 70%) + Behavior (30%) ──

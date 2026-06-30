@@ -44,7 +44,7 @@ export function analyzeTransaction(tx, senderWallet) {
     return txAgeMs < RAPID_TX_WINDOW_MS;
   });
 
-  if (recentTxs.length >= RAPID_TX_LIMIT) {
+  if (recentTxs.length + 1 >= RAPID_TX_LIMIT) {
     flags.push('RAPID_TRANSACTIONS');
     score += 40;
   }
