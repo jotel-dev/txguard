@@ -873,7 +873,7 @@ export default function App() {
             <div className="section-label">Security Alerts</div>
             <div className="alerts-list">
               {result.alerts?.map((alert, i) => (
-                <div key={i} className="alert-item">
+                <div key={alert.title ? `${alert.title}-${i}` : i} className="alert-item">
                   <div className={`alert-dot ${getAlertDot(alert.type)}`}></div>
                   <div className="alert-content">
                     <div className="alert-title">{alert.title}</div>
@@ -888,7 +888,7 @@ export default function App() {
             <div className="section-label">Transaction Breakdown</div>
             <div className="categories-list">
               {result.categories?.filter(c => c.count > 0).map((cat, i) => (
-                <div key={i} className="bar-row">
+                <div key={cat.name || i} className="bar-row">
                   <span className="bar-label">{cat.name}</span>
                   <div className="bar-track">
                     <div className="bar-fill" style={{ width: `${cat.percentage}%` }}></div>
@@ -903,7 +903,7 @@ export default function App() {
             <div className="section-label">Recommendations</div>
             <div className="recs-list">
               {result.recommendations?.map((rec, i) => (
-                <div key={i} className="rec-item">
+                <div key={rec || i} className="rec-item">
                   <span className="rec-num">{i + 1}</span>
                   <span className="rec-text">{rec}</span>
                 </div>
@@ -958,7 +958,7 @@ export default function App() {
             {!txLoading && !txError && txHistory.length > 0 && (
               <div className="tx-list">
                 {txHistory.map((tx, idx) => (
-                  <div key={idx} className="tx-item">
+                  <div key={tx.hash || tx.id || idx} className="tx-item">
                     <div className="tx-item-header">
                       <span className="tx-item-hash">
                         Tx: <a href={getExplorerTxLink(chain, tx.hash)} target="_blank" rel="noopener noreferrer" className="receipt-link">
@@ -1402,6 +1402,7 @@ export default function App() {
                   className="wallet-input"
                   placeholder={selectedChain.placeholder}
                   value={wallet}
+                  onChange={e => setWallet(e.target.value)}
                   disabled={loading}
                 />
                 {wallet && !loading && (
@@ -1429,7 +1430,7 @@ export default function App() {
                 </button>
               </div>
               <div className="input-icons">
-                <button className="input-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
+                <button className="input-icon-btn" onClick={() => {}} title="Placeholder">+</button>
                 <button className="input-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
                 <button className="input-icon-btn" title="Link"><LinkIcon /></button>
               </div>
@@ -1571,7 +1572,7 @@ export default function App() {
               </button>
             </div>
             <div className="mobile-icons-row">
-              <button className="mobile-icon-btn" onClick={() => setWallet(w => w + '+')}>➕</button>
+              <button className="mobile-icon-btn" onClick={() => {}} title="Placeholder">+</button>
               <button className="mobile-icon-btn" onClick={handlePaste} title="Paste"><CopyIcon /></button>
               <button className="mobile-icon-btn" title="Link"><LinkIcon /></button>
             </div>
@@ -1619,7 +1620,7 @@ function isValidAddress(address, chain) {
       return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(cleaned);
       
     case 'bitcoin':
-      const isLegacy = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(cleaned);
+      const isLegacy = /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/.test(cleaned);
       const isBech32 = /^bc1[ac-hj-np-z02-9]{11,71}$/i.test(cleaned);
       return isLegacy || isBech32;
 
