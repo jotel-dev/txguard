@@ -67,7 +67,8 @@ app.post('/api/wallets', (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -76,7 +77,8 @@ app.get('/api/wallets', (req, res) => {
   try {
     res.json({ wallets: listWallets() });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -96,7 +98,8 @@ app.get('/api/wallets/:address', (req, res) => {
       txHistory: wallet.txHistory
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -131,7 +134,8 @@ app.get('/api/transactions', (req, res) => {
   try {
     res.json({ transactions: listTransactions() });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -144,7 +148,8 @@ app.get('/api/transactions/:hash', (req, res) => {
     }
     res.json(tx);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
