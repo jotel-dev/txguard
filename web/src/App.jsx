@@ -520,32 +520,42 @@ export default function App() {
 
     if (!activeResult) return
 
+    if (typeof window !== 'undefined' && !window.StacksProvider) {
+      alert('Please install a Stacks wallet (like Leather or Xverse) to continue.')
+      return
+    }
+
     // If not signed into Stacks, trigger connect dialog first
     if (!userSession.isUserSignedIn()) {
       setLoggingStacks(true)
-      showConnect({
-        appDetails: {
-          name: 'TxGuard',
-          icon: window.location.origin + '/logo.png?v=2',
-        },
-        onFinish: () => {
-          try {
-            const userData = userSession.loadUserData()
-            const addr = userData.profile?.stxAddress?.mainnet || userData.profile?.stxAddress?.testnet || ''
-            setStacksAddress(addr)
+      try {
+        showConnect({
+          appDetails: {
+            name: 'TxGuard',
+            icon: window.location.origin + '/logo.png?v=2',
+          },
+          onFinish: () => {
+            try {
+              const userData = userSession.loadUserData()
+              const addr = userData.profile?.stxAddress?.mainnet || userData.profile?.stxAddress?.testnet || ''
+              setStacksAddress(addr)
+              setLoggingStacks(false)
+              // Re-trigger scanning log execution
+              logScanToStacks(activeChain, activeWallet, activeResult)
+            } catch (err) {
+              console.error('Error loading Stacks user data:', err)
+              setLoggingStacks(false)
+            }
+          },
+          onCancel: () => {
             setLoggingStacks(false)
-            // Re-trigger scanning log execution
-            logScanToStacks(activeChain, activeWallet, activeResult)
-          } catch (err) {
-            console.error('Error loading Stacks user data:', err)
-            setLoggingStacks(false)
-          }
-        },
-        onCancel: () => {
-          setLoggingStacks(false)
-        },
-        userSession,
-      })
+          },
+          userSession,
+        })
+      } catch (e) {
+        console.error('showConnect error:', e)
+        setLoggingStacks(false)
+      }
       return
     }
 
@@ -741,23 +751,6 @@ export default function App() {
             <div className="score-bar-track">
               <div className="score-bar-fill" style={{ width: `${result.riskScore}%` }}></div>
             </div>
-
-            {result.paymentTx && (
-              <div className="payment-receipt-badge">
-                <span className="receipt-icon">⚡</span>
-                <span className="receipt-text">
-                  On-Chain Scan Receipt:{" "}
-                  <a
-                    href={`https://celoscan.io/tx/${result.paymentTx}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="receipt-link"
-                  >
-                    {result.paymentTx.slice(0, 10)}...{result.paymentTx.slice(-8)} ↗
-                  </a>
-                </span>
-              </div>
-            )}
 
             <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               {stacksAddress && (

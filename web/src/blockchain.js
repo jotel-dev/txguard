@@ -249,7 +249,7 @@ function categorizeTxns(txns, chain) {
       input.startsWith('0xa9059cbb') ||
       input.startsWith('0x23b872dd')
     ) {
-      chain === 'celo' ? stablecoin++ : transfers++
+      transfers++
     } else if (
       input.startsWith('0x42842e0e')
     ) {
