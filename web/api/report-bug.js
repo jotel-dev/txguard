@@ -33,7 +33,8 @@ export default async function handler(req, res) {
 
   // Write report to local bugs.json database file for persistence
   try {
-    const filePath = path.join(process.cwd(), 'api', 'bugs.json');
+    const isVercel = process.env.VERCEL === '1' || process.env.VERCEL;
+    const filePath = isVercel ? '/tmp/bugs.json' : path.join(process.cwd(), 'api', 'bugs.json');
     let bugs = [];
     if (fs.existsSync(filePath)) {
       const data = fs.readFileSync(filePath, 'utf8');

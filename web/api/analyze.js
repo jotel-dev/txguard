@@ -66,6 +66,10 @@ export default async function handler(req, res) {
     let riskEngineResult = null;
     try { riskEngineResult = await calculateRisk(wallet, chain, onchainData); } catch (e) { console.warn('Backend calculateRisk failed:', e); }
 
+    if (!onchainData || !riskEngineResult) {
+      return res.status(500).json({ error: 'Backend systems failed to fetch wallet data or calculate risk.' });
+    }
+
     const chainName = chain === 'bnb' ? 'BNB Chain' : chain.charAt(0).toUpperCase() + chain.slice(1);
     const dataContext = onchainData
       ? `LIVE BLOCKCHAIN DATA:\n- Balance: ${onchainData.balance}\n- Total Transactions: ${onchainData.totalTransactions}\n- Wallet Age: ${onchainData.walletAge}\n- Categories: ${JSON.stringify(onchainData.categories)}`

@@ -171,6 +171,36 @@ export default defineConfig(({ mode }) => {
                 } catch (err) {
                   console.error('Local dev serverless handler error:', err)
                   res.statusCode = 500
+                  res.setHeader('Content-Type', 'application/json')
+                  res.end(JSON.stringify({ error: err.message }))
+                }
+              })
+            }
+            // Intercept /api/tts endpoint
+            else if (req.url.startsWith('/api/tts')) {
+              let body = ''
+              req.on('data', chunk => { body += chunk })
+              req.on('end', async () => {
+                try {
+                  req.body = body ? JSON.parse(body) : {}
+                } catch (e) {
+                  req.body = {}
+                }
+
+                const mockRes = {
+                  status(code) { res.statusCode = code; return this; },
+                  json(data) { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(data)); return this; },
+                  setHeader(name, value) { res.setHeader(name, value); return this; },
+                  end(data) { res.end(data); return this; }
+                }
+
+                try {
+                  const ttsHandler = (await import('./api/tts.js')).default
+                  await ttsHandler(req, mockRes)
+                } catch (err) {
+                  console.error('Local dev serverless handler error:', err)
+                  res.statusCode = 500
+                  res.setHeader('Content-Type', 'application/json')
                   res.end(JSON.stringify({ error: err.message }))
                 }
               })
