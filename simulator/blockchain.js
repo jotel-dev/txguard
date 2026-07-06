@@ -19,7 +19,7 @@ export function seedData() {
   // Pre-seed some wallets to make it easy to start
   const walletA = createWallet(5000, '0x742d35Cc6634C0532925a3b8D4C9E4f27F9cA5e'); // standard sample wallet
   const walletB = createWallet(100, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c');
-  const walletC = createWallet(10, '0xDRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm');
+  const walletC = createWallet(10, 'DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm');
   
   // Make walletA "old" (e.g. 1 year old) so it does not trigger the NEW_WALLET flag
   walletA.createdAt = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);

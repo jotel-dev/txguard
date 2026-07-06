@@ -47,14 +47,14 @@ export default async function handler(req, res) {
   }
 
   // Print bug report in console for review/debugging
-  console.log('=================== NEW BUG REPORT ===================');
-  console.log(`ID:       ${bugReport.id}`);
-  console.log(`Category: ${bugReport.category}`);
-  console.log(`Severity: ${bugReport.severity}`);
-  console.log(`Title:    ${bugReport.title}`);
-  console.log(`Email:    ${bugReport.email}`);
-  console.log(`Details:  ${bugReport.description}`);
-  console.log('======================================================');
+  // console.log('=================== NEW BUG REPORT ===================');
+  // console.log(`ID:       ${bugReport.id}`);
+  // console.log(`Category: ${bugReport.category}`);
+  // console.log(`Severity: ${bugReport.severity}`);
+  // console.log(`Title:    ${bugReport.title}`);
+  // console.log(`Email:    ${bugReport.email}`);
+  // console.log(`Details:  ${bugReport.description}`);
+  // console.log('======================================================');
 
   // Simulate server side process delay
   await new Promise(resolve => setTimeout(resolve, 800));

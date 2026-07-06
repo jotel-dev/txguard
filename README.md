@@ -74,7 +74,7 @@ npm install
 
 # Create environment configuration
 cp .env.example .env
-# Open .env and add VITE_GROQ_API_KEY and VITE_ETHERSCAN_API_KEY
+# Open .env and add GROQ_API_KEY and ETHERSCAN_API_KEY
 
 # Start server
 npm run dev
