@@ -11,21 +11,20 @@
   },
   "dependencies": {
     "@stacks/connect": "^8.2.6",
+    "@stacks/network": "^7.4.0",
     "@stacks/transactions": "^7.4.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "viem": "^2.21.19",
-    "wagmi": "^2.12.5",
-    "vite": "^8.0.12",
-    "@vitejs/plugin-react": "^6.0.1"
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "vite": "^8.0.12"
   }
 }

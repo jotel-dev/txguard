@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     let riskEngineResult = null;
     try { riskEngineResult = await calculateRisk(wallet, chain, onchainData); } catch (e) { console.warn('Backend calculateRisk failed:', e); }
 
-    if (!onchainData || !riskEngineResult) {
+    if (!onchainData && !riskEngineResult) {
       return res.status(500).json({ error: 'Backend systems failed to fetch wallet data or calculate risk.' });
     }
 

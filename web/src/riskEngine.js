@@ -149,9 +149,9 @@ export async function calculateRisk(address, chain, onchainData) {
   if (security.isApprovalAbuse) goplusScore += 30
 
   // ── Final score = GoPlus (weighted 70%) + Behavior (30%) ──
-  const finalScore = goplusScore > 0
-    ? Math.round(Math.min(100, goplusScore + behavior.score * 0.3))
-    : Math.round(Math.min(100, Math.max(0, behavior.score)))
+  const normalizedGoPlus = Math.min(100, goplusScore)
+  const normalizedBehavior = Math.min(100, behavior.score * 2)
+  const finalScore = Math.round((normalizedGoPlus * 0.7) + (normalizedBehavior * 0.3))
 
   // ── Build security alerts from real data ──
   const alerts = []

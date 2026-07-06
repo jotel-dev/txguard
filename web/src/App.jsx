@@ -1625,7 +1625,7 @@ function isValidAddress(address, chain) {
       return isLegacy || isBech32;
 
     case 'stacks':
-      return /^S[A-HP-Z0-9]{39,40}$/i.test(cleaned);
+      return /^S[A-Z0-9]{38,40}$/i.test(cleaned);
       
     default:
       return true;
