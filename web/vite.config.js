@@ -6,7 +6,18 @@ import { pathToFileURL } from 'node:url'
 const routes = new Set(['analyze', 'transactions', 'ask', 'tts', 'report-bug', 'registry'])
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  for (const key of ['GROQ_API_KEY', 'ETHERSCAN_API_KEY', 'APP_ORIGIN'])
+  for (const key of [
+    'GROQ_API_KEY',
+    'ETHERSCAN_API_KEY',
+    'APP_ORIGIN',
+    'UPSTASH_REDIS_REST_URL',
+    'UPSTASH_REDIS_REST_TOKEN',
+    'KV_REST_API_URL',
+    'KV_REST_API_TOKEN',
+    'RATE_LIMIT_HMAC_SECRET',
+    'RATE_LIMIT_GLOBAL_PER_MINUTE',
+    'RATE_LIMIT_AI_GLOBAL_PER_MINUTE',
+  ])
     if (env[key]) process.env[key] = env[key]
   return {
     plugins: [

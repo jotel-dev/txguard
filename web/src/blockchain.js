@@ -1,5 +1,6 @@
 import { formatUnits, walletKey, isValidAddress } from '../shared/chains.js'
 import { fetchJSON, createCache } from '../server/http.js'
+import { readEtherscan } from '../server/etherscan.js'
 
 /** @typedef {{hash:string,from:string|null,to:string|null,amount:string|null,asset:string,timestamp:number|null,status:string,kind?:string,statusDetails?:string}} Transaction */
 const historyCache = createCache(30000)
@@ -16,30 +17,7 @@ const requireArray = (value) => {
 }
 
 async function etherscan(address, chain, action) {
-  if (!process.env.ETHERSCAN_API_KEY) throw new Error('Explorer credentials unavailable')
-  const query = new URLSearchParams({
-    chainid: chain === 'bnb' ? '56' : '1',
-    module: 'account',
-    action,
-    address,
-    tag: 'latest',
-    page: '1',
-    offset: '20',
-    sort: 'desc',
-    apikey: process.env.ETHERSCAN_API_KEY,
-  })
-  const data = await fetchJSON(`https://api.etherscan.io/v2/api?${query}`)
-  if (data.status !== '1') {
-    if (
-      data.status === '0' &&
-      data.message === 'No transactions found' &&
-      Array.isArray(data.result) &&
-      action !== 'balance'
-    )
-      return []
-    throw new Error('Explorer returned an error')
-  }
-  return data.result
+  return readEtherscan(address, chain, action)
 }
 async function solana(method, params) {
   const data = await fetchJSON(RPC, {
@@ -53,7 +31,10 @@ async function solana(method, params) {
 
 export function parseEvmTransaction(tx, chain, token = false) {
   if (!/^0x[\da-fA-F]{64}$/.test(tx.hash || '')) throw new Error('Invalid transaction hash')
-  const amount = formatUnits(tx.value, token ? Number(tx.tokenDecimal) : 18)
+  const tokenDecimals = /^(?:0|[1-9]\d?)$/.test(String(tx.tokenDecimal))
+    ? Number(tx.tokenDecimal)
+    : NaN
+  const amount = formatUnits(tx.value, token ? tokenDecimals : 18)
   const confirmations = uint(tx.confirmations) ? BigInt(tx.confirmations) : null
   const status =
     tx.isError === '1' || tx.txreceipt_status === '0'
@@ -198,7 +179,7 @@ async function collectTransactions(address, chain) {
       etherscan(address, chain, 'txlist'),
       etherscan(address, chain, 'tokentx'),
     ])
-    if (native.status === 'rejected') throw new Error('History unavailable')
+    if (native.status === 'rejected') throw native.reason
     const transactions = requireArray(native.value)
       .slice(0, 20)
       .map((tx) => parseEvmTransaction(tx, chain))

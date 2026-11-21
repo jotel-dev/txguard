@@ -1,4 +1,5 @@
-import { test, afterEach, beforeEach } from 'node:test'
+import { test, afterEach, beforeEach, mock } from 'node:test'
+import { rateLimiter, createRateLimiter } from '../server/rate-limit.js'
 import assert from 'node:assert/strict'
 import analyze from '../api/analyze.js'
 import ask from '../api/ask.js'
@@ -13,8 +14,11 @@ const originalKey = process.env.GROQ_API_KEY
 const originalExplorerKey = process.env.ETHERSCAN_API_KEY
 beforeEach(() => {
   delete process.env.ETHERSCAN_API_KEY
+  // Never contact configured real infrastructure from deterministic handler tests.
+  mock.method(rateLimiter, 'consume', createRateLimiter({ env: {} }).consume)
 })
 afterEach(() => {
+  mock.restoreAll()
   if (originalExplorerKey) process.env.ETHERSCAN_API_KEY = originalExplorerKey
   else delete process.env.ETHERSCAN_API_KEY
 })
@@ -301,4 +305,18 @@ test('valid Groq focus is rendered only from verified evidence and repeated requ
   assert.equal(a.text, 'GoPlus: unavailable. No simulation.')
   assert.equal(b.text, a.text)
   assert.equal(calls, 1)
+})
+
+test('production protection failure stops the actual scan handler before blockchain or AI calls', async () => {
+  mock.restoreAll()
+  mock.method(rateLimiter, 'consume', createRateLimiter({ env:{VERCEL:'1',NODE_ENV:'production'} }).consume)
+  let calls=0
+  globalThis.fetch=async()=>{calls++;throw Error('must not fetch')}
+  const result=response()
+  await analyze(req({wallet:eth,chain:'ethereum'}),result)
+  assert.equal(result.code,503)
+  assert.equal(result.headers['Retry-After'],'30')
+  assert.match(result.body.error,/protection is unavailable/)
+  assert.equal(calls,0)
+  assert.equal(result.body.riskScore,undefined)
 })

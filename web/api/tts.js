@@ -1,6 +1,6 @@
 import { guard } from '../server/http.js'
 export default async function handler(req, res) {
-  if (!guard(req, res, 'POST', 10)) return
+  if (!(await guard(req, res, 'POST', 'tts'))) return
   if (typeof req.body.text !== 'string' || !req.body.text.trim() || req.body.text.length > 200)
     return res.status(400).json({ error: 'Text must contain 1-200 characters.' })
   try {

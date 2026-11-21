@@ -1,11 +1,9 @@
-import { createHash } from 'node:crypto'
 import { isValidAddress, CHAINS } from '../shared/chains.js'
+import { rateLimiter } from './rate-limit.js'
 
-const buckets = new Map()
 export const BODY_LIMIT = 8192
 
-// Defense in depth per warm instance. Configure a distributed Vercel firewall rule before public traffic.
-export function guard(req, res, method, limit = 20) {
+export async function guard(req, res, method, scope = 'scan') {
   res.setHeader('Cache-Control', 'no-store')
   res.setHeader('X-Content-Type-Options', 'nosniff')
   if (req.method !== method) {
@@ -44,19 +42,20 @@ export function guard(req, res, method, limit = 20) {
       return false
     }
   }
-  const now = Date.now()
-  for (const [key, bucket] of buckets) if (bucket.until <= now) buckets.delete(key)
-  const ip = req.headers?.['x-real-ip'] || req.socket?.remoteAddress || 'unknown'
-  const key =
-    createHash('sha256').update(String(ip)).digest('hex') + ':' + (req.url || method).split('?')[0]
-  const bucket = buckets.get(key) || { count: 0, until: now + 60000 }
-  if (bucket.count >= limit || (!buckets.has(key) && buckets.size >= 5000)) {
-    res.setHeader('Retry-After', '60')
-    res.status(429).json({ error: 'Too many requests. Please wait one minute.' })
+  const decision = await rateLimiter.consume(req, scope)
+  if (decision.unavailable) {
+    res.setHeader('Retry-After', String(decision.retryAfter))
+    res.status(503).json({ error: 'Request protection is unavailable. Please retry shortly.' })
     return false
   }
-  bucket.count++
-  buckets.set(key, bucket)
+  res.setHeader('RateLimit-Limit', String(decision.limit))
+  res.setHeader('RateLimit-Remaining', String(decision.remaining))
+  res.setHeader('RateLimit-Reset', String(decision.retryAfter))
+  if (!decision.allowed) {
+    res.setHeader('Retry-After', String(decision.retryAfter))
+    res.status(429).json({ error: 'Too many requests. Wait before trying again.' })
+    return false
+  }
   return true
 }
 
@@ -99,7 +98,11 @@ export async function fetchJSON(url, options = {}) {
     redirect: 'error',
     signal: AbortSignal.timeout(7000),
   })
-  if (!response.ok) throw new Error('Provider unavailable')
+  if (!response.ok)
+    throw Object.assign(new Error('Provider unavailable'), {
+      status: response.status,
+      retryAfter: Math.min(60, Math.max(1, Number(response.headers.get('retry-after')) || 5)),
+    })
   const reader = response.body?.getReader()
   if (!reader) throw new Error('Empty provider response')
   const chunks = []

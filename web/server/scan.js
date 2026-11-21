@@ -3,6 +3,7 @@ import { getWalletData } from '../src/blockchain.js'
 import { goplusCheck, evaluateRisk } from '../src/riskEngine.js'
 import { createCache } from './http.js'
 import { walletKey, explorerLink } from '../shared/chains.js'
+import { explorerFailure } from './etherscan.js'
 
 export const scans = createCache(60000)
 const reports = new Map()
@@ -50,6 +51,9 @@ export async function scanRecipient(wallet, chain) {
                 stacks: 'Hiro Stacks API',
               }[chain],
             status: onchain ? 'available' : 'unavailable',
+            ...(!onchain && ['ethereum', 'bnb'].includes(chain)
+              ? { note: explorerFailure(activity.reason) }
+              : {}),
           },
         ],
         limitations: [

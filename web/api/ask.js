@@ -4,7 +4,7 @@ import { validateScan } from '../server/http.js'
 import { explainReport } from '../server/ai.js'
 
 export default async function handler(req, res) {
-  if (!guard(req, res, 'POST', 8)) return
+  if (!(await guard(req, res, 'POST', 'ask'))) return
   const { scanId, question } = req.body
   const input = validateScan(req.body)
   if (
