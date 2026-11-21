@@ -1,0 +1,54 @@
+{
+  "measuredAt": "2026-11-21T11:55:54.653Z",
+  "browser": "158.0.4370.33",
+  "method": "Local production Vite preview; metrics collected from the initial viewport BEFORE screenshot capture. Google Fonts blocked for deterministic fallback measurement. These are single-run lab observations, not field Core Web Vitals or Lighthouse scores. INP and production API error rate not measured.",
+  "results": [
+    {
+      "label": "desktop",
+      "width": 1440,
+      "throttle": "none",
+      "lcpMs": 932,
+      "cls": 0,
+      "domContentLoadedMs": 357.90000000037253,
+      "loadMs": 358.40000000037253,
+      "jsHeapUsedBytes": 2833705,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "label": "mobile-lab",
+      "width": 390,
+      "throttle": "4x CPU, 150ms latency, 1.6Mbps down / 750kbps up",
+      "lcpMs": 5012,
+      "cls": 0,
+      "domContentLoadedMs": 1460.4000000003725,
+      "loadMs": 1465,
+      "jsHeapUsedBytes": 2830709,
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "bundle": {
+    "totalJsBytes": 277340,
+    "assets": [
+      {
+        "file": "Dashboard-CjJRpFub.js",
+        "bytes": 4918,
+        "gzipBytes": 1734
+      },
+      {
+        "file": "index-ztvBpYEp.js",
+        "bytes": 258034,
+        "gzipBytes": 81926
+      },
+      {
+        "file": "Receipt-BWYdDNvy.js",
+        "bytes": 2585,
+        "gzipBytes": 1233
+      },
+      {
+        "file": "Report-BChwGLb-.js",
+        "bytes": 11803,
+        "gzipBytes": 3738
+      }
+    ]
+  }
+}

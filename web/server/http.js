@@ -18,30 +18,42 @@ export function guard(req, res, method, limit = 20) {
   if (origin) {
     try {
       const url = new URL(origin)
-      const allowed = [host && `https://${host}`, host && `http://${host}`, process.env.APP_ORIGIN].filter(Boolean)
+      const allowed = [
+        host && `https://${host}`,
+        host && `http://${host}`,
+        process.env.APP_ORIGIN,
+      ].filter(Boolean)
       if (!allowed.includes(url.origin)) throw new Error('origin')
-    } catch { res.status(403).json({ error: 'Origin not allowed.' }); return false }
+    } catch {
+      res.status(403).json({ error: 'Origin not allowed.' })
+      return false
+    }
   }
   if (method === 'POST') {
     if (!(req.headers?.['content-type'] || '').toLowerCase().startsWith('application/json')) {
-      res.status(415).json({ error: 'Use application/json.' }); return false
+      res.status(415).json({ error: 'Use application/json.' })
+      return false
     }
     const length = Number(req.headers?.['content-length'] || 0)
     if (length > BODY_LIMIT || Buffer.byteLength(JSON.stringify(req.body ?? null)) > BODY_LIMIT) {
-      res.status(413).json({ error: 'Request too large.' }); return false
+      res.status(413).json({ error: 'Request too large.' })
+      return false
     }
     if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
-      res.status(400).json({ error: 'A JSON object is required.' }); return false
+      res.status(400).json({ error: 'A JSON object is required.' })
+      return false
     }
   }
   const now = Date.now()
   for (const [key, bucket] of buckets) if (bucket.until <= now) buckets.delete(key)
   const ip = req.headers?.['x-real-ip'] || req.socket?.remoteAddress || 'unknown'
-  const key = createHash('sha256').update(String(ip)).digest('hex') + ':' + (req.url || method).split('?')[0]
+  const key =
+    createHash('sha256').update(String(ip)).digest('hex') + ':' + (req.url || method).split('?')[0]
   const bucket = buckets.get(key) || { count: 0, until: now + 60000 }
   if (bucket.count >= limit || (!buckets.has(key) && buckets.size >= 5000)) {
     res.setHeader('Retry-After', '60')
-    res.status(429).json({ error: 'Too many requests. Please wait one minute.' }); return false
+    res.status(429).json({ error: 'Too many requests. Please wait one minute.' })
+    return false
   }
   bucket.count++
   buckets.set(key, bucket)
@@ -51,14 +63,42 @@ export function guard(req, res, method, limit = 20) {
 export function validateScan(input) {
   if (!input || typeof input !== 'object') return null
   const { wallet, chain, amount, token } = input
-  if (!CHAINS.some(c => c.id === chain) || typeof wallet !== 'string' || !isValidAddress(wallet.trim(), chain)) return null
-  if (amount !== undefined && amount !== '' && (typeof amount !== 'string' || amount.length > 50 || !/^(?:0|[1-9]\d*)(?:\.\d{1,18})?$/.test(amount) || !Number.isFinite(Number(amount)) || Number(amount) <= 0)) return null
-  if (token !== undefined && (typeof token !== 'string' || !['ETH', 'BNB', 'SOL', 'BTC', 'STX', 'USDT', 'USDC'].includes(token))) return null
-  return { wallet: wallet.trim(), chain, ...(amount ? { amount } : {}), ...(token ? { token } : {}) }
+  if (
+    !CHAINS.some((c) => c.id === chain) ||
+    typeof wallet !== 'string' ||
+    !isValidAddress(wallet.trim(), chain)
+  )
+    return null
+  if (
+    amount !== undefined &&
+    amount !== '' &&
+    (typeof amount !== 'string' ||
+      amount.length > 50 ||
+      !/^(?:0|[1-9]\d*)(?:\.\d{1,18})?$/.test(amount) ||
+      !Number.isFinite(Number(amount)) ||
+      Number(amount) <= 0)
+  )
+    return null
+  if (
+    token !== undefined &&
+    (typeof token !== 'string' ||
+      !['ETH', 'BNB', 'SOL', 'BTC', 'STX', 'USDT', 'USDC'].includes(token))
+  )
+    return null
+  return {
+    wallet: wallet.trim(),
+    chain,
+    ...(amount ? { amount } : {}),
+    ...(token ? { token } : {}),
+  }
 }
 
 export async function fetchJSON(url, options = {}) {
-  const response = await fetch(url, { ...options, redirect: 'error', signal: AbortSignal.timeout(7000) })
+  const response = await fetch(url, {
+    ...options,
+    redirect: 'error',
+    signal: AbortSignal.timeout(7000),
+  })
   if (!response.ok) throw new Error('Provider unavailable')
   const reader = response.body?.getReader()
   if (!reader) throw new Error('Empty provider response')
@@ -69,10 +109,15 @@ export async function fetchJSON(url, options = {}) {
       const { done, value } = await reader.read()
       if (done) break
       length += value.byteLength
-      if (length > 2_000_000) { await reader.cancel(); throw new Error('Provider response too large') }
+      if (length > 2_000_000) {
+        await reader.cancel()
+        throw new Error('Provider response too large')
+      }
       chunks.push(value)
     }
-  } finally { reader.releaseLock() }
+  } finally {
+    reader.releaseLock()
+  }
   const data = JSON.parse(Buffer.concat(chunks).toString('utf8'))
   if (!data || typeof data !== 'object') throw new Error('Malformed provider response')
   return data
@@ -93,13 +138,16 @@ export function createCache(ttl = 60000, max = 250) {
       if (hit) return hit
       if (pending.has(key)) return pending.get(key)
       if (pending.size >= max) throw new Error('Service busy')
-      const task = Promise.resolve().then(fn).then(value => {
-        if (cacheIf(value)) {
-          if (values.size >= max) values.delete(values.keys().next().value)
-          values.set(key, { value, until: Date.now() + ttl })
-        }
-        return value
-      }).finally(() => pending.delete(key))
+      const task = Promise.resolve()
+        .then(fn)
+        .then((value) => {
+          if (cacheIf(value)) {
+            if (values.size >= max) values.delete(values.keys().next().value)
+            values.set(key, { value, until: Date.now() + ttl })
+          }
+          return value
+        })
+        .finally(() => pending.delete(key))
       pending.set(key, task)
       return task
     },

@@ -156,6 +156,55 @@ test('demo fixtures are labeled and never saved as live history', async ({ page 
   await page.getByRole('link', { name: 'History', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'No scans yet' })).toBeVisible()
 })
+
+test('a late result from a cancelled scan cannot replace the newly selected recipient', async ({
+  page,
+}) => {
+  let started, release
+  const firstStarted = new Promise((resolve) => {
+    started = resolve
+  })
+  const firstRelease = new Promise((resolve) => {
+    release = resolve
+  })
+  const bitcoin = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'
+  await page.route('**/api/analyze', async (route) => {
+    const body = route.request().postDataJSON()
+    if (body.chain === 'ethereum') {
+      started()
+      await firstRelease
+      try {
+        await route.fulfill({ json: { ...report, riskScore: 90, riskLabel: 'High risk' } })
+      } catch {
+        /* cancelled request */
+      }
+    } else {
+      await route.fulfill({
+        json: {
+          ...report,
+          wallet: bitcoin,
+          chain: 'bitcoin',
+          scanId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+        },
+      })
+    }
+  })
+  try {
+    await page.goto('/')
+    await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+    await page.getByRole('button', { name: 'Check address', exact: true }).click()
+    await firstStarted
+    await page.getByLabel('Blockchain', { exact: true }).selectOption('bitcoin')
+    await page.getByLabel('Recipient address', { exact: true }).fill(bitcoin)
+    await page.getByRole('button', { name: 'Check address', exact: true }).click()
+    await expect(page.locator('.report-address')).toContainText(bitcoin)
+    release()
+    await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
+    await expect(page.locator('.report-address')).toContainText(bitcoin)
+  } finally {
+    release()
+  }
+})
 for (const width of [320, 375, 390, 428, 768, 1024, 1440])
   test(`responsive scan and report at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })

@@ -17,7 +17,7 @@ Audit date: 2026-11-21 (Africa/Lagos). Baseline: cd176c3. Source review precedes
 | Severity | Finding | Evidence / consequence | Planned repair |
 | --- | --- | --- | --- |
 | Critical | False-safe scores on failed/unsupported security providers | `goplusCheck` returns false flags on failure; non-EVM checks bypass intelligence; 70/30 formula produces SAFE | Explicit provider states; null score when intelligence is unavailable; deterministic evidence policy |
-| High | Automatic mainnet wallet prompt after scans | `analyze` schedules `logScanToStacks` automatically | Remove automatic writes; preserve read-only verification and require deliberate fee/privacy acknowledgement for optional writes |
+| High | Automatic mainnet wallet prompt after scans | `analyze` schedules `logScanToStacks` automatically | Remove automatic writes; preserve read-only verification. Creation needs separately approved scope |
 | High | Fabricated blockchain claims | Fixed Solana/Bitcoin category percentages, sample dashboard balances/scores, sampled history presented as wallet age, unknown times replaced by now | Remove fixtures from live state; preserve unknowns and sample scope |
 | High | Missing server address and body validation | User-controlled chain/address interpolated into upstream paths; unbounded payloads | Shared checksum validators, strict schema/size/method checks |
 | High | Unbounded expensive unauthenticated endpoints | No rate limits or provider timeouts; wildcard CORS | Bounded requests, same-origin policy, local throttling with documented distributed limitation |
@@ -47,7 +47,11 @@ No measured baseline exists yet. Requests have no deadlines, scan and history du
 ## Implementation order
 
 1. Add shared validation, bounded provider collection, deterministic risk and regression/security tests. Fix optional AI, endpoint policy and automatic write behavior before visual work.
-2. Refine existing React application into one responsive scan/report/dashboard flow; retain saved addresses, contextual chat and speech. Clearly labeled fixture examples and actual history.
+2. Refine existing React application into one responsive scan/report/dashboard flow; retain saved addresses, contextual chat and speech. Clearly labeled fixture examples and actual history. Paid receipt writing is excluded; retain read-only deployed-contract/receipt verification.
 3. Read-only contract/source/receipt verification; security regression tests without contract deployment.
 4. Production build, lint, dependency audits, deterministic E2E at required viewports, measured artifacts and CI.
 5. Accurate README, architecture, deployment checklist, demo script, screenshots, submission and remaining-risk report. Commit and push verified stages on the feature branch. Deployment, merging and paid transactions remain excluded.
+
+## Remediation evidence
+
+The reviewed scan-path critical/high findings have implementation and regression coverage in the revamp branch. [verification.md](verification.md) records actual test, provider, contract-source and existing-receipt results and remaining operational risks. Production abuse protection still needs distributed edge configuration. EVM activity needs approved explorer credentials; Groq remains optional. Source inspection alone is not a claim that every deployed feature or every chain is fully covered. No production deployment or paid writes were performed.

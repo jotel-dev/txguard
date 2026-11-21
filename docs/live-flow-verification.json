@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-11-21T11:50:26.939Z",
+  "note": "Local application endpoints and a real browser using actual external provider data. No fabricated intelligence, signing or paid transactions. This is a small sample, not a production error-rate estimate.",
+  "results": [
+    {
+      "scenario": "Genuine browser scan of sourced historical address",
+      "status": 200,
+      "latencyMs": 2755,
+      "riskScore": 95,
+      "riskLabel": "High risk",
+      "sources": [
+        {
+          "name": "GoPlus address security",
+          "status": "available",
+          "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+        },
+        {
+          "name": "Etherscan V2",
+          "status": "unavailable"
+        }
+      ]
+    },
+    {
+      "scenario": "Live ethereum scan API",
+      "status": 200,
+      "latencyMs": 1104,
+      "riskScore": 0,
+      "riskLabel": "Low observed risk",
+      "balance": "Unavailable",
+      "sources": [
+        {
+          "name": "GoPlus address security",
+          "status": "available",
+          "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+        },
+        {
+          "name": "Etherscan V2",
+          "status": "unavailable"
+        }
+      ]
+    },
+    {
+      "scenario": "Live bnb scan API",
+      "status": 200,
+      "latencyMs": 547,
+      "riskScore": 0,
+      "riskLabel": "Low observed risk",
+      "balance": "Unavailable",
+      "sources": [
+        {
+          "name": "GoPlus address security",
+          "status": "available",
+          "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+        },
+        {
+          "name": "Etherscan V2",
+          "status": "unavailable"
+        }
+      ]
+    },
+    {
+      "scenario": "Live bitcoin scan API",
+      "status": 200,
+      "latencyMs": 1039,
+      "riskScore": null,
+      "riskLabel": "Insufficient data",
+      "balance": "57.71686732 BTC",
+      "sources": [
+        {
+          "name": "GoPlus address security",
+          "status": "unsupported",
+          "note": "Address-security intelligence is not integrated for this network."
+        },
+        {
+          "name": "Blockstream (confirmed balance)",
+          "status": "available"
+        }
+      ]
+    },
+    {
+      "scenario": "Live solana scan API",
+      "status": 200,
+      "latencyMs": 891,
+      "riskScore": null,
+      "riskLabel": "Insufficient data",
+      "balance": "0.000000001 SOL",
+      "sources": [
+        {
+          "name": "GoPlus address security",
+          "status": "unsupported",
+          "note": "Address-security intelligence is not integrated for this network."
+        },
+        {
+          "name": "Solana mainnet RPC",
+          "status": "available"
+        }
+      ]
+    },
+    {
+      "scenario": "Live stacks scan API",
+      "status": 200,
+      "latencyMs": 1211,
+      "riskScore": null,
+      "riskLabel": "Insufficient data",
+      "balance": "0.001505 STX",
+      "sources": [
+        {
+          "name": "GoPlus address security",
+          "status": "unsupported",
+          "note": "Address-security intelligence is not integrated for this network."
+        },
+        {
+          "name": "Hiro Stacks API",
+          "status": "available"
+        }
+      ]
+    },
+    {
+      "scenario": "Invalid live API input",
+      "status": 400
+    }
+  ]
+}

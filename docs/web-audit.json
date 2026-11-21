@@ -1,4 +1,4 @@
-﻿{
+{
   "auditReportVersion": 2,
   "vulnerabilities": {
     "@eslint/config-array": {

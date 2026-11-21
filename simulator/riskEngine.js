@@ -20,8 +20,8 @@ export function analyzeTransaction(tx, senderWallet) {
     };
   }
 
-  // Base score starting around 10 with a slight random variation (-2 to +2)
-  let score = 10 + (Math.floor(Math.random() * 5) - 2);
+  // Deterministic mock policy. This is not production blockchain intelligence.
+  let score = 10;
 
   // 1. Check if amount is unusually high
   if (tx.amount > HIGH_AMOUNT_THRESHOLD) {
@@ -44,7 +44,7 @@ export function analyzeTransaction(tx, senderWallet) {
     return txAgeMs < RAPID_TX_WINDOW_MS;
   });
 
-  if (recentTxs.length + 1 >= RAPID_TX_LIMIT) {
+  if (recentTxs.length + 1 > RAPID_TX_LIMIT) {
     flags.push('RAPID_TRANSACTIONS');
     score += 40;
   }

@@ -28,6 +28,7 @@ export function seedData() {
 }
 
 export function createWallet(initialBalance = 100, customAddress = null) {
+  if (!Number.isFinite(Number(initialBalance)) || Number(initialBalance) < 0) throw new Error('Invalid mock balance.');
   const address = customAddress || generateAddress();
   
   const wallet = {
@@ -43,12 +44,12 @@ export function createWallet(initialBalance = 100, customAddress = null) {
 }
 
 export function getWallet(address) {
-  if (!address) return null;
+  if (typeof address !== 'string' || !address) return null;
   return wallets.get(address.toLowerCase()) || null;
 }
 
 export function getTransaction(hash) {
-  if (!hash) return null;
+  if (typeof hash !== 'string' || !hash) return null;
   return transactions.get(hash.toLowerCase()) || null;
 }
 
@@ -73,7 +74,7 @@ export function listTransactions() {
  * @param {number} amount - Amount to send
  * @returns {object} The transaction object
  */
-export function sendTransaction(from, to, amount) {
+export function sendTransaction(from, to, amount, simulationOptions = {}) {
   const sender = getWallet(from);
   const recipient = getWallet(to);
   const numAmount = Number(amount);
@@ -84,7 +85,7 @@ export function sendTransaction(from, to, amount) {
   if (!recipient) {
     throw new Error(`Recipient wallet ${to} not found.`);
   }
-  if (isNaN(numAmount) || numAmount <= 0) {
+  if (!Number.isFinite(numAmount) || numAmount <= 0) {
     throw new Error('Amount must be a positive number.');
   }
   if (sender.balance < numAmount) {
@@ -126,13 +127,13 @@ export function sendTransaction(from, to, amount) {
   transactions.set(hash.toLowerCase(), txRecord);
 
   // Simulated Block Confirmation Delay (3 to 10 seconds)
-  const delaySec = Math.floor(Math.random() * 8) + 3; // 3 to 10 seconds
+  const delaySec = simulationOptions.delayMs === undefined ? Math.floor(Math.random() * 8) + 3 : simulationOptions.delayMs / 1000;
   
   setTimeout(() => {
     const tx = transactions.get(hash.toLowerCase());
     if (tx && tx.status === 'pending') {
       // 2% chance of failure simulator (e.g. simulated network failure)
-      const isFailed = Math.random() < 0.02;
+      const isFailed = simulationOptions.shouldFail ?? Math.random() < 0.02;
       
       if (isFailed) {
         tx.status = 'failed';

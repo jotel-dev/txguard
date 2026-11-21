@@ -1,4 +1,5 @@
 import express from 'express';
+import { pathToFileURL } from 'node:url';
 import { 
   createWallet, 
   getWallet, 
@@ -9,18 +10,19 @@ import {
   seedData
 } from './blockchain.js';
 
-const app = express();
+export const app = express();
+app.disable('x-powered-by');
 const PORT = process.env.PORT || 3000;
 
 // Enable JSON body parsing
-app.use(express.json());
+app.use(express.json({ limit: '8kb' }));
+app.use((req, res, next) => { res.setHeader('X-TxGuard-Mode', 'mock-simulator'); next(); });
 
 // Seed initial test data on startup
-seedData();
 
 // Logger middleware
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log(`[Mock simulator] ${req.method} ${req.path.split('/')[2] || 'info'}`);
   next();
 });
 
@@ -53,7 +55,7 @@ app.post('/api/wallets', (req, res) => {
     const { initialBalance } = req.body;
     const balance = initialBalance !== undefined ? Number(initialBalance) : 100;
     
-    if (isNaN(balance) || balance < 0) {
+    if (!Number.isFinite(balance) || balance < 0) {
       return res.status(400).json({ error: 'Initial balance must be a non-negative number.' });
     }
 
@@ -153,10 +155,19 @@ app.get('/api/transactions/:hash', (req, res) => {
   }
 });
 
+// Keep malformed local fixture inputs out of stack traces and HTML error responses.
+app.use((error, req, res, _next) => {
+  const status = error.status === 413 ? 413 : 400;
+  res.status(status).json({ error: status === 413 ? 'Mock request too large.' : 'Invalid mock JSON payload.' });
+});
+
 // Start listening
-app.listen(PORT, () => {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+seedData();
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`==================================================`);
   console.log(`  TX Guard Mock Blockchain Simulator Running      `);
   console.log(`  Local Address: http://localhost:${PORT}          `);
   console.log(`==================================================`);
 });
+}

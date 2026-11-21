@@ -1,5 +1,9 @@
 # TX Guard Mock Blockchain Simulator
 
+**Local synthetic fixtures only.** This service never supplies production TxGuard scans and cannot predict real blockchain execution. It binds to `127.0.0.1`; it is not an authenticated public payment service.
+
+`npm test` now runs six deterministic Node tests with real assertions: scoring reproducibility, the fourth-transfer rapid rule, finite balances/amounts, reservation/overspend, settlement/refunds and API limits. Production behavior remains separate. The optional delay/failure controls are internal test arguments, never HTTP parameters.
+
 This is a local, self-contained mock blockchain simulator service built with Node.js and Express. It simulates wallet state management, transaction records, block confirmation delays, and executes security risk assessments modeled for the TX Guard transaction monitoring system.
 
 ## Features
