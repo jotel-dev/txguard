@@ -1,30 +1,11 @@
-import { getRecentTransactions } from '../src/blockchain.js';
-
+﻿import { guard, validateScan } from '../server/http.js'
+import { getRecentTransactions } from '../src/blockchain.js'
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  const { wallet, chain } = req.query;
-
-  if (!wallet || !chain) {
-    return res.status(400).json({ error: 'Wallet and chain parameters are required.' });
-  }
-
+  if (!guard(req, res, 'GET', 30)) return
+  const input = validateScan(req.query)
+  if (!input) return res.status(400).json({ error: 'Enter a valid mainnet address and network.' })
   try {
-    const transactions = await getRecentTransactions(wallet.trim(), chain);
-    return res.status(200).json({ transactions });
-  } catch (err) {
-    console.error('Fetch transactions failed:', err);
-    return res.status(500).json({ error: 'Failed to retrieve transactions: ' + err.message });
-  }
+    const data = await getRecentTransactions(input.wallet, input.chain)
+    return res.status(200).json({ ...data, fetchedAt: new Date().toISOString(), mode: 'live' })
+  } catch { return res.status(503).json({ error: 'Transaction provider unavailable. Retry shortly or use the explorer.' }) }
 }

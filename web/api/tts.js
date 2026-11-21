@@ -1,33 +1,13 @@
+﻿import { guard } from '../server/http.js'
 export default async function handler(req, res) {
-  // CORS setup
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  const text = req.method === 'POST' ? req.body?.text : req.query?.text;
-
-  if (!text) {
-    return res.status(400).json({ error: 'Text parameter is required.' });
-  }
-
+  if (!guard(req, res, 'POST', 10)) return
+  if (typeof req.body.text !== 'string' || !req.body.text.trim() || req.body.text.length > 200) return res.status(400).json({ error: 'Text must contain 1-200 characters.' })
   try {
-    // Google Translate TTS url (supports max 200 chars, client will chunk if necessary)
-    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(text)}`;
-    const response = await fetch(ttsUrl);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch TTS from source: ${response.status}`);
-    }
-
-    const buffer = await response.arrayBuffer();
-    res.setHeader('Content-Type', 'audio/mpeg');
-    return res.status(200).send(Buffer.from(buffer));
-  } catch (err) {
-    console.error('TTS generation failed:', err);
-    return res.status(500).json({ error: 'TTS generation failed: ' + err.message });
-  }
+    const response = await fetch(`https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(req.body.text)}`, { redirect: 'error', signal: AbortSignal.timeout(5000) })
+    if (!response.ok || !response.headers.get('content-type')?.startsWith('audio/')) throw new Error('Unavailable')
+    const bytes = await response.arrayBuffer()
+    if (bytes.byteLength > 250000) throw new Error('Too large')
+    res.setHeader('Content-Type', 'audio/mpeg')
+    return res.status(200).send(Buffer.from(bytes))
+  } catch { return res.status(503).json({ error: 'Speech audio unavailable. Use your device reader.' }) }
 }

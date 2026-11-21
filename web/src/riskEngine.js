@@ -1,216 +1,56 @@
-// ── TxGuard Risk Scoring Engine ──
-// Combines GoPlus security data + behavioral analysis into a risk score
+﻿import { fetchJSON } from '../server/http.js'
 
-// ── GoPlus Security Check (no API key needed) ──
+// Evidence policy v2. The strongest distinct reported signal determines the score.
+// These severity points are an explainable policy, not a calibrated probability of fraud.
+export const SIGNALS = {
+  phishing_activities: { score: 90, title: 'Phishing activity report' },
+  stealing_attack: { score: 90, title: 'Stealing attack report' },
+  blackmail_activities: { score: 90, title: 'Blackmail activity report' },
+  cybercrime: { score: 85, title: 'Cybercrime association report' },
+  money_laundering: { score: 80, title: 'Money laundering association report' },
+  financial_crime: { score: 80, title: 'Financial crime association report' },
+  sanctioned: { score: 95, title: 'Sanctions indicator (provider report)' },
+  fake_kyc: { score: 60, title: 'Fake identity verification report' },
+  malicious_mining_activities: { score: 60, title: 'Malicious mining activity report' },
+  darkweb_transactions: { score: 40, title: 'Darkweb activity association (unconfirmed)' },
+  fake_standard_interface: { score: 60, title: 'Nonstandard contract interface report' },
+  reinit: { score: 30, title: 'Redeployable contract indicator' },
+  honeypot_related_address: { score: 65, title: 'Honeypot-related address report' },
+  fake_token: { score: 60, title: 'Fake token association report' },
+  blacklist_doubt: { score: 40, title: 'Blacklist suspicion report (unconfirmed)' },
+  gas_abuse: { score: 30, title: 'Gas abuse report' },
+  mixer: { score: 0, title: 'Mixer association (context only; not evidence of fraud)' },
+}
+
 export async function goplusCheck(address, chain) {
-  // GoPlus chain IDs
-  const chainIds = {
-    ethereum: '1',
-    bnb: '56',
-    solana: 'solana',
-    bitcoin: 'bitcoin'
-  }
-
+  if (!['ethereum', 'bnb'].includes(chain)) return { status: 'unsupported', source: 'GoPlus address security', signals: [], note: 'Address-security intelligence is not integrated for this network.' }
   try {
-    const chainId = chainIds[chain] || '1'
-
-    // For EVM chains
-    if (chain === 'ethereum' || chain === 'bnb') {
-      const res = await fetch(
-        `https://api.gopluslabs.io/api/v1/address_security/${address}?chain_id=${chainId}`,
-        { headers: { 'accept': 'application/json' } }
-      )
-      const data = await res.json()
-      const result = data.result || {}
-
-      return {
-        isBlacklisted:      result.blacklist_doubt === '1',
-        isMalicious:        result.malicious_address === '1',
-        isPhishing:         result.phishing_activities === '1',
-        isFakeToken:        result.fake_token === '1',
-        isHoneypot:         result.honeypot_related_address === '1',
-        isMixer:            result.mixer === '1',
-        isDataTheft:        result.data_theft === '1',
-        isRansomware:       result.ransomware === '1',
-        isStealer:          result.stealing_attack === '1',
-        isContractAddress:  result.contract_address === '1',
-        isApprovalAbuse:    result.gas_abuse === '1',
-        flags: buildFlags(result),
-        raw: result
-      }
-    }
-
-    // For Stacks — GoPlus has limited/no support
-    if (chain === 'stacks') {
-      return {
-        isBlacklisted: false,
-        isMalicious: false,
-        flags: [{ severity: 'info', label: 'Stacks Local Fallback' }],
-        note: 'Stacks Address Security is evaluated via TxGuard AI and on-chain behavioral engine. GoPlus DB check bypassed.',
-        raw: {}
-      }
-    }
-
-    return { isBlacklisted: false, isMalicious: false, flags: [], raw: {} }
-
-  } catch (e) {
-    console.warn('GoPlus check failed:', e)
-    return { isBlacklisted: false, isMalicious: false, flags: [{ severity: 'warn', label: 'GoPlus API Offline' }], raw: {} }
+    const data = await fetchJSON(`https://api.gopluslabs.io/api/v1/address_security/${encodeURIComponent(address)}?chain_id=${chain === 'bnb' ? '56' : '1'}`, { headers: { accept: 'application/json' } })
+    const result = data.result
+    // Empty result, provider errors, or a partial set of negative fields cannot establish clean coverage.
+    if (data.code !== 1 || !result || typeof result !== 'object' || Array.isArray(result)) throw new Error('Invalid intelligence response')
+    const fields = Object.keys(SIGNALS)
+    const signals = fields.filter(key => result[key] === '1').map(key => ({ id: key, ...SIGNALS[key], source: 'GoPlus address security', evidence: key === 'blacklist_doubt' || key === 'mixer' ? 'provider context' : 'provider report' }))
+    const complete = fields.every(key => result[key] === '0' || result[key] === '1')
+    return { status: complete ? 'available' : 'partial', source: 'GoPlus address security', signals, note: complete ? 'Available address-security fields retrieved; database coverage is not comprehensive.' : 'Provider omitted some address-security fields.' }
+  } catch {
+    return { status: 'unavailable', source: 'GoPlus address security', signals: [], note: 'Security provider unavailable. No clean result can be inferred.' }
   }
 }
 
-function buildFlags(result) {
-  const flags = []
-  if (result.blacklist_doubt     === '1') flags.push({ severity: 'critical', label: 'Blacklisted Address' })
-  if (result.malicious_address   === '1') flags.push({ severity: 'critical', label: 'Known Malicious Address' })
-  if (result.phishing_activities === '1') flags.push({ severity: 'critical', label: 'Phishing Activity Detected' })
-  if (result.fake_token          === '1') flags.push({ severity: 'high',     label: 'Fake Token Activity' })
-  if (result.honeypot_related_address === '1') flags.push({ severity: 'high', label: 'Honeypot Related' })
-  if (result.mixer               === '1') flags.push({ severity: 'high',     label: 'Mixer / Tumbler Usage' })
-  if (result.ransomware          === '1') flags.push({ severity: 'critical', label: 'Ransomware Association' })
-  if (result.stealing_attack     === '1') flags.push({ severity: 'critical', label: 'Stealing Attack' })
-  if (result.data_theft          === '1') flags.push({ severity: 'high',     label: 'Data Theft Activity' })
-  if (result.gas_abuse           === '1') flags.push({ severity: 'medium',   label: 'Approval Abuse / Gas Drain' })
-  return flags
+export function evaluateRisk(security, onchainData) {
+  const signals = [...new Map((security?.signals || []).filter(s => Object.hasOwn(SIGNALS, s.id)).map(s => [s.id, { ...s, ...SIGNALS[s.id] }])).values()]
+  const strongest = signals.reduce((max, s) => Math.max(max, s.score), 0)
+  const sufficient = security?.status === 'available' || strongest > 0
+  const riskScore = sufficient ? strongest : null
+  const riskLabel = riskScore === null ? 'Insufficient data' : riskScore >= 76 ? 'High risk' : riskScore >= 51 ? 'Suspicious' : riskScore >= 26 ? 'Caution' : 'Low observed risk'
+  const alerts = signals.map(s => ({ type: s.score >= 76 ? 'danger' : s.score > 0 ? 'warn' : 'info', title: s.title, text: s.id === 'gas_abuse' ? 'GoPlus reports gas abuse. This is not an approval audit.' : `${s.source || 'GoPlus'} supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.`, evidence: s.evidence || 'provider report' }))
+  if (!sufficient) alerts.push({ type: 'info', title: 'Insufficient security coverage', text: security?.note || 'No address-security intelligence is available.', evidence: 'coverage limitation' })
+  if (sufficient && strongest === 0) alerts.push({ type: 'info', title: 'No scored indicators returned', text: 'No scored indicators appeared in the retrieved fields. This is not a guarantee of safety.', evidence: 'provider response' })
+  if (!onchainData) alerts.push({ type: 'info', title: 'Blockchain activity unavailable', text: 'Balance and activity could not be verified.', evidence: 'coverage limitation' })
+  return { riskScore, riskLabel, alerts, signals, policy: 'txguard-evidence-v2', confidence: sufficient ? 'Limited to retrieved provider evidence' : 'Insufficient coverage', summary: riskScore === null ? 'There is not enough security intelligence to assess this recipient. A valid address or an available balance does not establish trust.' : strongest > 0 ? `${riskLabel}: the security provider returned ${signals.filter(s => s.score > 0).length} scored indicator(s). Verify the recipient independently before proceeding.` : 'No high-severity indicators were returned in the available address-security fields. Unknown threats, ownership, token approvals and execution outcomes remain unchecked.', recommendations: ['Verify the full address and network with your recipient through a trusted channel.', 'Do not share a seed phrase or private key. Independently inspect unexpected payment instructions.', 'Review coverage limits and explorer history. A small test transfer can still lose funds.'] }
 }
 
-// ── Behavioral Risk Scorer ──
-export function scoreBehavior(onchainData, chain) {
-  let score = 0
-  const signals = []
-
-  if (!onchainData) return { score: 30, signals: ['Unable to fetch on-chain data'] }
-
-  const txCount    = parseInt(String(onchainData.totalTransactions || '').replace(/[^0-9]/g, ''), 10) || 0
-  const balanceRaw = onchainData.balanceRaw || 0
-  const walletAge  = onchainData.walletAge  || 'Unknown'
-
-  // ── New wallet with high balance = risk ──
-  if (walletAge.includes('day') && balanceRaw > 1) {
-    score += 20
-    signals.push('New wallet with significant balance')
-  }
-
-  // ── Zero transactions ──
-  if (txCount === 0 && balanceRaw > 0) {
-    score += 10
-    signals.push('Wallet has balance but no outgoing transactions')
-  }
-
-  // ── Very high tx count could indicate bot ──
-  if (txCount > 10000) {
-    score += 15
-    signals.push('Unusually high transaction volume — possible bot activity')
-  }
-
-  // ── Empty wallet ──
-  if (balanceRaw === 0 && txCount === 0) {
-    score += 5
-    signals.push('Empty wallet with no activity')
-  }
-
-  // ── Old wallet with activity = generally safer ──
-  if (walletAge.includes('year') && txCount > 10) {
-    score -= 10
-    signals.push('Established wallet with long history')
-  }
-
-  // ── Healthy active wallet ──
-  if (txCount > 5 && txCount < 1000 && balanceRaw > 0) {
-    score -= 5
-    signals.push('Normal wallet activity pattern')
-  }
-
-  return {
-    score: Math.max(0, Math.min(50, score)), // behavioral max is 50
-    signals
-  }
-}
-
-// ── Master Risk Calculator ──
 export async function calculateRisk(address, chain, onchainData) {
-  // Run GoPlus check
-  const security = await goplusCheck(address, chain)
-
-  // Run behavioral scoring
-  const behavior = scoreBehavior(onchainData, chain)
-
-  // ── Base score from GoPlus flags ──
-  let goplusScore = 0
-  if (security.isMalicious)  goplusScore += 80
-  if (security.isBlacklisted) goplusScore += 80
-  if (security.isPhishing)   goplusScore += 75
-  if (security.isRansomware) goplusScore += 85
-  if (security.isStealer)    goplusScore += 80
-  if (security.isMixer)      goplusScore += 40
-  if (security.isHoneypot)   goplusScore += 50
-  if (security.isFakeToken)  goplusScore += 45
-  if (security.isDataTheft)  goplusScore += 60
-  if (security.isApprovalAbuse) goplusScore += 30
-
-  // ── Final score = GoPlus (weighted 70%) + Behavior (30%) ──
-  const normalizedGoPlus = Math.min(100, goplusScore)
-  const normalizedBehavior = Math.min(100, behavior.score * 2)
-  const finalScore = Math.round((normalizedGoPlus * 0.7) + (normalizedBehavior * 0.3))
-
-  // ── Build security alerts from real data ──
-  const alerts = []
-
-  // GoPlus alerts (highest priority)
-  security.flags.forEach(flag => {
-    if (flag.label === 'Stacks Local Fallback') {
-      alerts.push({
-        type: 'info',
-        icon: 'ℹ️',
-        title: 'Stacks Mainnet Evaluation',
-        text: 'Threat analysis relies on TxGuard local risk engine and Llama-3 AI. GoPlus Security DB does not support Stacks.'
-      })
-    } else {
-      alerts.push({
-        type:  flag.severity === 'critical' ? 'danger' : flag.severity === 'high' ? 'warn' : 'info',
-        icon:  flag.severity === 'critical' ? '🔴' : '⚠️',
-        title: flag.label,
-        text:  `Detected by GoPlus Security database. Exercise extreme caution.`
-      })
-    }
-  })
-
-  // Behavioral alerts
-  behavior.signals.forEach(signal => {
-    const isPositive = signal.includes('Established') || signal.includes('Normal')
-    alerts.push({
-      type:  isPositive ? 'safe' : 'warn',
-      icon:  isPositive ? '✅' : '⚠️',
-      title: isPositive ? 'Positive Signal' : 'Behavioral Flag',
-      text:  signal
-    })
-  })
-
-  // Add default safe alert if no flags
-  if (alerts.length === 0) {
-    alerts.push({
-      type: 'safe', icon: '✅',
-      title: 'No Known Threats',
-      text: 'This address is not flagged in the GoPlus security database.'
-    })
-    alerts.push({
-      type: 'info', icon: 'ℹ️',
-      title: 'AI Analysis Only',
-      text: 'Security assessment is based on behavioral patterns and AI analysis.'
-    })
-  }
-
-  // ── Risk label ──
-  let riskLabel = 'SAFE'
-  if (finalScore > 75)      riskLabel = 'DANGEROUS'
-  else if (finalScore > 50) riskLabel = 'SUSPICIOUS'
-  else if (finalScore > 25) riskLabel = 'CAUTION'
-
-  return {
-    riskScore:  Math.round(finalScore),
-    riskLabel,
-    alerts:     alerts.slice(0, 5), // max 5 alerts
-    goplusData: security,
-    behavioral: behavior
-  }
+  return evaluateRisk(await goplusCheck(address, chain), onchainData)
 }

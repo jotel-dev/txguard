@@ -1,0 +1,25 @@
+{
+  "totalBytes": 1475577,
+  "largest": [
+    {
+      "file": "SIWXUtil-CtvDJX-8.js",
+      "bytes": 450034,
+      "gzip": 131936
+    },
+    {
+      "file": "index-Ct0m2Xqq.js",
+      "bytes": 401915,
+      "gzip": 127374
+    },
+    {
+      "file": "basic-BInQ_yus.js",
+      "bytes": 143010,
+      "gzip": 32157
+    },
+    {
+      "file": "ConstantsUtil-B-ojmpSp.js",
+      "bytes": 140322,
+      "gzip": 37175
+    }
+  ]
+}

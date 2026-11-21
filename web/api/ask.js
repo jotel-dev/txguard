@@ -1,56 +1,19 @@
-async function callGroq(prompt) {
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
-    throw new Error('GROQ_API_KEY is not configured on the server.');
-  }
-
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json', 
-      'Authorization': `Bearer ${apiKey}` 
-    },
-    body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
-      messages: [
-        { role: 'system', content: 'You are TxGuard AI. Answer the user\'s question about the wallet analysis in 2-4 sentences.' },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.5,
-      max_tokens: 400
-    })
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.choices?.[0]?.message?.content || '';
-}
+﻿import { guard } from '../server/http.js'
+import { getReport, scanRecipient } from '../server/scan.js'
+import { validateScan } from '../server/http.js'
+import { explainReport } from '../server/ai.js'
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  const { wallet, chain, riskScore, riskLabel, summary, question } = req.body;
-
-  if (!question) {
-    return res.status(400).json({ error: 'Question parameter is required.' });
-  }
-
-  const prompt = `Wallet: ${wallet}, Chain: ${chain}, Risk: ${riskScore}/100 (${riskLabel}), Summary: ${summary}. User asks: "${question.trim()}".`;
-
+  if (!guard(req, res, 'POST', 8)) return
+  const { scanId, question } = req.body
+  const input = validateScan(req.body)
+  if (!input || typeof scanId !== 'string' || !/^[\da-f-]{36}$/i.test(scanId) || typeof question !== 'string' || !question.trim() || question.length > 500) return res.status(400).json({ error: 'A live scan and a question of up to 500 characters are required.' })
   try {
-    const answer = await callGroq(prompt);
-    return res.status(200).json({ answer });
-  } catch (e) {
-    console.error('Ask failed:', e);
-    return res.status(500).json({ error: e.message || 'Failed to get answer' });
-  }
+    // Serverless instances do not share memory: re-collect normalized evidence on a cold instance.
+    let report = getReport(scanId)
+    if (report && (report.wallet !== input.wallet || report.chain !== input.chain)) return res.status(400).json({ error: 'Scan context does not match.' })
+    if (!report) report = await scanRecipient(input.wallet, input.chain)
+    const answer = await explainReport(report, question.trim())
+    return res.status(200).json({ answer: answer.text, source: answer.source, assessedAt: report.assessedAt })
+  } catch { return res.status(503).json({ error: 'Explanation unavailable. The evidence report remains available.' }) }
 }

@@ -1,0 +1,1130 @@
+﻿{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@eslint/config-array": {
+      "name": "@eslint/config-array",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "minimatch"
+      ],
+      "effects": [],
+      "range": "0.23.0 - 0.23.5",
+      "nodes": [
+        "node_modules/@eslint/config-array"
+      ],
+      "fixAvailable": true
+    },
+    "@reown/appkit": {
+      "name": "@reown/appkit",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-controllers",
+        "@reown/appkit-pay",
+        "@reown/appkit-scaffold-ui",
+        "@reown/appkit-siwx",
+        "@reown/appkit-ui",
+        "@reown/appkit-utils",
+        "@reown/appkit-wallet",
+        "@walletconnect/universal-provider"
+      ],
+      "effects": [
+        "@reown/appkit-universal-connector",
+        "@stacks/connect"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-controllers": {
+      "name": "@reown/appkit-controllers",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-wallet",
+        "@walletconnect/universal-provider"
+      ],
+      "effects": [
+        "@reown/appkit",
+        "@reown/appkit-scaffold-ui",
+        "@reown/appkit-siwx",
+        "@reown/appkit-utils"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-controllers"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-pay": {
+      "name": "@reown/appkit-pay",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-controllers",
+        "@reown/appkit-ui",
+        "@reown/appkit-utils"
+      ],
+      "effects": [
+        "@reown/appkit"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-pay"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-scaffold-ui": {
+      "name": "@reown/appkit-scaffold-ui",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-controllers",
+        "@reown/appkit-ui",
+        "@reown/appkit-utils",
+        "@reown/appkit-wallet"
+      ],
+      "effects": [
+        "@reown/appkit-siwx"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-scaffold-ui"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-siwx": {
+      "name": "@reown/appkit-siwx",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-controllers",
+        "@reown/appkit-scaffold-ui",
+        "@reown/appkit-ui",
+        "@reown/appkit-utils",
+        "bip322-js",
+        "viem"
+      ],
+      "effects": [
+        "@reown/appkit"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-siwx"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-ui": {
+      "name": "@reown/appkit-ui",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-controllers",
+        "@reown/appkit-wallet"
+      ],
+      "effects": [
+        "@reown/appkit",
+        "@reown/appkit-scaffold-ui"
+      ],
+      "range": ">=1.7.1-449657bc8f95adcfd295a2e883c4bcd439045044.0",
+      "nodes": [
+        "node_modules/@reown/appkit-ui"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-universal-connector": {
+      "name": "@reown/appkit-universal-connector",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit",
+        "@walletconnect/universal-provider"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-universal-connector"
+      ],
+      "fixAvailable": true
+    },
+    "@reown/appkit-utils": {
+      "name": "@reown/appkit-utils",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@reown/appkit-controllers",
+        "@reown/appkit-wallet",
+        "@walletconnect/universal-provider"
+      ],
+      "effects": [
+        "@reown/appkit-pay",
+        "@reown/appkit-siwx"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-utils"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@reown/appkit-wallet": {
+      "name": "@reown/appkit-wallet",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "zod"
+      ],
+      "effects": [
+        "@reown/appkit",
+        "@reown/appkit-controllers",
+        "@reown/appkit-scaffold-ui",
+        "@reown/appkit-ui",
+        "@reown/appkit-utils"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@reown/appkit-wallet"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@stacks/connect": {
+      "name": "@stacks/connect",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@reown/appkit",
+        "@reown/appkit-universal-connector"
+      ],
+      "effects": [],
+      "range": ">=8.1.10-alpha.1559549.0",
+      "nodes": [
+        "node_modules/@stacks/connect"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@walletconnect/core": {
+      "name": "@walletconnect/core",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@walletconnect/utils"
+      ],
+      "effects": [],
+      "range": "2.18.1-canary-exp-1 - 2.18.1-rc-1 || 2.19.0-canary-ak-1 - 2.21.9",
+      "nodes": [
+        "node_modules/@walletconnect/core"
+      ],
+      "fixAvailable": true
+    },
+    "@walletconnect/sign-client": {
+      "name": "@walletconnect/sign-client",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@walletconnect/core",
+        "@walletconnect/utils"
+      ],
+      "effects": [],
+      "range": "2.18.1-canary-exp-1 - 2.18.1-rc-1 || 2.19.0-canary-ak-1 - 2.21.9",
+      "nodes": [
+        "node_modules/@walletconnect/sign-client"
+      ],
+      "fixAvailable": true
+    },
+    "@walletconnect/universal-provider": {
+      "name": "@walletconnect/universal-provider",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@walletconnect/sign-client",
+        "@walletconnect/utils"
+      ],
+      "effects": [
+        "@reown/appkit",
+        "@reown/appkit-controllers",
+        "@reown/appkit-universal-connector",
+        "@reown/appkit-utils"
+      ],
+      "range": "2.18.1-canary-exp-1 - 2.18.1-rc-1 || 2.19.0-canary-ak-1 - 2.21.9",
+      "nodes": [
+        "node_modules/@walletconnect/universal-provider"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "@walletconnect/utils": {
+      "name": "@walletconnect/utils",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "query-string",
+        "viem"
+      ],
+      "effects": [
+        "@walletconnect/core",
+        "@walletconnect/sign-client",
+        "@walletconnect/universal-provider"
+      ],
+      "range": "1.2.3-1.3.0-rc.0.0 - 2.17.5-rc-1 || 2.18.0-canary-ell-1 - 2.21.9",
+      "nodes": [
+        "node_modules/@walletconnect/utils"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "abitype": {
+      "name": "abitype",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "zod"
+      ],
+      "effects": [
+        "viem"
+      ],
+      "range": "<=0.0.0-main-20230430000127 || 0.7.0-canary.20230307T162852 - 1.0.9",
+      "nodes": [
+        "node_modules/@reown/appkit-siwx/node_modules/abitype",
+        "node_modules/@walletconnect/utils/node_modules/abitype"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "baseline-browser-mapping": {
+      "name": "baseline-browser-mapping",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1193686,
+          "name": "baseline-browser-mapping",
+          "dependency": "baseline-browser-mapping",
+          "title": "baseline-browser-mapping process termination on invalid input causes denial of service",
+          "url": "https://github.com/advisories/GHSA-w5vr-8v7q-w6rv",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-705"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=2.0.0 <2.11.0"
+        }
+      ],
+      "effects": [],
+      "range": ">=2.0.0 <2.11.0",
+      "nodes": [
+        "node_modules/baseline-browser-mapping"
+      ],
+      "fixAvailable": true
+    },
+    "bip322-js": {
+      "name": "bip322-js",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "bitcoinjs-message",
+        "elliptic",
+        "secp256k1"
+      ],
+      "effects": [
+        "@reown/appkit-siwx"
+      ],
+      "range": "<=3.0.0",
+      "nodes": [
+        "node_modules/bip322-js"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "bitcoinjs-lib": {
+      "name": "bitcoinjs-lib",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1246097,
+          "name": "bitcoinjs-lib",
+          "dependency": "bitcoinjs-lib",
+          "title": "bitcoinjs-lib: Undetected merkle node duplication in block root computation validates a forged transaction list",
+          "url": "https://github.com/advisories/GHSA-8vv3-6qpc-gpw6",
+          "severity": "critical",
+          "cwe": [
+            "CWE-354"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=6.0.0 <6.1.8"
+        }
+      ],
+      "effects": [],
+      "range": "6.0.0 - 6.1.7",
+      "nodes": [
+        "node_modules/bitcoinjs-lib"
+      ],
+      "fixAvailable": true
+    },
+    "bitcoinjs-message": {
+      "name": "bitcoinjs-message",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "secp256k1"
+      ],
+      "effects": [
+        "bip322-js"
+      ],
+      "range": ">=1.0.1",
+      "nodes": [
+        "node_modules/bitcoinjs-message"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "brace-expansion": {
+      "name": "brace-expansion",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1123898,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+          "url": "https://github.com/advisories/GHSA-3jxr-9vmj-r5cp",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=3.0.0 <5.0.7"
+        },
+        {
+          "source": 1130591,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+          "url": "https://github.com/advisories/GHSA-mh99-v99m-4gvg",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=4.0.0 <5.0.8"
+        },
+        {
+          "source": 1130734,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation",
+          "url": "https://github.com/advisories/GHSA-rgw5-rvv9-x895",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=4.0.0 <5.0.9"
+        },
+        {
+          "source": 1240103,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+          "url": "https://github.com/advisories/GHSA-q2hr-2g5m-vwhr",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=4.0.0 <5.0.12"
+        },
+        {
+          "source": 1240107,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+          "url": "https://github.com/advisories/GHSA-qhr7-859c-m2p7",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=4.0.0 <5.0.11"
+        },
+        {
+          "source": 1240111,
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+          "url": "https://github.com/advisories/GHSA-6j4f-fj2g-mc7p",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=4.0.0 <5.0.10"
+        }
+      ],
+      "effects": [],
+      "range": "3.0.0 - 5.0.11",
+      "nodes": [
+        "node_modules/brace-expansion"
+      ],
+      "fixAvailable": true
+    },
+    "browserslist": {
+      "name": "browserslist",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1153171,
+          "name": "browserslist",
+          "dependency": "browserslist",
+          "title": "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+          "url": "https://github.com/advisories/GHSA-c83g-rgw3-j3cx",
+          "severity": "high",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=4.28.6"
+        },
+        {
+          "source": 1153172,
+          "name": "browserslist",
+          "dependency": "browserslist",
+          "title": "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)",
+          "url": "https://github.com/advisories/GHSA-73wf-gq98-2v4g",
+          "severity": "high",
+          "cwe": [
+            "CWE-248",
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=4.28.6"
+        }
+      ],
+      "effects": [],
+      "range": "<=4.28.6",
+      "nodes": [
+        "node_modules/browserslist"
+      ],
+      "fixAvailable": true
+    },
+    "decode-uri-component": {
+      "name": "decode-uri-component",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1147955,
+          "name": "decode-uri-component",
+          "dependency": "decode-uri-component",
+          "title": "decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input",
+          "url": "https://github.com/advisories/GHSA-vcc3-ghjq-m6fr",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-405",
+            "CWE-407",
+            "CWE-1176"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=0.4.2"
+        },
+        {
+          "source": 1243857,
+          "name": "decode-uri-component",
+          "dependency": "decode-uri-component",
+          "title": "decode-uri-component vulnerable to denial of service via quadratic replacement of percent-encoded runs",
+          "url": "https://github.com/advisories/GHSA-qr28-fpjm-wq7f",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=0.5.0"
+        }
+      ],
+      "effects": [
+        "query-string"
+      ],
+      "range": "<=0.5.0",
+      "nodes": [
+        "node_modules/decode-uri-component"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "elliptic": {
+      "name": "elliptic",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1112030,
+          "name": "elliptic",
+          "dependency": "elliptic",
+          "title": "Elliptic Uses a Cryptographic Primitive with a Risky Implementation",
+          "url": "https://github.com/advisories/GHSA-848j-6mx2-7j84",
+          "severity": "low",
+          "cwe": [
+            "CWE-1240"
+          ],
+          "cvss": {
+            "score": 5.6,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L"
+          },
+          "range": "<=6.6.1"
+        }
+      ],
+      "effects": [
+        "bip322-js",
+        "secp256k1"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/elliptic"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "eslint": {
+      "name": "eslint",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "minimatch"
+      ],
+      "effects": [],
+      "range": "10.0.0-alpha.0 - 10.14.0",
+      "nodes": [
+        "node_modules/eslint"
+      ],
+      "fixAvailable": true
+    },
+    "minimatch": {
+      "name": "minimatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1244623,
+          "name": "minimatch",
+          "dependency": "minimatch",
+          "title": "minimatch has potential denial of service via globparts amplification",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-405"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=7.0.0 <11.0.1"
+        }
+      ],
+      "effects": [
+        "@eslint/config-array",
+        "eslint"
+      ],
+      "range": "7.0.0 - 11.0.0",
+      "nodes": [
+        "node_modules/minimatch"
+      ],
+      "fixAvailable": true
+    },
+    "nanoid": {
+      "name": "nanoid",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1138811,
+          "name": "nanoid",
+          "dependency": "nanoid",
+          "title": "nanoid: non-secure generators can loop indefinitely with negative size",
+          "url": "https://github.com/advisories/GHSA-28wg-ghj8-5hjv",
+          "severity": "high",
+          "cwe": [
+            "CWE-835"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.3.16"
+        },
+        {
+          "source": 1139427,
+          "name": "nanoid",
+          "dependency": "nanoid",
+          "title": "nanoid: custom generators can loop indefinitely when size is zero",
+          "url": "https://github.com/advisories/GHSA-2v37-7h3g-55p8",
+          "severity": "high",
+          "cwe": [
+            "CWE-835"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.3.18"
+        }
+      ],
+      "effects": [],
+      "range": "<=3.3.17",
+      "nodes": [
+        "node_modules/nanoid"
+      ],
+      "fixAvailable": true
+    },
+    "postcss": {
+      "name": "postcss",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1130709,
+          "name": "postcss",
+          "dependency": "postcss",
+          "title": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
+          "url": "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22",
+            "CWE-200"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=8.5.22"
+        },
+        {
+          "source": 1139510,
+          "name": "postcss",
+          "dependency": "postcss",
+          "title": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
+          "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849",
+          "severity": "high",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=8.5.17"
+        }
+      ],
+      "effects": [],
+      "range": "<=8.5.22",
+      "nodes": [
+        "node_modules/postcss"
+      ],
+      "fixAvailable": true
+    },
+    "query-string": {
+      "name": "query-string",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "decode-uri-component"
+      ],
+      "effects": [
+        "@walletconnect/utils"
+      ],
+      "range": "5.0.0 - 9.4.1",
+      "nodes": [
+        "node_modules/query-string"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "secp256k1": {
+      "name": "secp256k1",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "elliptic"
+      ],
+      "effects": [
+        "bip322-js",
+        "bitcoinjs-message"
+      ],
+      "range": ">=2.0.0",
+      "nodes": [
+        "node_modules/bitcoinjs-message/node_modules/secp256k1",
+        "node_modules/secp256k1"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "source-map-js": {
+      "name": "source-map-js",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1241209,
+          "name": "source-map-js",
+          "dependency": "source-map-js",
+          "title": "source-map-js allows event-loop denial of service through indexed source-map section offsets",
+          "url": "https://github.com/advisories/GHSA-68fv-2mgg-jv7q",
+          "severity": "high",
+          "cwe": [
+            "CWE-1284"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=1.0.0 <1.2.2"
+        }
+      ],
+      "effects": [],
+      "range": "1.0.0 - 1.2.1",
+      "nodes": [
+        "node_modules/source-map-js"
+      ],
+      "fixAvailable": true
+    },
+    "viem": {
+      "name": "viem",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "abitype",
+        "ws",
+        "ws"
+      ],
+      "effects": [
+        "@reown/appkit-siwx",
+        "@walletconnect/utils"
+      ],
+      "range": "<=0.0.0-wagmiv2-20230628182101 || 0.1.10 - 2.54.1",
+      "nodes": [
+        "node_modules/@reown/appkit-siwx/node_modules/viem",
+        "node_modules/@walletconnect/utils/node_modules/viem",
+        "node_modules/viem"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "vite": {
+      "name": "vite",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1242624,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+          "url": "https://github.com/advisories/GHSA-698v-4r3x-3vcv",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-78"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=8.0.0 <=8.1.5"
+        },
+        {
+          "source": 1242653,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+          "url": "https://github.com/advisories/GHSA-r825-w8mm-5pxw",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-88"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=8.0.0 <=8.1.5"
+        },
+        {
+          "source": 1242660,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+          "url": "https://github.com/advisories/GHSA-587h-7wmj-h5pm",
+          "severity": "high",
+          "cwe": [
+            "CWE-77"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=8.0.0 <=8.1.5"
+        },
+        {
+          "source": 1242726,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "Vite: Cross origin script execution through Vite custom middleware",
+          "url": "https://github.com/advisories/GHSA-9jrq-w75r-8gcw",
+          "severity": "low",
+          "cwe": [
+            "CWE-80"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=8.0.0 <=8.1.5"
+        },
+        {
+          "source": 1242732,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine",
+          "url": "https://github.com/advisories/GHSA-rq7h-c2jc-7f22",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22",
+            "CWE-284"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=8.0.0 <=8.1.5"
+        }
+      ],
+      "effects": [],
+      "range": "8.0.0 - 8.1.5",
+      "nodes": [
+        "node_modules/vite"
+      ],
+      "fixAvailable": true
+    },
+    "ws": {
+      "name": "ws",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1119108,
+          "name": "ws",
+          "dependency": "ws",
+          "title": "ws: Uninitialized memory disclosure",
+          "url": "https://github.com/advisories/GHSA-58qx-3vcg-4xpx",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-908"
+          ],
+          "cvss": {
+            "score": 4.4,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=8.0.0 <8.20.1"
+        },
+        {
+          "source": 1123259,
+          "name": "ws",
+          "dependency": "ws",
+          "title": "ws: Memory exhaustion DoS from tiny fragments and data chunks",
+          "url": "https://github.com/advisories/GHSA-96hv-2xvq-fx4p",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-770",
+            "CWE-1050"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=8.0.0 <8.21.0"
+        }
+      ],
+      "effects": [
+        "viem"
+      ],
+      "range": "8.0.0 - 8.20.1",
+      "nodes": [
+        "node_modules/@reown/appkit-siwx/node_modules/ws",
+        "node_modules/@walletconnect/utils/node_modules/ws",
+        "node_modules/viem/node_modules/ws"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    },
+    "zod": {
+      "name": "zod",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1243066,
+          "name": "zod",
+          "dependency": "zod",
+          "title": "Zod can exhaust memory while validating oversized constrained collections",
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "severity": "high",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<4.6.6"
+        }
+      ],
+      "effects": [
+        "@reown/appkit-wallet",
+        "abitype"
+      ],
+      "range": "<4.6.6",
+      "nodes": [
+        "node_modules/@reown/appkit-wallet/node_modules/zod",
+        "node_modules/zod"
+      ],
+      "fixAvailable": {
+        "name": "@stacks/connect",
+        "version": "8.1.9",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 4,
+      "moderate": 7,
+      "high": 23,
+      "critical": 1,
+      "total": 35
+    },
+    "dependencies": {
+      "prod": 212,
+      "dev": 164,
+      "optional": 131,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 473
+    }
+  }
+}

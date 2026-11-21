@@ -24,6 +24,8 @@
 
 # Coverage and testing reports
 **/coverage/
+**/playwright-report/
+**/test-results/
 **/*.info
 
 # Editor directories and system files
