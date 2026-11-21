@@ -1,92 +1,191 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-const wallet='0x52908400098527886E0F7030069857D2E4169EE7'
-const report={scanId:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',wallet,chain:'ethereum',mode:'live',assessedAt:'2026-11-21T12:00:00.000Z',policy:'txguard-evidence-v2',riskScore:null,riskLabel:'Insufficient data',balance:'Unavailable',totalTransactions:'Not established',confidence:'Insufficient coverage',summary:'There is insufficient security coverage. Verify the recipient independently.',alerts:[{type:'info',title:'Security provider unavailable',text:'No clean result can be inferred.',evidence:'coverage limitation'}],signals:[],sources:[{name:'GoPlus address security',status:'unavailable'}],limitations:['This is an address-only assessment, not a transaction simulation.'],recommendations:['Verify the recipient through a trusted channel.'],commitment:'a'.repeat(64)}
-test.beforeEach(async({page})=>{
-  await page.route('https://fonts.googleapis.com/**',route=>route.abort())
-  await page.route('https://fonts.gstatic.com/**',route=>route.abort())
-})
-async function mockScan(page,data=report) {
-  await page.route('**/api/analyze',route=>route.fulfill({json:data}))
-  await page.route('**/api/transactions?**',route=>route.fulfill({json:{transactions:[{hash:'0x'+'b'.repeat(64),from:wallet,to:'0x'+'1'.repeat(40),amount:'1.000000000000000001',asset:'ETH',timestamp:null,status:'Pending',kind:'Native transfer'}],limitations:['Recent activity only.']}}))
-  await page.route('**/api/ask',route=>route.fulfill({json:{answer:'Coverage is incomplete. Verify independently.',source:'deterministic'}}))
-  await page.route('**/api/registry*',route=>route.fulfill({json:{status:'Pending',verified:false,note:'Submission is not finality.'}}))
+const wallet = '0x52908400098527886E0F7030069857D2E4169EE7'
+const report = {
+  scanId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  wallet,
+  chain: 'ethereum',
+  mode: 'live',
+  assessedAt: '2026-11-21T12:00:00.000Z',
+  policy: 'txguard-evidence-v2',
+  riskScore: null,
+  riskLabel: 'Insufficient data',
+  balance: 'Unavailable',
+  totalTransactions: 'Not established',
+  confidence: 'Insufficient coverage',
+  summary: 'There is insufficient security coverage. Verify the recipient independently.',
+  alerts: [
+    {
+      type: 'info',
+      title: 'Security provider unavailable',
+      text: 'No clean result can be inferred.',
+      evidence: 'coverage limitation',
+    },
+  ],
+  signals: [],
+  sources: [{ name: 'GoPlus address security', status: 'unavailable' }],
+  limitations: ['This is an address-only assessment, not a transaction simulation.'],
+  recommendations: ['Verify the recipient through a trusted channel.'],
+  commitment: 'a'.repeat(64),
 }
-test('complete scan, history, chat, receipt and saved dashboard journey',async({page})=>{
-  const errors=[];page.on('pageerror',error=>errors.push(error.message))
-  await mockScan(page);await page.goto('/')
-  await page.getByLabel('Recipient address',{exact:true}).fill(wallet)
-  await page.getByRole('button',{name:'Check address',exact:true}).click()
+test.beforeEach(async ({ page }) => {
+  await page.route('https://fonts.googleapis.com/**', (route) => route.abort())
+  await page.route('https://fonts.gstatic.com/**', (route) => route.abort())
+})
+
+test('real local serverless imports and validation work without API mocks', async ({ request }) => {
+  for (const path of ['analyze', 'ask', 'tts', 'report-bug']) {
+    const response = await request.get(`/api/${path}`)
+    expect(response.status()).toBe(405)
+  }
+  for (const path of ['transactions', 'registry']) {
+    const response = await request.post(`/api/${path}`, { data: {} })
+    expect(response.status()).toBe(405)
+  }
+  const invalid = await request.post('/api/analyze', {
+    data: { wallet: 'invalid', chain: 'bitcoin' },
+  })
+  expect(invalid.status()).toBe(400)
+})
+async function mockScan(page, data = report) {
+  await page.route('**/api/analyze', (route) => route.fulfill({ json: data }))
+  await page.route('**/api/transactions?**', (route) =>
+    route.fulfill({
+      json: {
+        transactions: [
+          {
+            hash: '0x' + 'b'.repeat(64),
+            from: wallet,
+            to: '0x' + '1'.repeat(40),
+            amount: '1.000000000000000001',
+            asset: 'ETH',
+            timestamp: null,
+            status: 'Pending',
+            kind: 'Native transfer',
+          },
+        ],
+        limitations: ['Recent activity only.'],
+      },
+    }),
+  )
+  await page.route('**/api/ask', (route) =>
+    route.fulfill({
+      json: { answer: 'Coverage is incomplete. Verify independently.', source: 'deterministic' },
+    }),
+  )
+  await page.route('**/api/registry*', (route) =>
+    route.fulfill({
+      json: { status: 'Pending', verified: false, note: 'Submission is not finality.' },
+    }),
+  )
+}
+test('complete scan, history, chat, receipt and saved dashboard journey', async ({ page }) => {
+  const errors = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await mockScan(page)
+  await page.goto('/')
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
   await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
   await expect(page.locator('.risk-number')).toContainText('No score')
-  await page.getByRole('button',{name:'Transaction history',exact:true}).click()
+  await page.getByRole('button', { name: 'Transaction history', exact: true }).click()
   await expect(page.locator('.transaction-status')).toHaveText('Pending')
-  await expect(page.getByText('1.000000000000000001 ETH',{exact:true})).toBeVisible()
-  await expect(page.getByText('Time unavailable',{exact:true})).toBeVisible()
-  await page.getByRole('button',{name:'Security report',exact:true}).click()
+  await expect(page.getByText('1.000000000000000001 ETH', { exact: true })).toBeVisible()
+  await expect(page.getByText('Time unavailable', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Security report', exact: true }).click()
   await page.getByLabel('Your question').fill('Why is this insufficient?')
-  await page.getByRole('button',{name:'Ask TxGuard',exact:true}).click()
+  await page.getByRole('button', { name: 'Ask TxGuard', exact: true }).click()
   await expect(page.getByText('Coverage is incomplete. Verify independently.')).toBeVisible()
-  await page.getByRole('button',{name:'View receipt tools'}).click()
+  await page.getByRole('button', { name: 'View receipt tools' }).click()
   await page.getByLabel('Existing Stacks receipt transaction ID').fill('a'.repeat(64))
-  await page.getByRole('button',{name:'Verify receipt',exact:true}).click()
+  await page.getByRole('button', { name: 'Verify receipt', exact: true }).click()
   await expect(page.getByText('Submission is not finality.')).toBeVisible()
-  await page.getByRole('button',{name:'Save wallet',exact:true}).click()
-  await page.getByRole('link',{name:'Dashboard',exact:true}).click()
+  await page.getByRole('button', { name: 'Save wallet', exact: true }).click()
+  await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
   await expect(page.locator('.wallet-card')).toHaveCount(1)
-  await page.reload();await expect(page.locator('.wallet-card')).toHaveCount(1)
-  await page.getByRole('button',{name:'Refresh all',exact:true}).click()
-  await expect(page.getByText('Wallet assessments refreshed. Check their timestamps and coverage.')).toBeVisible()
-  await page.getByRole('link',{name:'History',exact:true}).click()
+  await page.reload()
+  await expect(page.locator('.wallet-card')).toHaveCount(1)
+  await page.getByRole('button', { name: 'Refresh all', exact: true }).click()
+  await expect(
+    page.getByText('Wallet assessments refreshed. Check their timestamps and coverage.'),
+  ).toBeVisible()
+  await page.getByRole('link', { name: 'History', exact: true }).click()
   await expect(page.locator('.history-row')).toHaveCount(1)
   expect(errors).toEqual([])
 })
-test('invalid addresses never call provider API',async({page})=>{
-  let calls=0;await page.route('**/api/analyze',route=>{calls++;return route.fulfill({json:report})})
+test('invalid addresses never call provider API', async ({ page }) => {
+  let calls = 0
+  await page.route('**/api/analyze', (route) => {
+    calls++
+    return route.fulfill({ json: report })
+  })
   await page.goto('/')
-  for(const [chain,address] of [['ethereum','0x123'],['bitcoin','1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNb'],['solana','0'.repeat(32)],['stacks','ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZJSRTPGZGM']]){
-    await page.getByLabel('Blockchain',{exact:true}).selectOption(chain)
-    await page.getByLabel('Recipient address',{exact:true}).fill(address)
-    await expect(page.getByRole('button',{name:'Check address',exact:true})).toBeDisabled()
+  for (const [chain, address] of [
+    ['ethereum', '0x123'],
+    ['bitcoin', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNb'],
+    ['solana', '0'.repeat(32)],
+    ['stacks', 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZJSRTPGZGM'],
+  ]) {
+    await page.getByLabel('Blockchain', { exact: true }).selectOption(chain)
+    await page.getByLabel('Recipient address', { exact: true }).fill(address)
+    await expect(page.getByRole('button', { name: 'Check address', exact: true })).toBeDisabled()
   }
   expect(calls).toBe(0)
 })
-test('API error recovery and stale response cancellation',async({page})=>{
-  await page.route('**/api/analyze',route=>route.fulfill({status:503,json:{error:'Provider temporarily unavailable.'}}))
-  await page.goto('/');await page.getByLabel('Recipient address',{exact:true}).fill(wallet)
-  await page.getByRole('button',{name:'Check address',exact:true}).click()
+test('API error recovery and stale response cancellation', async ({ page }) => {
+  await page.route('**/api/analyze', (route) =>
+    route.fulfill({ status: 503, json: { error: 'Provider temporarily unavailable.' } }),
+  )
+  await page.goto('/')
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('Provider temporarily unavailable.')
-  await page.unroute('**/api/analyze');await mockScan(page)
-  await page.getByRole('button',{name:'Try again',exact:true}).click()
+  await page.unroute('**/api/analyze')
+  await mockScan(page)
+  await page.getByRole('button', { name: 'Try again', exact: true }).click()
   await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
-  await page.getByLabel('Blockchain',{exact:true}).selectOption('bitcoin')
+  await page.getByLabel('Blockchain', { exact: true }).selectOption('bitcoin')
   await expect(page.locator('#report')).toHaveCount(0)
 })
-test('demo fixtures are labeled and never saved as live history',async({page})=>{
-  await page.goto('/');await page.getByRole('button',{name:/An unavailable provider/}).click()
+test('demo fixtures are labeled and never saved as live history', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /An unavailable provider/ }).click()
   await expect(page.locator('.demo-banner')).toContainText('synthetic')
   await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
-  await expect(page.getByRole('button',{name:'Save wallet',exact:true})).toHaveCount(0)
-  await page.getByRole('link',{name:'History',exact:true}).click()
-  await expect(page.getByRole('heading',{name:'No scans yet'})).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Save wallet', exact: true })).toHaveCount(0)
+  await page.getByRole('link', { name: 'History', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'No scans yet' })).toBeVisible()
 })
-for(const width of [320,375,390,428,768,1024,1440]) test(`responsive scan and report at ${width}px`,async({page})=>{
-  await page.setViewportSize({width,height:900});await mockScan(page);await page.goto('/')
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
-  await page.getByLabel('Recipient address',{exact:true}).fill(wallet)
-  await page.getByRole('button',{name:'Check address',exact:true}).click()
+for (const width of [320, 375, 390, 428, 768, 1024, 1440])
+  test(`responsive scan and report at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await mockScan(page)
+    await page.goto('/')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+    await page.getByRole('button', { name: 'Check address', exact: true }).click()
+    await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  })
+test('homepage and report accessibility, keyboard and reduced motion', async ({ page }) => {
+  await mockScan(page)
+  await page.goto('/')
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused()
+  expect(
+    (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+      .violations,
+  ).toEqual([])
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
   await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
-  await page.getByRole('link',{name:'Dashboard',exact:true}).click()
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
-})
-test('homepage and report accessibility, keyboard and reduced motion',async({page})=>{
-  await mockScan(page);await page.goto('/');await page.keyboard.press('Tab')
-  await expect(page.getByRole('link',{name:'Skip to content'})).toBeFocused()
-  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations).toEqual([])
-  await page.getByLabel('Recipient address',{exact:true}).fill(wallet)
-  await page.getByRole('button',{name:'Check address',exact:true}).click()
-  await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
-  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations).toEqual([])
-  expect(await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true)
+  expect(
+    (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+      .violations,
+  ).toEqual([])
+  expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(
+    true,
+  )
 })
