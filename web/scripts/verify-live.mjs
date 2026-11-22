@@ -13,6 +13,7 @@ const targets = {
   stacks: 'SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM',
 }
 const checks = []
+const output = process.env.LIVE_VERIFICATION_OUTPUT || '../docs/live-verification.json'
 async function check(name, fn) {
   const start = performance.now()
   try {
@@ -29,7 +30,7 @@ async function check(name, fn) {
 }
 const watchdog = setTimeout(async () => {
   await writeFile(
-    '../docs/live-verification.json',
+    output,
     JSON.stringify(
       {
         checkedAt: new Date().toISOString(),
@@ -104,7 +105,7 @@ await Promise.all([
 ])
 clearTimeout(watchdog)
 await writeFile(
-  '../docs/live-verification.json',
+  output,
   JSON.stringify(
     {
       checkedAt: new Date().toISOString(),

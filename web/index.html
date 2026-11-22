@@ -14,9 +14,14 @@
     />
     <title>TxGuard — Know Before You Send</title>
 
-    <!-- Manrope and Space Grotesk load with display=swap in product.css. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Existing brand fonts are self-hosted; heading face is on the critical paint path. -->
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
   </head>
   <body>
     <div id="root"></div>

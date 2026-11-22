@@ -1,4 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: optional;
+  src: url('/fonts/manrope-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: optional;
+  src: url('/fonts/space-grotesk-latin.woff2') format('woff2');
+}
 :root {
   font-family: Manrope, system-ui, sans-serif;
   color: #0a0a0a;
@@ -433,7 +446,13 @@ html {
 .scan-card form {
   padding: 22px 25px 20px;
 }
-.scan-card form > select {
+.scan-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+.scan-card .scan-fields > select {
   margin: 7px 0 16px;
 }
 .label-row {

@@ -1,0 +1,142 @@
+{
+  "measuredAt": "2026-11-21T12:25:22.666Z",
+  "revision": "2356639",
+  "browser": "158.0.4370.33",
+  "target": "http://127.0.0.1:4173",
+  "method": "Three fresh-context production-preview runs; 390x1000, 4x CPU, 150ms latency, 1.6Mbps down/750kbps up, cold HTTP cache, Google Fonts blocked exactly as the prior lab test. Metrics collected before screenshots. Lab observations, not field CWV or Lighthouse.",
+  "medianLcpMs": 4680,
+  "samples": [
+    {
+      "run": 1,
+      "lcp": 4680,
+      "cls": 0,
+      "element": {
+        "tag": "H1",
+        "text": "Know BeforeYou Send.",
+        "size": 32208
+      },
+      "longTasks": [
+        {
+          "start": 969.5999999996275,
+          "duration": 417
+        },
+        {
+          "start": 1431.5999999996275,
+          "duration": 272
+        }
+      ],
+      "loadMs": 1381.7999999988824,
+      "domContentLoadedMs": 1378.9000000003725,
+      "htmlBytes": 1139,
+      "resources": [
+        {
+          "name": "/assets/index-ztvBpYEp.js",
+          "duration": 680,
+          "start": 258.09999999962747,
+          "bytes": 258034
+        },
+        {
+          "name": "/assets/index-P2R5Pbf-.css",
+          "duration": 267.40000000037253,
+          "start": 258.7999999988824,
+          "bytes": 28038
+        },
+        {
+          "name": "/css2",
+          "duration": 12.400000000372529,
+          "start": 536.6999999992549,
+          "bytes": 0
+        }
+      ],
+      "heapBytes": 2842082
+    },
+    {
+      "run": 2,
+      "lcp": 4460,
+      "cls": 0,
+      "element": {
+        "tag": "H1",
+        "text": "Know BeforeYou Send.",
+        "size": 32208
+      },
+      "longTasks": [
+        {
+          "start": 1025.5999999996275,
+          "duration": 390
+        },
+        {
+          "start": 1442.300000000745,
+          "duration": 258
+        }
+      ],
+      "loadMs": 1414.0999999996275,
+      "domContentLoadedMs": 1411.199999999255,
+      "htmlBytes": 1139,
+      "resources": [
+        {
+          "name": "/assets/index-ztvBpYEp.js",
+          "duration": 704.7999999988824,
+          "start": 299.30000000074506,
+          "bytes": 258034
+        },
+        {
+          "name": "/assets/index-P2R5Pbf-.css",
+          "duration": 312.90000000037253,
+          "start": 306.19999999925494,
+          "bytes": 28038
+        },
+        {
+          "name": "/css2",
+          "duration": 25.699999999254942,
+          "start": 641.8000000007451,
+          "bytes": 0
+        }
+      ],
+      "heapBytes": 2840255
+    },
+    {
+      "run": 3,
+      "lcp": 5440,
+      "cls": 0,
+      "element": {
+        "tag": "H1",
+        "text": "Know BeforeYou Send.",
+        "size": 32208
+      },
+      "longTasks": [
+        {
+          "start": 1011.1999999992549,
+          "duration": 475
+        },
+        {
+          "start": 1511.2999999988824,
+          "duration": 301
+        }
+      ],
+      "loadMs": 1483.7999999988824,
+      "domContentLoadedMs": 1481.5999999996275,
+      "htmlBytes": 1139,
+      "resources": [
+        {
+          "name": "/assets/index-ztvBpYEp.js",
+          "duration": 672.9000000003725,
+          "start": 310.2999999988824,
+          "bytes": 258034
+        },
+        {
+          "name": "/assets/index-P2R5Pbf-.css",
+          "duration": 276.2999999988824,
+          "start": 315.5,
+          "bytes": 28038
+        },
+        {
+          "name": "/css2",
+          "duration": 9,
+          "start": 607.6999999992549,
+          "bytes": 0
+        }
+      ],
+      "heapBytes": 2842034
+    }
+  ]
+}

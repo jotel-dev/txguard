@@ -119,6 +119,7 @@ test('production missing credentials or HMAC secret fails closed without calling
 })
 test('storage errors, timeouts and malformed responses never fall back to memory', async () => {
   for (const fn of [
+    async () => new Response('x'.repeat(4097)),
     async () => {
       throw Error('secret upstream failure')
     },

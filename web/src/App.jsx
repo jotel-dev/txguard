@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, lazy, Suspense } from 'react'
+import { useState, useRef, useEffect, useSyncExternalStore, lazy, Suspense } from 'react'
 import './product.css'
 import { CHAINS, isValidAddress, walletKey, formatTimestamp } from '../shared/chains.js'
 import { request, loadWallets, loadHistory, persist, assessmentOf } from './client.js'
@@ -7,10 +7,20 @@ import Icon from './Icon.jsx'
 const Report = lazy(() => import('./Report.jsx'))
 const Dashboard = lazy(() => import('./Dashboard.jsx'))
 const pageFromHash = () =>
-  ['dashboard', 'history'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'scan'
+  typeof location !== 'undefined' && ['dashboard', 'history'].includes(location.hash.slice(1))
+    ? location.hash.slice(1)
+    : 'scan'
+const subscribeToReadiness = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
+const initialPage = () =>
+  typeof document === 'undefined' || document.getElementById('root')?.dataset.prerendered === 'true'
+    ? 'scan'
+    : pageFromHash()
 
 export default function App() {
-  const [page, setPage] = useState(pageFromHash)
+  const [page, setPage] = useState(initialPage)
+  const interactive = useSyncExternalStore(subscribeToReadiness, clientReady, serverReady)
   const [chain, setChain] = useState('ethereum')
   const [wallet, setWallet] = useState('')
   const [amount, setAmount] = useState('')
@@ -35,6 +45,11 @@ export default function App() {
       })
     }
     window.addEventListener('hashchange', navigate)
+    if (
+      typeof document !== 'undefined' &&
+      document.getElementById('root')?.dataset.prerendered === 'true'
+    )
+      queueMicrotask(navigate)
     return () => {
       window.removeEventListener('hashchange', navigate)
       scanController.current?.abort()
@@ -383,128 +398,148 @@ export default function App() {
                   }}
                   noValidate
                 >
-                  <label htmlFor="chain">Blockchain</label>
-                  <select
-                    id="chain"
-                    value={chain}
-                    onChange={(event) => edit('', event.target.value)}
+                  <fieldset
+                    className="scan-fields"
+                    disabled={!interactive}
+                    aria-busy={!interactive}
                   >
-                    {CHAINS.map((c) => (
-                      <option value={c.id} key={c.id}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="label-row">
-                    <label htmlFor="wallet">Recipient address</label>
-                    <button
-                      type="button"
-                      className="text-button"
-                      onClick={async () => {
-                        try {
-                          edit((await navigator.clipboard.readText()).trim())
-                        } catch {
-                          setNotice(
-                            'Paste unavailable. Please paste directly into the address field.',
-                          )
-                        }
-                      }}
+                    <legend className="sr-only">Recipient address check</legend>
+                    <label htmlFor="chain">Blockchain</label>
+                    <select
+                      id="chain"
+                      value={chain}
+                      onChange={(event) => edit('', event.target.value)}
                     >
-                      <Icon name="copy" size={13} />
-                      Paste
-                    </button>
-                  </div>
-                  <input
-                    id="wallet"
-                    value={wallet}
-                    onChange={(event) => edit(event.target.value)}
-                    maxLength={128}
-                    placeholder={
-                      chain === 'ethereum' || chain === 'bnb'
-                        ? '0x…'
-                        : chain === 'stacks'
-                          ? 'SP… or SP….contract'
-                          : chain === 'bitcoin'
-                            ? 'bc1…, 1… or 3…'
-                            : 'Solana public address'
-                    }
-                    autoComplete="off"
-                    autoCapitalize="none"
-                    spellCheck="false"
-                    aria-invalid={valid === false}
-                    aria-describedby="address-help"
-                  />
-                  <p
-                    id="address-help"
-                    className={valid === false ? 'validation-error small' : 'small muted'}
-                  >
-                    {valid === false
-                      ? `Check the ${network.label} address format and checksum.`
-                      : valid
-                        ? 'Address format and checksum accepted. Identity is not verified.'
-                        : 'Select the network your recipient will use.'}
-                  </p>
-                  <details className="optional-context">
-                    <summary>
-                      Transfer context <span>optional</span>
-                    </summary>
-                    <div className="form-grid">
-                      <label htmlFor="token">
-                        Asset
-                        <select id="token" value={token} onChange={(e) => setToken(e.target.value)}>
-                          {[
-                            network.asset,
-                            ...(['ethereum', 'bnb', 'solana'].includes(chain)
-                              ? ['USDT', 'USDC']
-                              : []),
-                          ].map((asset) => (
-                            <option key={asset}>{asset}</option>
-                          ))}
-                        </select>
-                      </label>
-                      <label htmlFor="amount">
-                        Amount
-                        <input
-                          id="amount"
-                          inputMode="decimal"
-                          placeholder="0.00"
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                          maxLength={50}
-                        />
-                      </label>
-                    </div>
-                    <p className="small muted">
-                      Context only. Token identity, balances and execution are not simulated.
-                    </p>
-                  </details>
-                  <button className="button scan-submit" disabled={loading || !valid} type="submit">
-                    {loading ? (
-                      <>
-                        <span className="spinner" />
-                        Checking available evidence…
-                      </>
-                    ) : (
-                      <>
-                        <Icon size={18} />
-                        Check address
-                        <Icon name="arrow" size={18} />
-                      </>
-                    )}
-                  </button>
-                  {error && (
-                    <div className="error-note" role="alert">
-                      {error}
-                      <button type="button" className="text-button" onClick={() => scan()}>
-                        Try again
-                        <Icon name="refresh" size={14} />
+                      {CHAINS.map((c) => (
+                        <option value={c.id} key={c.id}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="label-row">
+                      <label htmlFor="wallet">Recipient address</label>
+                      <button
+                        type="button"
+                        className="text-button"
+                        onClick={async () => {
+                          try {
+                            edit((await navigator.clipboard.readText()).trim())
+                          } catch {
+                            setNotice(
+                              'Paste unavailable. Please paste directly into the address field.',
+                            )
+                          }
+                        }}
+                      >
+                        <Icon name="copy" size={13} />
+                        Paste
                       </button>
                     </div>
-                  )}
-                  <p className="scan-footnote">
-                    <Icon name="info" size={14} />
-                    An address check, not a transaction simulation.
-                  </p>
+                    <input
+                      id="wallet"
+                      value={wallet}
+                      onChange={(event) => edit(event.target.value)}
+                      maxLength={128}
+                      placeholder={
+                        chain === 'ethereum' || chain === 'bnb'
+                          ? '0x…'
+                          : chain === 'stacks'
+                            ? 'SP… or SP….contract'
+                            : chain === 'bitcoin'
+                              ? 'bc1…, 1… or 3…'
+                              : 'Solana public address'
+                      }
+                      autoComplete="off"
+                      autoCapitalize="none"
+                      spellCheck="false"
+                      aria-invalid={valid === false}
+                      aria-describedby="address-help"
+                    />
+                    <p
+                      id="address-help"
+                      className={valid === false ? 'validation-error small' : 'small muted'}
+                    >
+                      {valid === false
+                        ? `Check the ${network.label} address format and checksum.`
+                        : valid
+                          ? 'Address format and checksum accepted. Identity is not verified.'
+                          : 'Select the network your recipient will use.'}
+                    </p>
+                    <details className="optional-context">
+                      <summary>
+                        Transfer context <span>optional</span>
+                      </summary>
+                      <div className="form-grid">
+                        <label htmlFor="token">
+                          Asset
+                          <select
+                            id="token"
+                            value={token}
+                            onChange={(e) => setToken(e.target.value)}
+                          >
+                            {[
+                              network.asset,
+                              ...(['ethereum', 'bnb', 'solana'].includes(chain)
+                                ? ['USDT', 'USDC']
+                                : []),
+                            ].map((asset) => (
+                              <option key={asset}>{asset}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label htmlFor="amount">
+                          Amount
+                          <input
+                            id="amount"
+                            inputMode="decimal"
+                            placeholder="0.00"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            maxLength={50}
+                          />
+                        </label>
+                      </div>
+                      <p className="small muted">
+                        Context only. Token identity, balances and execution are not simulated.
+                      </p>
+                    </details>
+                    <button
+                      className="button scan-submit"
+                      disabled={loading || !valid}
+                      type="submit"
+                    >
+                      {loading ? (
+                        <>
+                          <span className="spinner" />
+                          Checking available evidence…
+                        </>
+                      ) : (
+                        <>
+                          <Icon size={18} />
+                          Check address
+                          <Icon name="arrow" size={18} />
+                        </>
+                      )}
+                    </button>
+                    {error && (
+                      <div className="error-note" role="alert">
+                        {error}
+                        <button type="button" className="text-button" onClick={() => scan()}>
+                          Try again
+                          <Icon name="refresh" size={14} />
+                        </button>
+                      </div>
+                    )}
+                    <p className="scan-footnote">
+                      <Icon name="info" size={14} />
+                      An address check, not a transaction simulation.
+                    </p>
+                    {!interactive && (
+                      <p className="sr-only" role="status">
+                        Preparing address controls…
+                      </p>
+                    )}
+                  </fieldset>
                 </form>
                 <div className="scan-card-bottom">
                   <span>No seed phrase. No sign-in.</span>

@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-21T12:57:47.318Z",
+  "note": "Existing GitHub-linked Vercel previews are created by pre-existing branch automation. No explicit deployment or production promotion was initiated. Vercel CLI authentication is invalid; project environment settings are unverified.",
+  "results": [
+    {
+      "name": "Existing Vercel preview",
+      "url": "https://txguard-ihsf66g9g-jotelfootball-techs-projects.vercel.app",
+      "status": 200,
+      "title": "Login – Vercel",
+      "server": "Vercel",
+      "apiStatus": 401,
+      "apiError": {
+        "code": "401",
+        "message": "Protected deployment"
+      },
+      "applicationVerified": false,
+      "note": "HTTP 200 is Vercel login, not the app. Preview application headers/flow remain unverified."
+    },
+    {
+      "name": "Existing public production",
+      "url": "https://txguard-gules.vercel.app",
+      "status": 200,
+      "title": "TxGuard — Know Before You Send",
+      "csp": null,
+      "server": "Vercel"
+    }
+  ]
+}

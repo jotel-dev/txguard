@@ -28,7 +28,10 @@ export async function guard(req, res, method, scope = 'scan') {
     }
   }
   if (method === 'POST') {
-    if (!(req.headers?.['content-type'] || '').toLowerCase().startsWith('application/json')) {
+    if (
+      (req.headers?.['content-type'] || '').split(';', 1)[0].trim().toLowerCase() !==
+      'application/json'
+    ) {
       res.status(415).json({ error: 'Use application/json.' })
       return false
     }

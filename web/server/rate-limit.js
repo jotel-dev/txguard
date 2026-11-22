@@ -116,8 +116,25 @@ export function createRateLimiter({
             body: JSON.stringify(['EVAL', RATE_SCRIPT, keys.length, ...keys, ...limits, WINDOW_MS]),
           })
           if (!response.ok) throw new Error('Shared limiter unavailable')
-          const text = await response.text()
-          if (text.length > 4096) throw new Error('Invalid limiter response')
+          const reader = response.body?.getReader()
+          if (!reader) throw new Error('Missing limiter response')
+          const chunks = []
+          let bytes = 0
+          try {
+            for (;;) {
+              const { done, value } = await reader.read()
+              if (done) break
+              bytes += value.byteLength
+              if (bytes > 4096) {
+                await reader.cancel()
+                throw new Error('Invalid limiter response')
+              }
+              chunks.push(value)
+            }
+          } finally {
+            reader.releaseLock()
+          }
+          const text = Buffer.concat(chunks).toString('utf8')
           const data = JSON.parse(text)
           if (data.error) throw new Error('Shared limiter failed')
           result = data.result

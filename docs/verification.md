@@ -1,5 +1,7 @@
 # Verification and release handoff
 
+This document records the earlier revamp baseline. See [final stabilization results](final-release-report.md) for shared Redis protection, Etherscan hardening, final test counts, browser coverage and newer three-run performance evidence. Historical measurements below are retained for comparison.
+
 Date: November 21, 2026, Africa/Lagos. Branch: `feat/txguard-2-reliability`. No production deployment, merge, contract publication or paid mainnet transaction was performed. Treat this as a locally verified release candidate, not a claim of completed production rollout.
 
 ## Implementation outcome

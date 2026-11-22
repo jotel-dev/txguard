@@ -221,6 +221,7 @@ for (const width of [320, 375, 390, 428, 768, 1024, 1440])
 test('homepage and report accessibility, keyboard and reduced motion', async ({ page }) => {
   await mockScan(page)
   await page.goto('/')
+  await page.getByRole('link', { name: 'Skip to content' }).waitFor({ state: 'attached' })
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused()
   expect(

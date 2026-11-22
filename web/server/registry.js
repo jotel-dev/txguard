@@ -54,12 +54,10 @@ export function verifyRegistryTransaction(tx) {
     submittedBy: tx.sender_address || null,
     blockHeight: tx.block_height || null,
     arguments: matches
-      ? (tx.contract_call.function_args || [])
-          .slice(0, 3)
-          .map((arg) => ({
-            name: String(arg.name).slice(0, 32),
-            value: String(arg.repr).slice(0, 128),
-          }))
+      ? (tx.contract_call.function_args || []).slice(0, 3).map((arg) => ({
+          name: String(arg.name).slice(0, 32),
+          value: String(arg.repr).slice(0, 128),
+        }))
       : [],
     explorerUrl: explorerLink('stacks', tx.tx_id, 'tx'),
     note: 'Confirms an anchored successful call to the registry according to Hiro. Inspect its public arguments; this does not bind the entry to your current report or certify the score.',

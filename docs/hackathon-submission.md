@@ -41,7 +41,8 @@ The benefit is practical: clearer evidence before irreversible transfers for fre
 | Existing public application | https://txguard-gules.vercel.app — verified HTTP 200; revamp deployment still requires approval |
 | Architecture | [architecture.md](architecture.md) |
 | Security audit | [txguard-revamp-audit.md](txguard-revamp-audit.md) |
-| Verification and limitations | [verification.md](verification.md) |
+| Verification and limitations | [final-release-report.md](final-release-report.md), [historical verification](verification.md) |
+| Environment and launch setup | [production-environment.md](production-environment.md) |
 | Demo script | [demo-walkthrough.md](demo-walkthrough.md) |
 | Desktop homepage | [screenshot](screenshots/desktop-home.png) |
 | Mobile homepage | [screenshot](screenshots/mobile-lab-home.png) |
@@ -50,7 +51,7 @@ The benefit is practical: clearer evidence before irreversible transfers for fre
 
 ## Limitations to disclose
 
-EVM balance/history needs a compatible Etherscan key and plan. Non-EVM address-security intelligence, comprehensive sanctions screening, transaction execution simulation, ownership verification and approvals/honeypot checks are not implemented. AI live inference is unverified without credentials. In-process throttling needs distributed edge limits for public production traffic. The slower-network lab run needs further performance work; field metrics and physical Android/Safari/Firefox checks are outstanding. New mainnet receipt creation and payments are outside this release. The 2.0 code is not deployed until separately approved.
+EVM balance/history needs a compatible Etherscan key and plan. Non-EVM address-security intelligence, comprehensive sanctions screening, transaction execution simulation, ownership verification and approvals/honeypot checks are not implemented. Authenticated Redis/Etherscan and optional AI live calls remain unverified without credentials. Atomic shared quotas are implemented and tested with mocks; deployed APIs fail closed until Redis is configured. Cold mobile lab median LCP improved from 4.680 to 2.884 seconds with zero layout shift, but still exceeds the 2.5-second target. Chromium/Firefox/WebKit and Android-emulation checks pass; field metrics, physical Android and native Safari remain outstanding. Bitcoin history timed out in the final read-only probe. Existing automatic previews are login-protected; the production release has not been promoted. New mainnet receipt creation and payments are outside this release.
 
 ## Optional recording and slides
 

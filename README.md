@@ -6,7 +6,7 @@ TxGuard is a free recipient risk assessment tool for everyday crypto users, free
 
 [Existing public app](https://txguard-gules.vercel.app) · [Repository](https://github.com/jotel-dev/txguard)
 
-The 2.0 revamp is on `feat/txguard-2-reliability`. The existing public app returned HTTP 200 during verification; this branch has **not been deployed**.
+The 2.0 revamp is on `feat/txguard-2-reliability`. Production still serves the previous release. Existing GitHub automation creates protected Vercel previews on branch pushes; their application flow has not been verified through Vercel login. No production promotion has been performed. See the [final release report](docs/final-release-report.md).
 
 ## What is implemented
 
@@ -44,11 +44,11 @@ cp .env.example .env
 npm run dev
 ```
 
-Vite serves the frontend and all six local `/api/` handlers. `GROQ_API_KEY` and `ETHERSCAN_API_KEY` are optional server-only variables. Never prefix secrets with `VITE_`. `APP_ORIGIN` is optional; set the actual origin in a deployment. `npm run preview` serves the static production build only; it does not emulate serverless APIs.
+Vite serves the frontend and all six local `/api/` handlers. `GROQ_API_KEY` and `ETHERSCAN_API_KEY` are optional server-only variables. Deployed APIs require an existing Upstash REST URL/write token and `RATE_LIMIT_HMAC_SECRET`; missing or unavailable protection returns 503 before providers are called. Never prefix secrets with `VITE_`. Follow the [exact environment setup](docs/production-environment.md). `npm run preview` serves the static production build only; it does not emulate serverless APIs.
 
 ```sh
 # web/
-npm run check                 # lint, unit/API/security tests, production build
+npm run check                 # formatting, lint, unit/API/security tests, build + secret boundary
 npx playwright install chromium
 npm run test:e2e              # deterministic browser journeys, seven widths and axe
 node scripts/verify-live.mjs  # read-only public integration checks; no signing
@@ -58,6 +58,7 @@ node scripts/verify-live.mjs  # read-only public integration checks; no signing
 
 # txguard-stacks/
 npm ci
+npm run typecheck            # strict TypeScript for tests/configuration
 npm test                     # local Clarinet simnet, never mainnet
 
 # simulator/
@@ -80,9 +81,11 @@ Read-only verification confirmed its interface, deployed source (matching local 
 - [Architecture and APIs](docs/architecture.md)
 - [Scoring policy](docs/risk-policy.md)
 - [Verification, measurements and limitations](docs/verification.md)
+- [Final stabilization results](docs/final-release-report.md)
+- [Server environment variables and setup](docs/production-environment.md)
 - [Deployment checklist](docs/deployment-checklist.md)
 - [Hackathon submission](docs/hackathon-submission.md)
 - [Four-minute demo walkthrough](docs/demo-walkthrough.md)
 - [Desktop screenshot](docs/screenshots/desktop-home.png) · [Mobile screenshot](docs/screenshots/mobile-lab-home.png)
 
-Deployment, production environment changes, contract upgrades, paid transactions and merging require explicit approval. Configure distributed edge rate limits before public production traffic: in-process throttling alone does not cover multiple serverless instances.
+Deployment, production environment changes, contract upgrades, paid transactions and merging require explicit approval. Shared Redis quotas are implemented and mocked in tests; configure and verify them across actual deployed instances before launch. Production has no in-memory limiter fallback.

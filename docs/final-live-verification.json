@@ -1,0 +1,199 @@
+{
+  "checkedAt": "2026-11-22T11:52:50.456Z",
+  "note": "Read-only public probes. Credentials absent means Etherscan balance is unavailable; unavailable probes are not successful integrations.",
+  "checks": [
+    {
+      "name": "ethereum balance",
+      "status": "unavailable",
+      "latencyMs": 245
+    },
+    {
+      "name": "bnb balance",
+      "status": "unavailable",
+      "latencyMs": 243
+    },
+    {
+      "name": "bitcoin balance",
+      "status": "response",
+      "latencyMs": 1015,
+      "value": {
+        "balance": "57.71977119 BTC",
+        "totalTransactions": "67588",
+        "walletAge": "Not established",
+        "categories": [],
+        "chain": "bitcoin",
+        "source": "Blockstream (confirmed balance)",
+        "status": "available"
+      }
+    },
+    {
+      "name": "solana balance",
+      "status": "response",
+      "latencyMs": 1226,
+      "value": {
+        "balance": "0.000000001 SOL",
+        "totalTransactions": null,
+        "walletAge": "Not established",
+        "categories": [],
+        "chain": "solana",
+        "source": "Solana mainnet RPC",
+        "status": "available"
+      }
+    },
+    {
+      "name": "ethereum GoPlus",
+      "status": "response",
+      "latencyMs": 1161,
+      "value": {
+        "status": "available",
+        "source": "GoPlus address security",
+        "signals": [],
+        "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+      }
+    },
+    {
+      "name": "Existing public app",
+      "status": "response",
+      "latencyMs": 1200,
+      "value": {
+        "status": 200
+      }
+    },
+    {
+      "name": "Stacks registry interface",
+      "status": "response",
+      "latencyMs": 1339,
+      "value": {
+        "contract": "SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry",
+        "compatible": true,
+        "explorerUrl": "https://explorer.hiro.so/address/SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry?chain=mainnet",
+        "checkedAt": "2026-11-22T11:52:44.764Z",
+        "note": "Permissionless public assertions. A registry entry does not independently verify a security assessment."
+      }
+    },
+    {
+      "name": "bnb GoPlus",
+      "status": "response",
+      "latencyMs": 1452,
+      "value": {
+        "status": "available",
+        "source": "GoPlus address security",
+        "signals": [],
+        "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+      }
+    },
+    {
+      "name": "stacks balance",
+      "status": "response",
+      "latencyMs": 1663,
+      "value": {
+        "balance": "0.001505 STX",
+        "totalTransactions": null,
+        "walletAge": "Not established",
+        "categories": [],
+        "chain": "stacks",
+        "source": "Hiro Stacks API",
+        "status": "available"
+      }
+    },
+    {
+      "name": "Deployed registry source matches local code",
+      "status": "response",
+      "latencyMs": 1716,
+      "value": {
+        "matchesIgnoringCommentsAndWhitespace": true,
+        "sourceSha256": "e193cb87747e527f42e4f51861bf79b264030f79c8b967a458066400ee4535ca",
+        "publishHeight": 8336638
+      }
+    },
+    {
+      "name": "Historically documented address security (OFAC 2022-04-14)",
+      "status": "response",
+      "latencyMs": 1720,
+      "value": {
+        "status": "available",
+        "source": "GoPlus address security",
+        "signals": [
+          {
+            "id": "stealing_attack",
+            "score": 90,
+            "title": "Stealing attack report",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "sanctioned",
+            "score": 95,
+            "title": "Sanctions indicator (provider report)",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "blacklist_doubt",
+            "score": 40,
+            "title": "Blacklist suspicion report (unconfirmed)",
+            "source": "GoPlus address security",
+            "evidence": "provider context"
+          }
+        ],
+        "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+      }
+    },
+    {
+      "name": "Stacks recent history",
+      "status": "response",
+      "latencyMs": 1751,
+      "value": {
+        "count": 20,
+        "limitations": [
+          "Recent anchored activity; contract calls are not represented as token transfers."
+        ]
+      }
+    },
+    {
+      "name": "Solana recent signatures/history",
+      "status": "response",
+      "latencyMs": 2074,
+      "value": {
+        "count": 6,
+        "limitations": [
+          "Last six signatures; some details may be unavailable. Multiple/inner transfers and unchecked SPL amounts are not decoded."
+        ]
+      }
+    },
+    {
+      "name": "Existing anchored registry receipt",
+      "status": "response",
+      "latencyMs": 2422,
+      "value": {
+        "status": "Confirmed registry call",
+        "verified": true,
+        "matches": true,
+        "txid": "0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082",
+        "submittedBy": "SP1906ZPQE20F1HX2JEKDMSD99YHB8G7Y7N7CW9ER",
+        "blockHeight": 8495105,
+        "arguments": [
+          {
+            "name": "chain",
+            "value": "\"solana\""
+          },
+          {
+            "name": "target",
+            "value": "\"DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm\""
+          },
+          {
+            "name": "risk-score",
+            "value": "u5"
+          }
+        ],
+        "explorerUrl": "https://explorer.hiro.so/txid/0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082?chain=mainnet",
+        "note": "Confirms an anchored successful call to the registry according to Hiro. Inspect its public arguments; this does not bind the entry to your current report or certify the score."
+      }
+    },
+    {
+      "name": "Bitcoin recent history",
+      "status": "unavailable",
+      "latencyMs": 7015
+    }
+  ]
+}
