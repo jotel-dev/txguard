@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-23T20:43:34.998Z",
+  "wallet": "0x0000000000000000000000000000000000000001",
+  "checks": [
+    {
+      "status": "response",
+      "chain": "ethereum",
+      "chainId": 1,
+      "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "decimals": 6,
+      "balance": "27658.736544",
+      "source": "ethereum-rpc.publicnode.com",
+      "note": "Contract-reported balance; not token legitimacy or spendability. Nonstandard tokens may be unsupported."
+    },
+    {
+      "status": "response",
+      "chain": "bnb",
+      "chainId": 56,
+      "token": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "decimals": 18,
+      "balance": "2181.967425104406548494",
+      "source": "bsc-dataseed.bnbchain.org",
+      "note": "Contract-reported balance; not token legitimacy or spendability. Nonstandard tokens may be unsupported."
+    },
+    {
+      "chain": "bnb",
+      "balance": "35.130284249104170623",
+      "kind": "native",
+      "status": "response"
+    }
+  ]
+}

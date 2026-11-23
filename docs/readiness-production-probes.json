@@ -1,0 +1,75 @@
+﻿{
+    "checkedAt":  "2026-11-23T20:28:26.2371869Z",
+    "checks":  [
+                   {
+                       "balance":  "57.256761534519935099 ETH",
+                       "sources":  [
+                                       {
+                                           "name":  "GoPlus address security",
+                                           "status":  "available",
+                                           "note":  "Available address-security fields retrieved; database coverage is not comprehensive."
+                                       },
+                                       {
+                                           "name":  "Etherscan V2",
+                                           "status":  "available"
+                                       }
+                                   ],
+                       "limit":  "20",
+                       "transactionCount":  1,
+                       "limitations":  [
+                                           "This is an address-only assessment, not a transaction execution simulation.",
+                                           "No ownership verification, approval audit, token honeypot test or complete sanctions screening.",
+                                           "History and balance do not prove absence of fraud. An address can be compromised after this assessment."
+                                       ],
+                       "chain":  "ethereum",
+                       "status":  200,
+                       "remaining":  "19",
+                       "route":  "analyze"
+                   },
+                   {
+                       "balance":  null,
+                       "sources":  null,
+                       "limit":  "30",
+                       "transactionCount":  30,
+                       "limitations":  [
+                                           "Recent normal transactions only; internal calls and approvals are not decoded.",
+                                           "Token events use contract addresses; symbols are not trusted."
+                                       ],
+                       "chain":  "ethereum",
+                       "status":  200,
+                       "remaining":  "29",
+                       "route":  "transactions"
+                   },
+                   {
+                       "balance":  "Unavailable",
+                       "sources":  [
+                                       {
+                                           "name":  "GoPlus address security",
+                                           "status":  "available",
+                                           "note":  "Available address-security fields retrieved; database coverage is not comprehensive."
+                                       },
+                                       {
+                                           "name":  "Etherscan V2",
+                                           "status":  "unavailable",
+                                           "note":  "Explorer access is unavailable for this network on the configured plan."
+                                       }
+                                   ],
+                       "limit":  "20",
+                       "transactionCount":  1,
+                       "limitations":  [
+                                           "This is an address-only assessment, not a transaction execution simulation.",
+                                           "No ownership verification, approval audit, token honeypot test or complete sanctions screening.",
+                                           "History and balance do not prove absence of fraud. An address can be compromised after this assessment."
+                                       ],
+                       "chain":  "bnb",
+                       "status":  200,
+                       "remaining":  "18",
+                       "route":  "analyze"
+                   },
+                   {
+                       "status":  503,
+                       "route":  "transactions",
+                       "chain":  "bnb"
+                   }
+               ]
+}

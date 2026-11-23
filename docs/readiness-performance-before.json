@@ -1,0 +1,282 @@
+{
+  "measuredAt": "2026-11-23T20:29:32.403Z",
+  "revision": "readiness-before-performance-change",
+  "browser": "158.0.4370.33",
+  "target": "http://127.0.0.1:4173",
+  "method": "Three fresh-context production-preview runs; 390x1000, 4x CPU, 150ms latency, 1.6Mbps down/750kbps up, cold HTTP cache, Google Fonts blocked exactly as the prior lab test. Metrics collected before screenshots. Lab observations, not field CWV or Lighthouse.",
+  "medianLcpMs": 4028,
+  "samples": [
+    {
+      "run": 1,
+      "lcp": 4604,
+      "cls": 0,
+      "element": {
+        "tag": "H1",
+        "text": "Know BeforeYou Send.",
+        "size": 33082
+      },
+      "longTasks": [
+        {
+          "start": 689.9000000003725,
+          "duration": 2629
+        },
+        {
+          "start": 3355.100000000559,
+          "duration": 967
+        },
+        {
+          "start": 4322.799999999814,
+          "duration": 79
+        },
+        {
+          "start": 4622.9000000003725,
+          "duration": 74
+        },
+        {
+          "start": 4948.100000000559,
+          "duration": 100
+        },
+        {
+          "start": 5361.700000000186,
+          "duration": 585
+        },
+        {
+          "start": 5968.9000000003725,
+          "duration": 132
+        }
+      ],
+      "loadMs": 4326.299999999814,
+      "domContentLoadedMs": 701.5,
+      "htmlBytes": 17065,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "duration": 400.29999999981374,
+          "start": 344,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-BSV0Th9z.js",
+          "duration": 261.5,
+          "start": 348.20000000018626,
+          "bytes": 3180
+        },
+        {
+          "name": "/assets/index-D0thse4y.css",
+          "duration": 319.5,
+          "start": 350.90000000037253,
+          "bytes": 28262
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "duration": 2785.7000000001863,
+          "start": 829.5,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/bootstrap-BuYEX4vW.js",
+          "duration": 658.2000000001863,
+          "start": 4648,
+          "bytes": 205819
+        },
+        {
+          "name": "/assets/Icon-uLQnSSys.js",
+          "duration": 410.6000000005588,
+          "start": 4653.799999999814,
+          "bytes": 51755
+        },
+        {
+          "name": "/favicon.svg",
+          "duration": 193.59999999962747,
+          "start": 4751.700000000186,
+          "bytes": 9522
+        }
+      ],
+      "heapBytes": 2683197
+    },
+    {
+      "run": 2,
+      "lcp": 4028,
+      "cls": 0,
+      "element": {
+        "tag": "H1",
+        "text": "Know BeforeYou Send.",
+        "size": 33082
+      },
+      "longTasks": [
+        {
+          "start": 652.8000000007451,
+          "duration": 2487
+        },
+        {
+          "start": 3178.5,
+          "duration": 810
+        },
+        {
+          "start": 3989,
+          "duration": 88
+        },
+        {
+          "start": 4084.100000000559,
+          "duration": 96
+        },
+        {
+          "start": 4401.5,
+          "duration": 127
+        },
+        {
+          "start": 4834.600000000559,
+          "duration": 507
+        },
+        {
+          "start": 5344.700000000186,
+          "duration": 145
+        },
+        {
+          "start": 5505.9000000003725,
+          "duration": 182
+        }
+      ],
+      "loadMs": 3990.4000000003725,
+      "domContentLoadedMs": 660.4000000003725,
+      "htmlBytes": 17065,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "duration": 401.29999999981374,
+          "start": 290.6000000005588,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-BSV0Th9z.js",
+          "duration": 265.79999999981374,
+          "start": 301.80000000074506,
+          "bytes": 3180
+        },
+        {
+          "name": "/assets/index-D0thse4y.css",
+          "duration": 304.6000000005588,
+          "start": 305.5,
+          "bytes": 28262
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "duration": 2603.300000000745,
+          "start": 838,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/bootstrap-BuYEX4vW.js",
+          "duration": 706.7000000001863,
+          "start": 4096,
+          "bytes": 205819
+        },
+        {
+          "name": "/assets/Icon-uLQnSSys.js",
+          "duration": 456.59999999962747,
+          "start": 4099.4000000003725,
+          "bytes": 51755
+        },
+        {
+          "name": "/favicon.svg",
+          "duration": 212.29999999981374,
+          "start": 4188.4000000003725,
+          "bytes": 9522
+        }
+      ],
+      "heapBytes": 2686303
+    },
+    {
+      "run": 3,
+      "lcp": 3380,
+      "cls": 0,
+      "element": {
+        "tag": "H1",
+        "text": "Know BeforeYou Send.",
+        "size": 32208
+      },
+      "longTasks": [
+        {
+          "start": 588.7999999998137,
+          "duration": 2413
+        },
+        {
+          "start": 3011.5,
+          "duration": 335
+        },
+        {
+          "start": 3360.7000000001863,
+          "duration": 165
+        },
+        {
+          "start": 3533.100000000559,
+          "duration": 113
+        },
+        {
+          "start": 3888.2000000001863,
+          "duration": 117
+        },
+        {
+          "start": 4305,
+          "duration": 664
+        },
+        {
+          "start": 4987.200000000186,
+          "duration": 354
+        },
+        {
+          "start": 5386.100000000559,
+          "duration": 147
+        }
+      ],
+      "loadMs": 3380.7999999998137,
+      "domContentLoadedMs": 595.7999999998137,
+      "htmlBytes": 17065,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "duration": 384.69999999925494,
+          "start": 279.6000000005588,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-BSV0Th9z.js",
+          "duration": 241.6000000005588,
+          "start": 285.5,
+          "bytes": 3180
+        },
+        {
+          "name": "/assets/index-D0thse4y.css",
+          "duration": 288.20000000018626,
+          "start": 288.20000000018626,
+          "bytes": 28262
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "duration": 2567,
+          "start": 723.6000000005588,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/bootstrap-BuYEX4vW.js",
+          "duration": 685.7999999998137,
+          "start": 3562.600000000559,
+          "bytes": 205819
+        },
+        {
+          "name": "/assets/Icon-uLQnSSys.js",
+          "duration": 432.79999999981374,
+          "start": 3571.4000000003725,
+          "bytes": 51755
+        },
+        {
+          "name": "/favicon.svg",
+          "duration": 212.20000000018626,
+          "start": 3674,
+          "bytes": 9522
+        }
+      ],
+      "heapBytes": 2689413
+    }
+  ]
+}

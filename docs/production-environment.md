@@ -1,5 +1,7 @@
 # Server environment setup
 
+Historical setup instructions retained below. November 23 live production reads verified Ethereum explorer balance/history access and a functioning quota response; BNB explorer access is plan-restricted. Direct environment inventory remains unverified without authenticated Vercel access. See [current readiness](readiness-report.md). The development candidate adds fixed public RPC reads requiring no additional secrets, including a BNB native-balance fallback; it has not been deployed.
+
 No Etherscan, Redis or Groq credentials were available for live authenticated verification in this stabilization phase. Integration tests use mocks. Do not interpret passing mocks as proof that a configured account or plan works. No paid infrastructure, environment changes or deployment was performed.
 
 ## Configure in Vercel

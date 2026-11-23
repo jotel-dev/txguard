@@ -1,5 +1,7 @@
 # Final stabilization and launch handoff
 
+Historical handoff. For the November 23 post-submission audit, current production observations, isolated development changes and remaining release gates, see [readiness report](readiness-report.md). PR #6 has since merged; statements below about the old production rollout are historical.
+
 Branch: `feat/txguard-2-reliability`. Security stage: `fc4022e`. Final source and CI status are identified by the PR's current head commit. Verification artifacts retain their actual timestamps; they are observations, not continuing availability guarantees. Production still serves the previous release.
 
 ## Completed implementation

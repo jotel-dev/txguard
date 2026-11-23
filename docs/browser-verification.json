@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-21T13:09:04.847Z",
+  "checkedAt": "2026-11-23T20:40:26.197Z",
   "note": "Additional engine smoke checks. These supplement the deterministic E2E suite. WebKit is not a claim of native Safari testing; Android is emulation, not a physical device.",
   "results": [
     {

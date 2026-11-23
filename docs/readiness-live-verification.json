@@ -1,0 +1,200 @@
+{
+  "checkedAt": "2026-11-23T20:27:10.422Z",
+  "note": "Read-only public probes. Credentials absent means Etherscan balance is unavailable; unavailable probes are not successful integrations.",
+  "checks": [
+    {
+      "name": "ethereum balance",
+      "status": "unavailable",
+      "latencyMs": 162
+    },
+    {
+      "name": "bnb balance",
+      "status": "unavailable",
+      "latencyMs": 160
+    },
+    {
+      "name": "Existing public app",
+      "status": "response",
+      "latencyMs": 1259,
+      "value": {
+        "status": 200
+      }
+    },
+    {
+      "name": "Bitcoin recent history",
+      "status": "response",
+      "latencyMs": 1584,
+      "value": {
+        "count": 25,
+        "limitations": [
+          "Recent confirmed and mempool observations, not complete lifetime history. Bitcoin has multiple inputs and outputs."
+        ]
+      }
+    },
+    {
+      "name": "bitcoin balance",
+      "status": "response",
+      "latencyMs": 1668,
+      "value": {
+        "balance": "57.71980119 BTC",
+        "totalTransactions": "67589",
+        "walletAge": "Not established",
+        "categories": [],
+        "chain": "bitcoin",
+        "source": "Blockstream (confirmed balance)",
+        "status": "available"
+      }
+    },
+    {
+      "name": "ethereum GoPlus",
+      "status": "response",
+      "latencyMs": 1779,
+      "value": {
+        "status": "available",
+        "source": "GoPlus address security",
+        "signals": [],
+        "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+      }
+    },
+    {
+      "name": "Stacks recent history",
+      "status": "response",
+      "latencyMs": 1862,
+      "value": {
+        "count": 20,
+        "limitations": [
+          "Recent anchored activity; contract calls are not represented as token transfers."
+        ]
+      }
+    },
+    {
+      "name": "Stacks registry interface",
+      "status": "response",
+      "latencyMs": 1881,
+      "value": {
+        "contract": "SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry",
+        "compatible": true,
+        "explorerUrl": "https://explorer.hiro.so/address/SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry?chain=mainnet",
+        "checkedAt": "2026-11-23T20:27:04.269Z",
+        "note": "Permissionless public assertions. A registry entry does not independently verify a security assessment."
+      }
+    },
+    {
+      "name": "bnb GoPlus",
+      "status": "response",
+      "latencyMs": 1982,
+      "value": {
+        "status": "available",
+        "source": "GoPlus address security",
+        "signals": [],
+        "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+      }
+    },
+    {
+      "name": "Historically documented address security (OFAC 2022-04-14)",
+      "status": "response",
+      "latencyMs": 2298,
+      "value": {
+        "status": "available",
+        "source": "GoPlus address security",
+        "signals": [
+          {
+            "id": "stealing_attack",
+            "score": 90,
+            "title": "Stealing attack report",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "sanctioned",
+            "score": 95,
+            "title": "Sanctions indicator (provider report)",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "blacklist_doubt",
+            "score": 40,
+            "title": "Blacklist suspicion report (unconfirmed)",
+            "source": "GoPlus address security",
+            "evidence": "provider context"
+          }
+        ],
+        "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+      }
+    },
+    {
+      "name": "solana balance",
+      "status": "response",
+      "latencyMs": 4160,
+      "value": {
+        "balance": "0.000000001 SOL",
+        "totalTransactions": null,
+        "walletAge": "Not established",
+        "categories": [],
+        "chain": "solana",
+        "source": "Solana mainnet RPC",
+        "status": "available"
+      }
+    },
+    {
+      "name": "stacks balance",
+      "status": "response",
+      "latencyMs": 5084,
+      "value": {
+        "balance": "0.001505 STX",
+        "totalTransactions": null,
+        "walletAge": "Not established",
+        "categories": [],
+        "chain": "stacks",
+        "source": "Hiro Stacks API",
+        "status": "available"
+      }
+    },
+    {
+      "name": "Existing anchored registry receipt",
+      "status": "response",
+      "latencyMs": 5389,
+      "value": {
+        "status": "Confirmed registry call",
+        "verified": true,
+        "matches": true,
+        "txid": "0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082",
+        "submittedBy": "SP1906ZPQE20F1HX2JEKDMSD99YHB8G7Y7N7CW9ER",
+        "blockHeight": 8495105,
+        "arguments": [
+          {
+            "name": "chain",
+            "value": "\"solana\""
+          },
+          {
+            "name": "target",
+            "value": "\"DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm\""
+          },
+          {
+            "name": "risk-score",
+            "value": "u5"
+          }
+        ],
+        "explorerUrl": "https://explorer.hiro.so/txid/0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082?chain=mainnet",
+        "note": "Confirms an anchored successful call to the registry according to Hiro. Inspect its public arguments; this does not bind the entry to your current report or certify the score."
+      }
+    },
+    {
+      "name": "Deployed registry source matches local code",
+      "status": "unavailable",
+      "latencyMs": 7009
+    },
+    {
+      "name": "Solana recent signatures/history",
+      "status": "response",
+      "latencyMs": 8025,
+      "value": {
+        "count": 6,
+        "limitations": [
+          "Last six signatures; some details may be unavailable. Multiple/inner transfers and unchecked SPL amounts are not decoded."
+        ]
+      }
+    }
+  ]
+}
