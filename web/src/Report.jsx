@@ -3,6 +3,7 @@ import { CHAINS, explorerLink, formatTimestamp } from '../shared/chains.js'
 import { request } from './client.js'
 import Icon from './Icon.jsx'
 const Receipt = lazy(() => import('./Receipt.jsx'))
+const TokenBalance = lazy(() => import('./TokenBalance.jsx'))
 
 export default function Report({ report, save, copy }) {
   const [tab, setTab] = useState('report')
@@ -381,6 +382,11 @@ export default function Report({ report, save, copy }) {
                     Refresh history
                   </button>
                 </div>
+                {['ethereum', 'bnb'].includes(report.chain) && (
+                  <Suspense fallback={<p>Loading token tools…</p>}>
+                    <TokenBalance report={report} />
+                  </Suspense>
+                )}
                 {txLoading && (
                   <div className="skeleton-stack" role="status">
                     <p>Retrieving blockchain activity…</p>

@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { readFile } from 'node:fs/promises'
+import { verifyReceiptPackage } from '../shared/receipt.js'
 const wallet = '0x52908400098527886E0F7030069857D2E4169EE7'
 const report = {
   scanId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
@@ -113,6 +115,31 @@ test('complete scan, history, chat, receipt and saved dashboard journey', async 
   await expect(page.locator('.history-row')).toHaveCount(1)
   expect(errors).toEqual([])
 })
+test('private receipt export verifies offline and token balance shows real contract units', async ({
+  page,
+}) => {
+  await mockScan(page)
+  await page.route('**/api/token-balance?**', (route) =>
+    route.fulfill({
+      json: { balance: '1.000001', decimals: 6, chainId: 1, note: 'Contract-reported balance.' },
+    }),
+  )
+  await page.goto('/')
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
+  await page.getByRole('button', { name: 'View receipt tools' }).click()
+  const pendingDownload = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Prepare private receipt package' }).click()
+  const downloaded = await pendingDownload
+  const bundle = JSON.parse(await readFile(await downloaded.path(), 'utf8'))
+  expect(verifyReceiptPackage(bundle)).toBe(true)
+  expect(bundle.assessment.wallet).toBe(wallet.toLowerCase())
+  await page.getByRole('button', { name: 'Transaction history', exact: true }).click()
+  await page.getByLabel('Token contract address').fill('0x0000000000000000000000000000000000000001')
+  await page.getByRole('button', { name: 'Check token balance', exact: true }).click()
+  await expect(page.getByText(/1.000001 units/)).toBeVisible()
+})
+
 test('invalid addresses never call provider API', async ({ page }) => {
   let calls = 0
   await page.route('**/api/analyze', (route) => {

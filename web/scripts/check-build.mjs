@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFile, readdir } from 'node:fs/promises'
 const html = await readFile('dist/index.html', 'utf8')
 assert.ok(
-  html.includes('rel="stylesheet"'),
+  html.includes('<style data-critical-css>'),
   'Critical public-page CSS must load before the async application',
 )
 assert.ok(html.includes('data-prerendered="true"'), 'Public HTML must be rendered at build time')
