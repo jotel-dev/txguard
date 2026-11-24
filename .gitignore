@@ -47,3 +47,18 @@
 **/.env.production.local
 **/.env.*
 !**/.env.example
+
+# TxGuard demo outputs and local media (keep editable sources and metadata tracked)
+# These paths stay on disk; original footage and delivery archives need separate backups.
+/media/txguard-demo/art/
+/media/txguard-demo/render/
+/media/txguard-demo/audio/*.wav
+/media/txguard-demo/source/*.png
+/media/txguard-demo/source/*.webm
+/media/txguard-demo/source/raw/
+/media/txguard-demo/review/*.jpg
+/media/txguard-demo/review/*.png
+/media/txguard-demo/deliverables/*.mp4
+/media/txguard-demo/deliverables/*.wav
+/media/txguard-demo/deliverables/*.png
+/media/txguard-demo/deliverables/*.zip

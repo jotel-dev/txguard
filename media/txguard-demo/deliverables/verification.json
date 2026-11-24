@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-11-22T21:41:59.215Z",
+  "file": "TxGuard-90s-1080p.mp4",
+  "sha256": "6da81373f924bb35f152cc83e368d7d90daa83ec2e8a64b1eef7259e68423813",
+  "bytes": 9995352,
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": "30/1",
+    "codec": "h264",
+    "pixelFormat": "yuv420p",
+    "frames": "2700",
+    "duration": "90.000000"
+  },
+  "audio": {
+    "codec": "aac",
+    "rate": "48000",
+    "channels": 2,
+    "duration": "90.000000",
+    "loudness": {
+      "input_i": "-16.01",
+      "input_tp": "-1.97",
+      "input_lra": "7.90",
+      "input_thresh": "-27.33",
+      "output_i": "-16.53",
+      "output_tp": "-1.50",
+      "output_lra": "5.40",
+      "output_thresh": "-27.35",
+      "normalization_type": "dynamic",
+      "target_offset": "0.53"
+    }
+  },
+  "captions": {
+    "count": 15,
+    "method": "Actual generated phrase boundaries checked against each WAV duration to within 2ms; final A/V start and duration difference under one video frame",
+    "srt": "TxGuard-90s.en.srt",
+    "animatedBurnIn": true
+  },
+  "fullDecode": "passed, no errors",
+  "blackIntervals": [],
+  "silenceLog": [],
+  "playback": {
+    "ended": true,
+    "duration": 90,
+    "currentTime": 90,
+    "decodedVideoFrames": 2700,
+    "decodedAudioBytes": 2154758,
+    "quality": {
+      "totalVideoFrames": 2700,
+      "droppedVideoFrames": 2
+    },
+    "errors": []
+  },
+  "genuineTxGuardSeconds": 68,
+  "genuineExplorerSeconds": 4,
+  "coverage": {
+    "realProviderResults": true,
+    "noMocks": true,
+    "explanationSource": "deterministic",
+    "receipt": "Existing confirmed registry call; not bound to the current report; no write"
+  },
+  "reviewScope": "Automated full decode, complete headless browser playback with audio decoding, measured sync/loudness, speech recognition and visual frame inspection. No claim of independent human listening or physical device playback."
+}

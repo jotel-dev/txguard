@@ -1,0 +1,143 @@
+{
+  "engine": "Kokoro 82M v1.0 ONNX",
+  "voice": "am_michael",
+  "speed": 0.94,
+  "method": "Measured generated phrase audio boundaries, not estimated word timing",
+  "segments": [
+    {
+      "scene": 1,
+      "text": "Every day, people send cryptocurrency to wallets they know little about.",
+      "spoken": "Every day, people send cryptocurrency to wallets they know little about.",
+      "start": 0.5,
+      "end": 4.998625,
+      "duration": 4.498625,
+      "file": "audio/scene-1-1.wav"
+    },
+    {
+      "scene": 1,
+      "text": "And when something goes wrong, getting that money back may be impossible.",
+      "spoken": "And when something goes wrong, getting that money back may be impossible.",
+      "start": 5.248625,
+      "end": 9.482167,
+      "duration": 4.233542,
+      "file": "audio/scene-1-2.wav"
+    },
+    {
+      "scene": 2,
+      "text": "Meet TxGuard.",
+      "spoken": "Meet T X Guard.",
+      "start": 12.6,
+      "end": 13.877374999999999,
+      "duration": 1.277375,
+      "file": "audio/scene-2-1.wav"
+    },
+    {
+      "scene": 2,
+      "text": "A Web3 recipient-checking tool that helps you understand available wallet risk evidence before sending your crypto.",
+      "spoken": "A Web three recipient checking tool that helps you understand available wallet risk evidence before sending your crypto.",
+      "start": 14.127374999999999,
+      "end": 22.038083,
+      "duration": 7.910708,
+      "file": "audio/scene-2-2.wav"
+    },
+    {
+      "scene": 3,
+      "text": "Choose a blockchain, enter a public wallet address, and run a scan.",
+      "spoken": "Choose a blockchain, enter a public wallet address, and run a scan.",
+      "start": 23.5,
+      "end": 27.51775,
+      "duration": 4.01775,
+      "file": "audio/scene-3-1.wav"
+    },
+    {
+      "scene": 3,
+      "text": "TxGuard retrieves available security intelligence and blockchain activity, with missing coverage kept visible.",
+      "spoken": "T X Guard retrieves available security intelligence and blockchain activity, with missing coverage kept visible.",
+      "start": 27.76775,
+      "end": 35.436792,
+      "duration": 7.669042,
+      "file": "audio/scene-3-2.wav"
+    },
+    {
+      "scene": 4,
+      "text": "Review the findings, their sources, and the limits of the check in plain English.",
+      "spoken": "Review the findings, their sources, and the limits of the check in plain English.",
+      "start": 40.4,
+      "end": 45.407416999999995,
+      "duration": 5.007417,
+      "file": "audio/scene-4-1.wav"
+    },
+    {
+      "scene": 4,
+      "text": "Available explanations stay grounded in retrieved evidence.",
+      "spoken": "Available explanations stay grounded in retrieved evidence.",
+      "start": 45.657416999999995,
+      "end": 49.47670899999999,
+      "duration": 3.819292,
+      "file": "audio/scene-4-2.wav"
+    },
+    {
+      "scene": 4,
+      "text": "No assessment can guarantee safety.",
+      "spoken": "No assessment can guarantee safety.",
+      "start": 49.72670899999999,
+      "end": 51.923083999999996,
+      "duration": 2.196375,
+      "file": "audio/scene-4-3.wav"
+    },
+    {
+      "scene": 5,
+      "text": "Five networks: Ethereum, BNB Chain, Solana, Bitcoin, and Stacks.",
+      "spoken": "Five networks. Ethereum, B N B Chain, Solana, Bitcoin, and Stacks.",
+      "start": 55.5,
+      "end": 60.7085,
+      "duration": 5.2085,
+      "file": "audio/scene-5-1.wav"
+    },
+    {
+      "scene": 5,
+      "text": "Security coverage varies by network.",
+      "spoken": "Security coverage varies by network.",
+      "start": 60.9585,
+      "end": 63.172458,
+      "duration": 2.213958,
+      "file": "audio/scene-5-2.wav"
+    },
+    {
+      "scene": 6,
+      "text": "Inspect an existing scan record on Stacks Mainnet.",
+      "spoken": "Inspect an existing scan record on Stacks main net.",
+      "start": 65.3,
+      "end": 68.530125,
+      "duration": 3.230125,
+      "file": "audio/scene-6-1.wav"
+    },
+    {
+      "scene": 6,
+      "text": "A public receipt records an assertion; it does not certify the score.",
+      "spoken": "A public receipt records an assertion; it does not certify the score.",
+      "start": 68.780125,
+      "end": 73.20504199999999,
+      "duration": 4.424917,
+      "file": "audio/scene-6-2.wav"
+    },
+    {
+      "scene": 7,
+      "text": "Built for P2P traders, freelancers, and everyday crypto users.",
+      "spoken": "Built for P two P traders, freelancers, and everyday crypto users.",
+      "start": 76.6,
+      "end": 81.50774999999999,
+      "duration": 4.90775,
+      "file": "audio/scene-7-1.wav"
+    },
+    {
+      "scene": 8,
+      "text": "TxGuard. Know before you send.",
+      "spoken": "T X Guard. Know before you send.",
+      "start": 84.5,
+      "end": 86.935333,
+      "duration": 2.435333,
+      "file": "audio/scene-8-1.wav"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "engine": "Kokoro 82M v1.0 ONNX",
+  "voice": "am_michael",
+  "delivery": "Calm male English; natural pace. No voice cloning.",
+  "scenes": [
+    { "id": 1, "start": 0, "end": 12, "lead": 0.5, "phrases": [
+      { "text": "Every day, people send cryptocurrency to wallets they know little about." },
+      { "text": "And when something goes wrong, getting that money back may be impossible." }
+    ] },
+    { "id": 2, "start": 12, "end": 23, "lead": 0.6, "phrases": [
+      { "text": "Meet TxGuard.", "spoken": "Meet T X Guard." },
+      { "text": "A Web3 recipient-checking tool that helps you understand available wallet risk evidence before sending your crypto.", "spoken": "A Web three recipient checking tool that helps you understand available wallet risk evidence before sending your crypto." }
+    ] },
+    { "id": 3, "start": 23, "end": 40, "lead": 0.5, "phrases": [
+      { "text": "Choose a blockchain, enter a public wallet address, and run a scan." },
+      { "text": "TxGuard retrieves available security intelligence and blockchain activity, with missing coverage kept visible.", "spoken": "T X Guard retrieves available security intelligence and blockchain activity, with missing coverage kept visible." }
+    ] },
+    { "id": 4, "start": 40, "end": 55, "lead": 0.4, "phrases": [
+      { "text": "Review the findings, their sources, and the limits of the check in plain English." },
+      { "text": "Available explanations stay grounded in retrieved evidence." },
+      { "text": "No assessment can guarantee safety." }
+    ] },
+    { "id": 5, "start": 55, "end": 65, "lead": 0.5, "phrases": [
+      { "text": "Five networks: Ethereum, BNB Chain, Solana, Bitcoin, and Stacks.", "spoken": "Five networks. Ethereum, B N B Chain, Solana, Bitcoin, and Stacks." },
+      { "text": "Security coverage varies by network." }
+    ] },
+    { "id": 6, "start": 65, "end": 76, "lead": 0.3, "phrases": [
+      { "text": "Inspect an existing scan record on Stacks Mainnet.", "spoken": "Inspect an existing scan record on Stacks main net." },
+      { "text": "A public receipt records an assertion; it does not certify the score." }
+    ] },
+    { "id": 7, "start": 76, "end": 84, "lead": 0.6, "phrases": [
+      { "text": "Built for P2P traders, freelancers, and everyday crypto users.", "spoken": "Built for P two P traders, freelancers, and everyday crypto users." }
+    ] },
+    { "id": 8, "start": 84, "end": 90, "lead": 0.5, "phrases": [
+      { "text": "TxGuard. Know before you send.", "spoken": "T X Guard. Know before you send." }
+    ] }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "title": "TxGuard — Know Before You Send",
+  "event": "Iyin-Ekiti TechFest 2026 — Web3 Track",
+  "output": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSeconds": 90,
+    "container": "mp4",
+    "videoCodec": "h264"
+  },
+  "state": "completed — final master and subtitles exported; technical playback and frame review passed",
+  "source": {
+    "url": "https://txguard-gules.vercel.app",
+    "uiVerified": true,
+    "productionPrerendered": true,
+    "liveScanStatus": 200,
+    "evidence": "source/capture-evidence.json",
+    "capturePolicy": "Use genuine website pixels and actual responses. No mocked security results or fictional interface. Local footage requires owner approval and a visible local-demo label."
+  },
+  "audio": {
+    "narration": "Kokoro 82M neural TTS; am_michael male English catalogue voice; actual measured phrase durations; no playback speed-up",
+    "music": "Original synthesized 90-second electronic score, no external samples; narration ducking and two-pass loudness mastering",
+    "captionPolicy": "Generate phrase/word timing from final narration, then review; export SRT and animated burned-in captions"
+  },
+  "minimumGenuineWebsiteSeconds": 63,
+  "scenes": [
+    {
+      "id": 1,
+      "start": 0,
+      "end": 12,
+      "title": "The problem",
+      "narration": "Every day, people send cryptocurrency to wallets they know little about. And when something goes wrong, getting that money back may be impossible.",
+      "visual": "Abstract wallet address and transfer line, freeze before transfer; ONE WRONG ADDRESS. YOUR CRYPTO COULD BE GONE."
+    },
+    {
+      "id": 2,
+      "start": 12,
+      "end": 23,
+      "title": "Introducing TxGuard",
+      "narration": "Meet TxGuard. A Web3 recipient-checking tool that helps you understand available wallet risk evidence before sending your crypto.",
+      "visual": "Actual deployed homepage, scanner push-in and existing product logo; KNOW BEFORE YOU SEND."
+    },
+    {
+      "id": 3,
+      "start": 23,
+      "end": 40,
+      "title": "The scanning experience",
+      "narration": "Choose a blockchain, enter a public wallet address, and run a scan. TxGuard retrieves available security intelligence and blockchain activity, with missing coverage kept visible.",
+      "visual": "Recorded actual chain selection, address entry, request/loading and completed 95/100 current provider assessment from the live production website."
+    },
+    {
+      "id": 4,
+      "start": 40,
+      "end": 55,
+      "title": "Understand the evidence",
+      "narration": "Review the findings, their sources, and the limits of the check in plain English. Available explanations stay grounded in retrieved evidence. No assessment can guarantee safety.",
+      "visual": "Actual report category/signals, working explanation with its real source label, actual available transaction history and locally saved multi-wallet dashboard. Do not describe deterministic fallback as live AI inference."
+    },
+    {
+      "id": 5,
+      "start": 55,
+      "end": 65,
+      "title": "Five networks",
+      "narration": "Five networks: Ethereum, BNB Chain, Solana, Bitcoin, and Stacks. Security coverage varies by network.",
+      "visual": "Actual selector and real interface close-ups; five network names with legible coverage note."
+    },
+    {
+      "id": 6,
+      "start": 65,
+      "end": 76,
+      "title": "Existing Stacks record",
+      "narration": "Inspect an existing scan record on Stacks Mainnet. A public receipt records an assertion; it does not certify the score.",
+      "visual": "Actual read-only existing receipt verification and explorer; label EXISTING RECORD. Never connect it to the current scan as if bound together. No new paid write.",
+      "receipt": "0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082"
+    },
+    {
+      "id": 7,
+      "start": 76,
+      "end": 84,
+      "title": "Everyday impact",
+      "narration": "Built for P2P traders, freelancers, and everyday crypto users.",
+      "visual": "Actual mobile website in restrained phone framing; no fabricated device screen or fake balance."
+    },
+    {
+      "id": 8,
+      "start": 84,
+      "end": 90,
+      "title": "Product reveal",
+      "narration": "TxGuard. Know before you send.",
+      "visual": "Existing TxGuard identity, public URL, event and Web3 track; restrained blue light and fade."
+    }
+  ],
+  "deliverablesPending": [],
+  "requiredChecks": [
+    "Working actual feature capture",
+    "At least 70 percent actual TxGuard visuals",
+    "Independent transcription review of every narration phrase",
+    "No private information",
+    "Exact dimensions/frame rate/duration verified with ffprobe",
+    "Full decode, complete browser playback and representative frame inspection"
+  ],
+  "actualTxGuardWebsiteSeconds": 68,
+  "actualExplorerSeconds": 4,
+  "deliverables": [
+    "deliverables/TxGuard-90s-1080p.mp4",
+    "deliverables/TxGuard-90s.en.srt",
+    "deliverables/TxGuard-narration.wav",
+    "deliverables/TxGuard-thumbnail.png",
+    "timeline.json",
+    "deliverables/verification.json"
+  ],
+  "review": {
+    "completeBrowserPlayback": true,
+    "fullDecode": true,
+    "exactStreamDurationAndFormat": true,
+    "exactCaptionPhraseBoundaries": true,
+    "independentSpeechRecognition": true,
+    "representativeExportedFramesInspected": 21,
+    "scope": "Automated full decode, complete headless browser playback with audio decoding, measured sync/loudness, speech recognition and visual frame inspection. No claim of independent human listening or physical device playback."
+  }
+}
