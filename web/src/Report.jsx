@@ -432,6 +432,13 @@ export default function Report({ report, save, copy }) {
                               {tx.hash.slice(0, 12)}…{tx.hash.slice(-8)}
                               <Icon name="link" size={14} />
                             </a>
+                            <button
+                              className="icon-button"
+                              aria-label="Copy transaction hash"
+                              onClick={() => copy(tx.hash, 'Transaction hash')}
+                            >
+                              <Icon name="copy" size={18} />
+                            </button>
                             <span className="transaction-status">{tx.status}</span>
                           </div>
                           <p className="small muted">{tx.kind}</p>
