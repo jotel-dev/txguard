@@ -149,10 +149,13 @@ export default function Dashboard({ wallets, setWallets, onScan, refresh, refres
               </button>
             </div>
             <h2>{w.label}</h2>
-            <button className="address-copy" title={w.address} onClick={() => copy(w.address)}>
-              <span>
-                {w.address.slice(0, 10)}…{w.address.slice(-8)}
-              </span>
+            <button
+              className="address-copy"
+              title={w.address}
+              aria-label={`Copy ${w.label} address`}
+              onClick={() => copy(w.address)}
+            >
+              <span>{w.address}</span>
               <Icon name="copy" size={14} />
             </button>
             <div className="wallet-metrics">

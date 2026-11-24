@@ -1,5 +1,7 @@
 # Production deployment checklist
 
+For the merge-only handoff, `web/vercel.json` disables automatic Git deployments from `main` using `git.deploymentEnabled.main: false`. Feature-branch previews retain their existing behavior. Production release remains a separate explicitly approved action; choose a reviewed manual deployment or approve re-enabling the main-branch automation after competition eligibility is confirmed. See [Vercel's branch deployment configuration](https://vercel.com/docs/project-configuration/git-configuration).
+
 No explicit deployment, production promotion, environment overwrite, contract upgrade, merge or paid transaction was performed. Existing GitHub automation creates protected Vercel previews on authorized branch pushes. Complete this checklist against the exact approved commit. See [final release results](final-release-report.md) and [exact environment setup](production-environment.md).
 
 ## Before approval

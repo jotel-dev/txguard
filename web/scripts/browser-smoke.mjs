@@ -2,14 +2,17 @@ import { chromium, firefox, webkit, devices } from '@playwright/test'
 import { writeFile } from 'node:fs/promises'
 const results = []
 for (const [name, engine, options, device] of [
+  ['Chrome desktop', chromium, { channel: 'chrome' }, {}],
+  ['Edge desktop', chromium, { channel: 'msedge' }, {}],
   ['Firefox', firefox, {}, {}],
   ['WebKit engine (not native Safari)', webkit, {}, {}],
   [
-    'Android emulation (not a physical device)',
+    'Android Chrome emulation (not a physical device)',
     chromium,
-    { channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge' },
+    { channel: 'chrome' },
     devices['Pixel 5'],
   ],
+  ['iOS Safari emulation (WebKit, not a physical iPhone)', webkit, {}, devices['iPhone 13']],
 ]) {
   let browser
   try {
@@ -38,6 +41,8 @@ for (const [name, engine, options, device] of [
       .fill('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')
     if (!(await page.getByRole('button', { name: 'Check address', exact: true }).isEnabled()))
       throw Error(`${name}: validator/control failed`)
+    const menu = page.getByRole('button', { name: 'Menu', exact: true })
+    if (await menu.isVisible()) await menu.click()
     await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
     await page.getByRole('heading', { name: 'A clearer view of your wallets.' }).waitFor()
     if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth))
@@ -61,7 +66,7 @@ for (const [name, engine, options, device] of [
   }
 }
 await writeFile(
-  '../docs/browser-verification.json',
+  process.env.BROWSER_OUTPUT || '../docs/browser-verification.json',
   JSON.stringify(
     {
       checkedAt: new Date().toISOString(),

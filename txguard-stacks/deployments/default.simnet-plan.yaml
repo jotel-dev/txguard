@@ -65,6 +65,11 @@ plan:
   - id: 0
     transactions:
     - transaction-type: emulated-contract-publish
+      contract-name: receipt-v2
+      emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+      path: contracts/receipt-v2.clar
+      clarity-version: 4
+    - transaction-type: emulated-contract-publish
       contract-name: registry
       emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
       path: contracts/registry.clar

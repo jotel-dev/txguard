@@ -3,6 +3,9 @@ import { renderPublicPage } from '../.cache/prerender/prerender.js'
 
 const path = new URL('../dist/index.html', import.meta.url)
 const shell = await readFile(path, 'utf8')
+// Keep CSS external so it can download alongside fonts and scripts and be cached
+// independently. Inlining the full stylesheet triples the initial HTML response.
+if (!shell.includes('rel="stylesheet"')) throw new Error('Missing stylesheet')
 const marker = '<div id="root"></div>'
 if (!shell.includes(marker)) throw new Error('Missing public render outlet')
 const html = renderPublicPage()

@@ -1,5 +1,6 @@
 import { isValidAddress, CHAINS } from '../shared/chains.js'
 import { rateLimiter } from './rate-limit.js'
+import { recordProvider } from './telemetry.js'
 
 export const BODY_LIMIT = 8192
 
@@ -96,6 +97,18 @@ export function validateScan(input) {
 }
 
 export async function fetchJSON(url, options = {}) {
+  const started = performance.now()
+  try {
+    const data = await fetchProviderJSON(url, options)
+    recordProvider(url, started, true)
+    return data
+  } catch (error) {
+    recordProvider(url, started, false)
+    throw error
+  }
+}
+
+async function fetchProviderJSON(url, options = {}) {
   const response = await fetch(url, {
     ...options,
     redirect: 'error',

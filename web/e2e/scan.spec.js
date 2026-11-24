@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { readFile } from 'node:fs/promises'
+import { verifyReceiptPackage } from '../shared/receipt.js'
+import { navigate } from './navigation.js'
 const wallet = '0x52908400098527886E0F7030069857D2E4169EE7'
 const report = {
   scanId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
@@ -101,7 +104,7 @@ test('complete scan, history, chat, receipt and saved dashboard journey', async 
   await page.getByRole('button', { name: 'Verify receipt', exact: true }).click()
   await expect(page.getByText('Submission is not finality.')).toBeVisible()
   await page.getByRole('button', { name: 'Save wallet', exact: true }).click()
-  await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
+  await navigate(page, 'Dashboard')
   await expect(page.locator('.wallet-card')).toHaveCount(1)
   await page.reload()
   await expect(page.locator('.wallet-card')).toHaveCount(1)
@@ -109,10 +112,35 @@ test('complete scan, history, chat, receipt and saved dashboard journey', async 
   await expect(
     page.getByText('Wallet assessments refreshed. Check their timestamps and coverage.'),
   ).toBeVisible()
-  await page.getByRole('link', { name: 'History', exact: true }).click()
+  await navigate(page, 'History')
   await expect(page.locator('.history-row')).toHaveCount(1)
   expect(errors).toEqual([])
 })
+test('private receipt export verifies offline and token balance shows real contract units', async ({
+  page,
+}) => {
+  await mockScan(page)
+  await page.route('**/api/token-balance?**', (route) =>
+    route.fulfill({
+      json: { balance: '1.000001', decimals: 6, chainId: 1, note: 'Contract-reported balance.' },
+    }),
+  )
+  await page.goto('/')
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
+  await page.getByRole('button', { name: 'View receipt tools' }).click()
+  const pendingDownload = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Prepare private receipt package' }).click()
+  const downloaded = await pendingDownload
+  const bundle = JSON.parse(await readFile(await downloaded.path(), 'utf8'))
+  expect(verifyReceiptPackage(bundle)).toBe(true)
+  expect(bundle.assessment.wallet).toBe(wallet.toLowerCase())
+  await page.getByRole('button', { name: 'Transaction history', exact: true }).click()
+  await page.getByLabel('Token contract address').fill('0x0000000000000000000000000000000000000001')
+  await page.getByRole('button', { name: 'Check token balance', exact: true }).click()
+  await expect(page.getByText(/1.000001 units/)).toBeVisible()
+})
+
 test('invalid addresses never call provider API', async ({ page }) => {
   let calls = 0
   await page.route('**/api/analyze', (route) => {
@@ -153,7 +181,7 @@ test('demo fixtures are labeled and never saved as live history', async ({ page 
   await expect(page.locator('.demo-banner')).toContainText('synthetic')
   await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
   await expect(page.getByRole('button', { name: 'Save wallet', exact: true })).toHaveCount(0)
-  await page.getByRole('link', { name: 'History', exact: true }).click()
+  await navigate(page, 'History')
   await expect(page.getByRole('heading', { name: 'No scans yet' })).toBeVisible()
 })
 
@@ -205,7 +233,7 @@ test('a late result from a cancelled scan cannot replace the newly selected reci
     release()
   }
 })
-for (const width of [320, 375, 390, 428, 768, 1024, 1440])
+for (const width of [320, 360, 375, 390, 414, 428, 480, 768, 1024, 1440, 1920])
   test(`responsive scan and report at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await mockScan(page)
@@ -215,7 +243,7 @@ for (const width of [320, 375, 390, 428, 768, 1024, 1440])
     await page.getByRole('button', { name: 'Check address', exact: true }).click()
     await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-    await page.getByRole('link', { name: 'Dashboard', exact: true }).click()
+    await navigate(page, 'Dashboard')
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   })
 test('homepage and report accessibility, keyboard and reduced motion', async ({ page }) => {
@@ -238,4 +266,104 @@ test('homepage and report accessibility, keyboard and reduced motion', async ({ 
   expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(
     true,
   )
+})
+
+test('mobile navigation supports Escape, active routes and focus without covering content', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 800 })
+  await page.goto('/')
+  const menu = page.getByRole('button', { name: 'Menu', exact: true })
+  await expect(menu).toBeEnabled()
+  await menu.click()
+  await expect(page.getByRole('button', { name: 'Close', exact: true })).toHaveAttribute(
+    'aria-expanded',
+    'true',
+  )
+  await page.keyboard.press('Escape')
+  await expect(menu).toBeFocused()
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  await navigate(page, 'Dashboard')
+  await expect(page.getByRole('heading', { name: 'A clearer view of your wallets.' })).toBeVisible()
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  await expect(page.locator('#main')).toBeFocused()
+  await expect(page.locator('nav a[href="#dashboard"]')).toHaveAttribute('aria-current', 'page')
+  await navigate(page, 'How It Works')
+  await expect(page.locator('#how-it-works')).toBeInViewport()
+  await expect(page.locator('nav a[href="#how-it-works"]')).toHaveAttribute(
+    'aria-current',
+    'location',
+  )
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('mobile report controls are readable, touch sized and copy full transaction hashes', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 850 })
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: async (value) => {
+          window.copiedForTest = value
+        },
+      },
+    })
+  })
+  await mockScan(page)
+  await page.goto('/')
+  expect(
+    await page
+      .getByLabel('Recipient address', { exact: true })
+      .evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+  ).toBeGreaterThanOrEqual(16)
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
+  await expect(page.locator('.risk-category')).toHaveText('Insufficient data')
+  await page.getByRole('button', { name: 'Copy scanned address', exact: true }).click()
+  expect(await page.evaluate(() => window.copiedForTest)).toBe(wallet)
+  await page.getByRole('button', { name: 'Transaction history', exact: true }).click()
+  await page.getByRole('button', { name: 'Copy transaction hash', exact: true }).click()
+  expect(await page.evaluate(() => window.copiedForTest)).toBe(`0x${'b'.repeat(64)}`)
+  await expect(page.getByText('Transaction hash copied.', { exact: true })).toBeVisible()
+  const small = await page.evaluate(() =>
+    [...document.querySelectorAll('button, input, select, summary')]
+      .filter((el) => el.getBoundingClientRect().width && el.getBoundingClientRect().height)
+      .filter((el) => {
+        const r = el.getBoundingClientRect()
+        return r.width < 44 || r.height < 44
+      })
+      .map((el) => el.getAttribute('aria-label') || el.textContent),
+  )
+  expect(small).toEqual([])
+})
+
+test('mobile dashboard, chat, receipt and error states pass automated accessibility checks', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 850 })
+  await mockScan(page)
+  const check = async () =>
+    expect(
+      (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+        .violations,
+    ).toEqual([])
+  await page.goto('/#dashboard')
+  await expect(page.getByRole('heading', { name: 'Your watchlist starts here' })).toBeVisible()
+  await check()
+  await page.getByRole('button', { name: 'Add wallet', exact: true }).click()
+  await page.getByLabel('Public address', { exact: true }).fill('invalid')
+  await page.getByRole('button', { name: 'Save wallet', exact: true }).click()
+  await expect(page.getByRole('alert')).toBeVisible()
+  await check()
+  await navigate(page, 'Scan Wallet')
+  await page.getByLabel('Recipient address', { exact: true }).fill(wallet)
+  await page.getByRole('button', { name: 'Check address', exact: true }).click()
+  await page.getByRole('button', { name: 'View receipt tools', exact: true }).click()
+  await page.getByLabel('Existing Stacks receipt transaction ID').waitFor()
+  await check()
+  await page.getByLabel('Your question').fill('What does coverage mean?')
+  await page.getByRole('button', { name: 'Ask TxGuard', exact: true }).click()
+  await expect(page.getByText('Coverage is incomplete. Verify independently.')).toBeVisible()
+  await check()
 })

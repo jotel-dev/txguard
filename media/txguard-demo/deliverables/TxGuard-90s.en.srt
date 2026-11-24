@@ -1,0 +1,66 @@
+1
+00:00:00,500 --> 00:00:04,999
+Every day, people send cryptocurrency to wallets they know
+little about.
+
+2
+00:00:05,249 --> 00:00:09,482
+And when something goes wrong, getting that money back may be
+impossible.
+
+3
+00:00:12,600 --> 00:00:13,877
+Meet TxGuard.
+
+4
+00:00:14,127 --> 00:00:22,038
+A Web3 recipient-checking tool that helps you understand
+available wallet risk evidence before sending your crypto.
+
+5
+00:00:23,500 --> 00:00:27,518
+Choose a blockchain, enter a public wallet address, and run a
+scan.
+
+6
+00:00:27,768 --> 00:00:35,437
+TxGuard retrieves available security intelligence and blockchain
+activity, with missing coverage kept visible.
+
+7
+00:00:40,400 --> 00:00:45,407
+Review the findings, their sources, and the limits of the check
+in plain English.
+
+8
+00:00:45,657 --> 00:00:49,477
+Available explanations stay grounded in retrieved evidence.
+
+9
+00:00:49,727 --> 00:00:51,923
+No assessment can guarantee safety.
+
+10
+00:00:55,500 --> 00:01:00,709
+Five networks: Ethereum, BNB Chain, Solana, Bitcoin, and Stacks.
+
+11
+00:01:00,959 --> 00:01:03,172
+Security coverage varies by network.
+
+12
+00:01:05,300 --> 00:01:08,530
+Inspect an existing scan record on Stacks Mainnet.
+
+13
+00:01:08,780 --> 00:01:13,205
+A public receipt records an assertion; it does not certify the
+score.
+
+14
+00:01:16,600 --> 00:01:21,508
+Built for P2P traders, freelancers, and everyday crypto users.
+
+15
+00:01:24,500 --> 00:01:26,935
+TxGuard. Know before you send.

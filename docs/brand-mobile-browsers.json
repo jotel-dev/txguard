@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-11-24T15:55:56.605Z",
+  "note": "Additional engine smoke checks. These supplement the deterministic E2E suite. WebKit is not a claim of native Safari testing; Android is emulation, not a physical device.",
+  "results": [
+    {
+      "name": "Chrome desktop",
+      "status": "passed",
+      "engineVersion": "157.0.8103.79",
+      "checks": [
+        "production hydration",
+        "Bitcoin checksum input",
+        "scan control",
+        "dashboard navigation",
+        "no overflow",
+        "no page errors"
+      ]
+    },
+    {
+      "name": "Edge desktop",
+      "status": "passed",
+      "engineVersion": "158.0.4370.33",
+      "checks": [
+        "production hydration",
+        "Bitcoin checksum input",
+        "scan control",
+        "dashboard navigation",
+        "no overflow",
+        "no page errors"
+      ]
+    },
+    {
+      "name": "Firefox",
+      "status": "passed",
+      "engineVersion": "159.0",
+      "checks": [
+        "production hydration",
+        "Bitcoin checksum input",
+        "scan control",
+        "dashboard navigation",
+        "no overflow",
+        "no page errors"
+      ]
+    },
+    {
+      "name": "WebKit engine (not native Safari)",
+      "status": "passed",
+      "engineVersion": "27.2",
+      "checks": [
+        "production hydration",
+        "Bitcoin checksum input",
+        "scan control",
+        "dashboard navigation",
+        "no overflow",
+        "no page errors"
+      ]
+    },
+    {
+      "name": "Android Chrome emulation (not a physical device)",
+      "status": "passed",
+      "engineVersion": "157.0.8103.79",
+      "checks": [
+        "production hydration",
+        "Bitcoin checksum input",
+        "scan control",
+        "dashboard navigation",
+        "no overflow",
+        "no page errors"
+      ]
+    },
+    {
+      "name": "iOS Safari emulation (WebKit, not a physical iPhone)",
+      "status": "passed",
+      "engineVersion": "27.2",
+      "checks": [
+        "production hydration",
+        "Bitcoin checksum input",
+        "scan control",
+        "dashboard navigation",
+        "no overflow",
+        "no page errors"
+      ]
+    }
+  ]
+}

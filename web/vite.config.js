@@ -3,7 +3,16 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-const routes = new Set(['analyze', 'transactions', 'ask', 'tts', 'report-bug', 'registry'])
+const routes = new Set([
+  'analyze',
+  'transactions',
+  'ask',
+  'tts',
+  'report-bug',
+  'registry',
+  'health',
+  'token-balance',
+])
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   for (const key of [

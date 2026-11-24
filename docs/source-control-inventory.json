@@ -1,0 +1,1265 @@
+{
+  "originalHead": "36366aa78dab0257de0167e10855e6b49934b553",
+  "branch": "feat/txguard-demo-readiness",
+  "originalStatus": {
+    "modifiedTracked": 0,
+    "staged": 0,
+    "deleted": 0,
+    "untracked": 206
+  },
+  "totalOriginalBytes": 198102174,
+  "reviewedSources": {
+    "files": 34,
+    "bytes": 514554
+  },
+  "preservedIgnored": {
+    "files": 172,
+    "bytes": 197587620
+  },
+  "preservation": "All 206 original files retain their exact byte lengths and SHA-256 hashes. No file was removed, overwritten or moved.",
+  "video": {
+    "standaloneMasterPresent": false,
+    "archive": "media/txguard-demo/deliverables/TxGuard-editable-project.zip",
+    "entry": "TxGuard-Cinematic-Demo\\deliverables\\TxGuard-90s-1080p.mp4",
+    "sha256": "6da81373f924bb35f152cc83e368d7d90daa83ec2e8a64b1eef7259e68423813",
+    "matchesRecordedMaster": true
+  },
+  "files": [
+    {
+      "path": "media/txguard-demo/README.md",
+      "bytes": 6325,
+      "sha256": "b2a02730ab70aebda5b76885f930c6049b08cccecb40f2badcd5d85a72d928d4",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/art/background.html",
+      "bytes": 405229,
+      "sha256": "1649dfd15f4f55c8a1d42cfe4df7c7ea92b1107805e02ea9002422354ec80c8d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/background.png",
+      "bytes": 425782,
+      "sha256": "da2f038b387753df55f8b9d5d802285a79d3f81f8daf3bae6d9661eef85751ae",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/intro-a.html",
+      "bytes": 405974,
+      "sha256": "a472aa41eacd9cfda11ceb36562d66f498503b5018afd01b05a07d840126eef0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/intro-a.png",
+      "bytes": 531585,
+      "sha256": "bbc8c96fcf164552575c0123284bba99c121763e563a8dbffcee8c452cb91178",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/intro-b.html",
+      "bytes": 405976,
+      "sha256": "5bb792e02c384e76ad18aaba362dbabf13c966768f654dc59dcc3e8c4795f1ef",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/intro-b.png",
+      "bytes": 531269,
+      "sha256": "ab2c416c4f269456a1834de9198eae5b26b849cd3484fbfed01d582b2880b98f",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/intro-c.html",
+      "bytes": 405514,
+      "sha256": "6a535bcc3cb34eeb4c4912c780c3d59938117b88c7b9d6797690afcfc5a440ee",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/intro-c.png",
+      "bytes": 499891,
+      "sha256": "f00346dc4d6fcd3aba064fb4666d4c74ed81025fc3d93240e61ab6c45af0dfd2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/mobile.html",
+      "bytes": 405593,
+      "sha256": "4f2865a9962ce6855f1dadf5debdcef872173ec63e6b228fd550cac0b83ebd00",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/mobile.png",
+      "bytes": 687832,
+      "sha256": "e287f6a3d12ec845efec998243d8316fd302204055dbb2ebbc0c732eb52d81fd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/outro.html",
+      "bytes": 405887,
+      "sha256": "bfe7665635e8edf4c45aee48bfa2984dcf1f24354d2a71e33f3e9d2aadb49f11",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/outro.png",
+      "bytes": 506620,
+      "sha256": "a714c5bbed1b4ce2ac088addbc9c326238b37a8806f97b38c64388bd37ff24a2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/thumbnail.html",
+      "bytes": 495069,
+      "sha256": "e6fcc5acdd11123737c038890a0432ae1c0669ed0283f03cf63ba0ec745334f3",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/art/thumbnail.png",
+      "bytes": 560837,
+      "sha256": "ce573ca745a9db30d551fe56bd8820c87753b2a4318c25b96a6e0a19bcc60364",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/music-provenance.json",
+      "bytes": 409,
+      "sha256": "84271633411aebde3de3e2a946032c13243464deaee6463a4fc66169ad57776d",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/audio/original-score.wav",
+      "bytes": 17280044,
+      "sha256": "ac5612da1864d066c665905fc42833345e7f2ae268e59f279e3676be0599fc6f",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-1-1-raw.wav",
+      "bytes": 544844,
+      "sha256": "40e972684b80ec113530b447b68ec4523f6913b6da6a6689175bb689a3a88f5d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-1-1.wav",
+      "bytes": 431946,
+      "sha256": "d61ded71ae74fec6a491abf58e37d127bb8616b3a785950335b7dc6ee100c74f",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-1-2-raw.wav",
+      "bytes": 513644,
+      "sha256": "fde6c22dcb9f5270f314c22fa440b94b262161ebbe1eb00f95e79b90daffb248",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-1-2.wav",
+      "bytes": 406498,
+      "sha256": "3f18290837e9acf4d32e16dfaf617007e4ba054f3e5e9d1325ca53de0a842818",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-2-1-raw.wav",
+      "bytes": 218444,
+      "sha256": "95f7d21694cc6f80aa2cc9b01b028508b066f047ff7e3ae309ea3bd1ea7678a0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-2-1.wav",
+      "bytes": 122706,
+      "sha256": "09d27ddf3c33d5e5b1d639e7e7f6ad75acbbc9103a3dc4f1b709c2d1800691bd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-2-2-raw.wav",
+      "bytes": 871244,
+      "sha256": "d6125a94d927396d1cc39e27386d41171896fee3092d351801f69ca342a91f4f",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-2-2.wav",
+      "bytes": 759506,
+      "sha256": "756a8923d2a8c1eeffaaecf7ae26479e98917b0820007fd33d532268c431be32",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-3-1-raw.wav",
+      "bytes": 489644,
+      "sha256": "e4630a5a61cdb31662d99d531e3107e25f6d6a885b3ce8a0c9d0d70197b8fc85",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-3-1.wav",
+      "bytes": 385782,
+      "sha256": "7234df438e04de26752dfdec6e278b5fb0d1301520dfa5a69062253964cd8880",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-3-2-raw.wav",
+      "bytes": 840044,
+      "sha256": "5b8ee42badec070886f294fd5693a0c2e8de6418fc4c09761179185cac2c756e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-3-2.wav",
+      "bytes": 736306,
+      "sha256": "57d22b5d8226b7964a218acbdc519154f5ce7708526faeb78c08794fc3b1532e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-4-1-raw.wav",
+      "bytes": 583244,
+      "sha256": "85b25798c1cd4e41b66cebe4d62d5d413c43915cb7d9c2aab762420727e9fc99",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-4-1.wav",
+      "bytes": 480790,
+      "sha256": "04941561e1d3fb95fab00fc4cec017bfd8eb40b0160a00df31e278960f318cfb",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-4-2-raw.wav",
+      "bytes": 468044,
+      "sha256": "7e6831804920f2da685f969ea942c7b9b62cdb13697b926eec2faa4684a7775c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-4-2.wav",
+      "bytes": 366730,
+      "sha256": "7f0a204e8333a1fb88098cedfd9ecfa25ea436274fb3c65e3ec736df43d734cd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-4-3-raw.wav",
+      "bytes": 316844,
+      "sha256": "26966c08a8a03dc97b0de78222eca1f2b2b1018c4e9fcc8d4376c95119a10600",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-4-3.wav",
+      "bytes": 210930,
+      "sha256": "2112fdbb610d95729300088c5c1723b75d70a552c5cc369f66bb4418340e0587",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-5-1-raw.wav",
+      "bytes": 597644,
+      "sha256": "11ba2337b0563b8feaa1f9b7105d532a5c33b597120c66d6f1e62217670269e0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-5-1.wav",
+      "bytes": 500094,
+      "sha256": "fb75d8fb7ae7c950d5f744a1f63d55d526a5015283395b52e4f3bdcbe8a4aeb4",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-5-2-raw.wav",
+      "bytes": 312044,
+      "sha256": "47e3315696cb5dbc84a1267b5a41e549316157d2959f9a14d7bcd3e8c23a4fdc",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-5-2.wav",
+      "bytes": 212618,
+      "sha256": "8e49a96aab57d8c4b9bd4862704f5fa1db9dee146cb908127eaf189a379df50a",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-6-1-raw.wav",
+      "bytes": 420044,
+      "sha256": "cc20d2826dbcc86991d661177fa83c64b7ccc68faadc1960c36e9c0943543a78",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-6-1.wav",
+      "bytes": 310170,
+      "sha256": "6e34357c6aaccc9c7c5883468578076c15dba5accfb87ad8b3f859071e546906",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-6-2-raw.wav",
+      "bytes": 530444,
+      "sha256": "0d78e5f292e2b47ac1314be041425e3b96dcb71f6090422be42d2490b4d2a7a0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-6-2.wav",
+      "bytes": 424870,
+      "sha256": "3c12e5767c75d15615eebf081205dbd2bf76bea73107329b400fa155861bd19c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-7-1-raw.wav",
+      "bytes": 568844,
+      "sha256": "a4e6ad2f9ce4d3016fa5b692c1a398cdeb5c7516700c26bf1eff763edaacab48",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-7-1.wav",
+      "bytes": 471222,
+      "sha256": "4bc5a783009903c2b3beec874416d0b5eec272199ef1cca57ae9dc044db7e66e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-8-1-raw.wav",
+      "bytes": 333644,
+      "sha256": "86deba97b2c83218326697b8e22dbebd58bc259f667ca9acab4fd4b0050a4ae9",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/scene-8-1.wav",
+      "bytes": 233870,
+      "sha256": "e7467ff05ec74175757b59783a59f81e11f02a2435446a430e81ad5cdf940e09",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/audio/timing.json",
+      "bytes": 4843,
+      "sha256": "32e7a46960d250e5decb2a059c4fa792ce4c92f00b90abf3152e5aa1f34e6468",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/SHA256SUMS.txt",
+      "bytes": 515,
+      "sha256": "9d9ec46a7f64ffb9b5a7aacc36f8bdc7f3cc789fb862c3f39d872ffda3884343",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/TxGuard-90s.en.srt",
+      "bytes": 1451,
+      "sha256": "62e217166bc7fe7e0b03bf7abd90c64a066cfbf63e75dcf5653f339693e5d63b",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/TxGuard-editable-project.zip",
+      "bytes": 64611421,
+      "sha256": "952ae0f79b421e2a3c1a5609278e81a9c81e21930e2af9a12e4aebfed8846738",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/TxGuard-narration.wav",
+      "bytes": 8640078,
+      "sha256": "66f5e8a362346a4adde5151885dfd7b34c1834674e5a6ea684caaca87ab50712",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/TxGuard-thumbnail.png",
+      "bytes": 560837,
+      "sha256": "ce573ca745a9db30d551fe56bd8820c87753b2a4318c25b96a6e0a19bcc60364",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/media-info.json",
+      "bytes": 6361,
+      "sha256": "aa56acf10bee154f2f2ac76490d187e5a181d78a834a76b9f1f4a37691c234a5",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/deliverables/verification.json",
+      "bytes": 1893,
+      "sha256": "e9a97d3723f750b40e0fd4f130519c11bae901e7a7d781828bca6b195ecb03b1",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/fonts/Manrope.ttf",
+      "bytes": 164700,
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/fonts/OFL-manrope.txt",
+      "bytes": 4386,
+      "sha256": "d6a309fcfb963d329a93baf9df66fa5f3c23a4be2b5f67edf24d6cafecde12ac",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/fonts/OFL-spacegrotesk.txt",
+      "bytes": 4494,
+      "sha256": "c9a6f76d065b19ee383e42c8a114915e733bcbaed9759de41f4016b64d502cd5",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/fonts/SpaceGrotesk.ttf",
+      "bytes": 136676,
+      "sha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/narration.json",
+      "bytes": 2559,
+      "sha256": "7b1209fe1c27a8d8f68b23f79ae7bcf493fba018d5f28a44bc99c038d27ac6a3",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/production-plan.json",
+      "bytes": 5599,
+      "sha256": "3c8785a60b83aad02f3c65d45efce3221a96f3d268f16b2a2189a9203e50833f",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/render/captions.ass",
+      "bytes": 3079,
+      "sha256": "05b8c0ca1887c78c27690aec9642437bda04511bf4fe3141a194ebf8867264bb",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/chain-bitcoin.mp4",
+      "bytes": 359145,
+      "sha256": "89481e62c04a03514691857be2f1ec4a6f0fe24b5c18357ecf5f9f965b672193",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/chain-bnb.mp4",
+      "bytes": 358375,
+      "sha256": "9ec03fca7d5ff8187070b7cd14c5b12eba00c201184430b22120fec6786713da",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/chain-ethereum.mp4",
+      "bytes": 357741,
+      "sha256": "663caeb85d8946e9d2c068328ecc83f68bad7d29034295bb87c7daec8c3eebe7",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/chain-solana.mp4",
+      "bytes": 361485,
+      "sha256": "ebdd31506f10bcf5a832d99e5b5c36cd42b5425fbafeed62f6a8ccd0fb24bd8b",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/chain-stacks.mp4",
+      "bytes": 361198,
+      "sha256": "aad53e909c54f48775b6ea7c388881a2d5c882ff5cb3fa76361523b4ed9002c6",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/chapters.ffmeta",
+      "bytes": 745,
+      "sha256": "091337348e56797e4be277edf0f7ae06e39cdb05bdbc54b8447d303fa63fc0ec",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/concat.txt",
+      "bytes": 422,
+      "sha256": "e52db369be14593fcb86d1aa90f1314079716a3cb17b5f589b7fd98abf39e2f2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/dashboard.mp4",
+      "bytes": 240492,
+      "sha256": "dd7f6d381e8b2e13792e3e2fb68f75dbd352adc06063c25dc2cbc5ac22ca30e6",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/explanation.mp4",
+      "bytes": 235339,
+      "sha256": "2863c8897879e4166647a8a3878fbc570ed2b2dfbc7907237c5b416b1c83a339",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/explorer.mp4",
+      "bytes": 635039,
+      "sha256": "46369c7bc411a33d4fb44422734c6cd2326a1f715cbce14583b08e90ae71438d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/history.mp4",
+      "bytes": 240146,
+      "sha256": "05c9c6c384471ed4001600ffdd0187c6ae27ce893eee584ac361c735ff4110e4",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/homepage.mp4",
+      "bytes": 659650,
+      "sha256": "47204a2adbdb1af0c5046081ae708f52f5b2a531a07405feb9d369010804c91b",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/mix.wav",
+      "bytes": 17280078,
+      "sha256": "a440d32fd2c657d6e2eb8cde103bb95748cb8ea7b81bdb826ded028dd6b786ef",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/mobile-home.mp4",
+      "bytes": 218966,
+      "sha256": "09dc036ba3beabbea24ca404e676b59b0feda3f1c8f3ecd3ec5d3d8b2af920a6",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/mobile-report.mp4",
+      "bytes": 227460,
+      "sha256": "98a41e8b3888cba0cd606d1b9c97d7bc29aeaed595af7f0ca5c361b1685c31bf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/outro.mp4",
+      "bytes": 718670,
+      "sha256": "86ac353c33d6dd495a504cf3eab43d283b6f77c2556bba812cbd7c32d92dc767",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/picture.mp4",
+      "bytes": 9160750,
+      "sha256": "3d78c96959a5fc459a92f45364b4d5b248d9449853537d03b206a91e931ddd8b",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/problem-a.mp4",
+      "bytes": 627337,
+      "sha256": "437b1599ad07fb1bd7f83f268133c79b3b2e8c462041e533fc78db166e4947aa",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/problem-b.mp4",
+      "bytes": 665650,
+      "sha256": "172216422224e24080cd34828113327c696e17e3f291ecd577170a6bf7477594",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/problem-c.mp4",
+      "bytes": 642231,
+      "sha256": "68330ba0122a4a17973acee4c1b767ef3ba8beacb7ed7e2810dda043db677de0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/receipt.mp4",
+      "bytes": 542846,
+      "sha256": "911e8f13ec011e7d2357c0f0ba1144d5fd5f9fdbcf8336dbd9cd5cd50fcba11d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/report.mp4",
+      "bytes": 213551,
+      "sha256": "f9e21d5fabb24c4779bfa485d0f265c6e25a4bcdab038cd9aeefbf1e390e1a3c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/scan.mp4",
+      "bytes": 1162824,
+      "sha256": "537ec43725df1de086a4aabf5dd9891e8e86d54045400aa0092d732be27cf184",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/signals.mp4",
+      "bytes": 347914,
+      "sha256": "9439cb7d9ad402f54250af9fc7ea9a9a71efffd69bd4f55b05ee9a4f6a710b2c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-bitcoin-heading.txt",
+      "bytes": 39,
+      "sha256": "c5a22c3c19256db2500b3309c2332815f489f5cc6e6028ea41192bc298edb8bf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-bitcoin-note.txt",
+      "bytes": 42,
+      "sha256": "e22fd18a013d3981bc6f9b78fb08e7fa05fdd02b277963d101802090287e346d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-bnb-heading.txt",
+      "bytes": 39,
+      "sha256": "c5a22c3c19256db2500b3309c2332815f489f5cc6e6028ea41192bc298edb8bf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-bnb-note.txt",
+      "bytes": 42,
+      "sha256": "e22fd18a013d3981bc6f9b78fb08e7fa05fdd02b277963d101802090287e346d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-ethereum-heading.txt",
+      "bytes": 39,
+      "sha256": "c5a22c3c19256db2500b3309c2332815f489f5cc6e6028ea41192bc298edb8bf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-ethereum-note.txt",
+      "bytes": 42,
+      "sha256": "e22fd18a013d3981bc6f9b78fb08e7fa05fdd02b277963d101802090287e346d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-solana-heading.txt",
+      "bytes": 39,
+      "sha256": "c5a22c3c19256db2500b3309c2332815f489f5cc6e6028ea41192bc298edb8bf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-solana-note.txt",
+      "bytes": 42,
+      "sha256": "e22fd18a013d3981bc6f9b78fb08e7fa05fdd02b277963d101802090287e346d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-stacks-heading.txt",
+      "bytes": 39,
+      "sha256": "c5a22c3c19256db2500b3309c2332815f489f5cc6e6028ea41192bc298edb8bf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/chain-stacks-note.txt",
+      "bytes": 42,
+      "sha256": "e22fd18a013d3981bc6f9b78fb08e7fa05fdd02b277963d101802090287e346d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/dashboard-heading.txt",
+      "bytes": 32,
+      "sha256": "220493049edfa03d163a89c3d3fbe91045befb524f40fb92ce2111334bbe6c84",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/dashboard-note.txt",
+      "bytes": 20,
+      "sha256": "891f2fb7cc052a51a3bdec7676563c606c5c2b819dfb75c07af7de82efc85460",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/explanation-heading.txt",
+      "bytes": 28,
+      "sha256": "5e2fb0f0ee9cda56ff7da7149900e4496f7e57e64f7cd73e3db595f5fc118e9c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/explanation-note.txt",
+      "bytes": 31,
+      "sha256": "44d583dda19bbe1d1dd94fbb074f4ad88ef63e520b9b1fa2c8933c16184d7606",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/explorer-heading.txt",
+      "bytes": 38,
+      "sha256": "477e77b396067a69b9c35576478b8821aacd98f15f0ef130319257b9943cd6e6",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/explorer-note.txt",
+      "bytes": 39,
+      "sha256": "a8b45220065acfc6e5f16dd628e5b34c06294148040d4695ecc1c8c2c9fbefa3",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/history-heading.txt",
+      "bytes": 32,
+      "sha256": "f566088209706c3180f4743888a6322517a38c417d2e2d5c000ec5813f65f73e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/history-note.txt",
+      "bytes": 23,
+      "sha256": "79008c89638fceddff2ec5f70e63f2f409c436eea3d89196dbba402c741b4913",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/homepage-heading.txt",
+      "bytes": 25,
+      "sha256": "5f708cc8f0e4b081e32353ed7b68eb48c02d7de221d43e85e8ad623b743e4d2e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/homepage-note.txt",
+      "bytes": 23,
+      "sha256": "79008c89638fceddff2ec5f70e63f2f409c436eea3d89196dbba402c741b4913",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/receipt-heading.txt",
+      "bytes": 38,
+      "sha256": "62b08c9639f76f1af0bbb11c09317a5b330d95494882b5ac6de9ee9e6cf4dcbf",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/receipt-note.txt",
+      "bytes": 46,
+      "sha256": "daf98403f10beeca34c14a451cdff5714e8401fdcd81dbc142300254c2cf55c1",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/report-heading.txt",
+      "bytes": 35,
+      "sha256": "e36fcdcf0ab9f0a16824bef96afe877315833244ae40fe6e87a9eaf528665654",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/report-note.txt",
+      "bytes": 23,
+      "sha256": "79008c89638fceddff2ec5f70e63f2f409c436eea3d89196dbba402c741b4913",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/scan-heading.txt",
+      "bytes": 26,
+      "sha256": "574adf538a1e9a8c1f8069436acdb32d493a7a163af260006444a33bc149fde7",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/scan-note.txt",
+      "bytes": 23,
+      "sha256": "79008c89638fceddff2ec5f70e63f2f409c436eea3d89196dbba402c741b4913",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/signals-heading.txt",
+      "bytes": 33,
+      "sha256": "9bff92d4ea9d18ecae4133ce7d4c9349c0a4f2b122a2d8e85e1b89f2760fd643",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/render/text/signals-note.txt",
+      "bytes": 23,
+      "sha256": "79008c89638fceddff2ec5f70e63f2f409c436eea3d89196dbba402c741b4913",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-10.jpg",
+      "bytes": 14987,
+      "sha256": "feacbd76e8d1283caab12a09a9cfc33022e3b76096ad085102345fa120206b7f",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-16.jpg",
+      "bytes": 32050,
+      "sha256": "9c738ac333b4241a7c303867351782f8d7b01b84b9344e181bf2664d2b3e45a9",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-2.jpg",
+      "bytes": 16788,
+      "sha256": "672a5b67ad2622c504746ae0cb102d7f73f1bdf1610c94d5e0b96319e25cc870",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-30.jpg",
+      "bytes": 36022,
+      "sha256": "0a9fb12a9a4882f42a41afa81c946ef64f7fbb777f13368ac821d1bd8367347d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-39.jpg",
+      "bytes": 24176,
+      "sha256": "8ba22e167c2c75aede355479586f4513333ba95435088311b6af102134fc4498",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-42.jpg",
+      "bytes": 28991,
+      "sha256": "a194d4b0bc5844824620f272beb1ac84e32ecb38be60cfaf502e4531454437d0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-44.jpg",
+      "bytes": 31205,
+      "sha256": "a4ac781d07553d28fef3c494af5f5a42a8cf562899d7c71bfdbedf54034fa38a",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-47.jpg",
+      "bytes": 25963,
+      "sha256": "3a66208e05929ace7389e900dff48483a794a24034d50608e7a46a98134ec4d6",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-50.jpg",
+      "bytes": 22693,
+      "sha256": "20651e7d43e33cb947bfa88987ccec451d1d316fc492c08c1e41d42659433d8c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-53.jpg",
+      "bytes": 21563,
+      "sha256": "683b211b1166273f62af6b370e82ed36882edafc53a0f54e88302ae6f4fabda5",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-56.jpg",
+      "bytes": 31301,
+      "sha256": "b5800f62cc897767bfcf05c61bf640ab0c664a353a0873f3bd5cdc36b4687a1c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-58.jpg",
+      "bytes": 31524,
+      "sha256": "3943a06e2bdbc99ddd8afaac6ee8dbe7bfb6f28a73d4e6e21f9bfcb7521cfa2c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-6.jpg",
+      "bytes": 19268,
+      "sha256": "4b546c945a76fc4b71e5db30d57fcc2232b23ef63145507be17aa6fd6d368408",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-60.jpg",
+      "bytes": 31704,
+      "sha256": "05496af179658c860f3137b490916d79b180c3953873ec7cd425b3caab59a3eb",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-62.jpg",
+      "bytes": 29511,
+      "sha256": "4528b8bad5f3fc6c1bbb2fdcb3940e7c6e9059be36a473c65fbde6271e30c3f7",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-64.jpg",
+      "bytes": 27117,
+      "sha256": "eae8e5614569a7561e74d9f19bdc4c2cc1234c2748a6a2db5e840119541a4ce2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-68.jpg",
+      "bytes": 27578,
+      "sha256": "e8542f8f0b50121d0ea94f9840cd4a956356db97fb1ae6dd9ca45fba15c7feba",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-74.jpg",
+      "bytes": 23062,
+      "sha256": "cb1a25e0f36100dd4e991e04f7f94d26b86c085b768143cac31e9aaca09ecc44",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-78.jpg",
+      "bytes": 28617,
+      "sha256": "209ccfebe00b60e01e05e2a5ea94bcccba44d259c845cc51dda9a69b501257cd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-82.jpg",
+      "bytes": 23329,
+      "sha256": "4a0818280b53bbaeba35c540c0115854f42cd97ccbe88c72328b28c30f950acc",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-87.jpg",
+      "bytes": 12149,
+      "sha256": "c7cf40f7af1319bd872552ac128d89de32badd2f021e80c6f3160fb186d72e3b",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-contact-sheet.jpg",
+      "bytes": 505773,
+      "sha256": "ca0ecb4c08d0fd45ee6a09ffbed086c0ffa3cdfb54bfc166aafd3b7838e706d5",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/final-frame-times.json",
+      "bytes": 235,
+      "sha256": "cb8e0af1c11e47c8d77cea75df8051d0bb252a09d00b71fc8d666813ef00ba1f",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/review/narration-transcription.json",
+      "bytes": 4796,
+      "sha256": "806833cf195981bc72e14320c3ba2d8fb004712d6a10d06c2f288fed18d3eaf6",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-10.jpg",
+      "bytes": 15100,
+      "sha256": "ed4496f52c14a313c6c0933b957f2f4502f2a759c3c40ed3a3a32d1c2040dcff",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-16.jpg",
+      "bytes": 24785,
+      "sha256": "8e3010c4bf4b1cfcea890c99319b711b33c21baedbda335230938d156c7d69bb",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-2.jpg",
+      "bytes": 12397,
+      "sha256": "0d1f14fb94544500147c1a12e275a02fb99f23eb1c43f0e47408ff494d43875e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-30.jpg",
+      "bytes": 29460,
+      "sha256": "5016afc6b6849d70cc6146431fb01d7023ae8033aa01542b07572f58812b596a",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-39.jpg",
+      "bytes": 24246,
+      "sha256": "5b406a3348d387f89c852c3937056cdbeeb435af1e88eaa1eddec8e020e22201",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-42.jpg",
+      "bytes": 24302,
+      "sha256": "d506a4c2ee520a22a6612e4ac1192ab7d68c859f845fd143c35288a31b4518fe",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-44.jpg",
+      "bytes": 26207,
+      "sha256": "b02f2ce0ae6f31388aa356877191ddcb938e338421ab62759e768cb1fe0b1660",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-47.jpg",
+      "bytes": 21857,
+      "sha256": "4468086e7986f77d68e3e6bc257d71ef7f678416f69271486685695679a70437",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-50.jpg",
+      "bytes": 20216,
+      "sha256": "caa8017891d65573e0126e61a81e0f7a0b0d61865db6976796c13a2730a6d3b3",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-53.jpg",
+      "bytes": 21674,
+      "sha256": "e01046e979d445f5e256b8e2fc788b4dc8b5099a4a85327750a67416f89eba31",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-56.jpg",
+      "bytes": 28913,
+      "sha256": "f4c80a13172e00ed99c7388b1e10a7aac161341a0c8446d919be02c2a94ec63d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-58.jpg",
+      "bytes": 29710,
+      "sha256": "8b7a95545f56845e644a32de25e50d41be4ec86fe58b61a88b671168d61a4ef9",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-6.jpg",
+      "bytes": 14459,
+      "sha256": "3b318ad8d2cb5c54c5f508210d975602526a78d18eda8dc55f937f8cbe38fef5",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-60.jpg",
+      "bytes": 29427,
+      "sha256": "93a17abdd3d7ffbac92ca391e2acb0d767c8dc78155603054df31eb1e5acdcc0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-62.jpg",
+      "bytes": 29837,
+      "sha256": "f7d6256bd86bb02e8cd648616b0e18750dd2d06ceb02fcde51ffc9fba1f94fba",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-64.jpg",
+      "bytes": 29477,
+      "sha256": "56c0bf3300b92db950121b5c00b93cae559c2be6445997a7cbc63fd745dbc9c1",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-68.jpg",
+      "bytes": 24079,
+      "sha256": "4ab1a9984cbefe9cc1297d3066022fa8567d6f7186c1313996d564e40c441eb0",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-74.jpg",
+      "bytes": 23125,
+      "sha256": "291b18e7bd0dc13a0a713bf064b63cb898d83c81e8de2f4d0321360c20c876c2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-78.jpg",
+      "bytes": 24723,
+      "sha256": "1945c0d63b8741d95a7f0c52b84a00ded5a2055d34a03047a99ce4153c37e726",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-82.jpg",
+      "bytes": 23429,
+      "sha256": "e82ac49d8cc78e2e071fe52e0c9320504452b8b81ad1454cd9f85e7511be2101",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-87.jpg",
+      "bytes": 12184,
+      "sha256": "4e90963eae0047d43d65092714dace56625368522f47f8d01e7a15562b87132e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-contact-sheet.jpg",
+      "bytes": 465259,
+      "sha256": "334776e18e435a779059618ade4f4dcac6b058167f73a52409a8cd47dde41324",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/review/picture-frame-times.json",
+      "bytes": 219,
+      "sha256": "30babc5f74b9513c1bd5796e5d3b972fd45f192ebecdadfe9d369b5d2c4b4295",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/artwork.mjs",
+      "bytes": 7687,
+      "sha256": "ddab873b098ba156fa74d2337a868fe5aa4087f54bab4d26c4daa3d48e312c64",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/capture.mjs",
+      "bytes": 10662,
+      "sha256": "2e682a1546510797726eceef2953036320680b81cc4b33aeda0ac943b72632a7",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/check-narration.mjs",
+      "bytes": 3707,
+      "sha256": "995b147879276dc61486e2aa7e26c3e3d680913521b5a3654b3362566675e714",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/inspect-frames.mjs",
+      "bytes": 2187,
+      "sha256": "11f0d0d029a12ddb46f7ec1c8f57d74a72441c60549e4725ab561e275d88fbf1",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/music.mjs",
+      "bytes": 3870,
+      "sha256": "536cb7a39853ff6e83161c20be74f5b71254ef61394c43b7217fcd211e340f69",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/narrate.mjs",
+      "bytes": 3086,
+      "sha256": "fab032ad053afad2635011edbddc69125ad3160a7919e450591025396b4a77f0",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/package.mjs",
+      "bytes": 4989,
+      "sha256": "c7f2c6806f013b0eecfb2801cc400b36688c9ba4b0667e10645deeac865e0459",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/recapture-chains.mjs",
+      "bytes": 1282,
+      "sha256": "0965794a3bc670d32e4d2681d3aeb79fc2c6a526eaf79e963d8c20b411e805b0",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/render.mjs",
+      "bytes": 13282,
+      "sha256": "f12ce7172769ba9cb522cb1493de9fddec86bc7fb20312471b176789aee2f21e",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/scripts/verify.mjs",
+      "bytes": 8364,
+      "sha256": "3e751e95024da2542f62a3cc4fb567fce0e5d25fc2898df5e2f99ecf131daed9",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/source/capture-evidence.json",
+      "bytes": 28897,
+      "sha256": "ecd880e5aad6352018e12a6a44c431fe1924548f3a125937a40cfb12752deb18",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/source/chain-bitcoin.png",
+      "bytes": 66244,
+      "sha256": "9ceda21ae820c7af5258bda2e03b1ff5e8ea61e96dfc1fcfa508fd932f2a4bf2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/chain-bnb.png",
+      "bytes": 66082,
+      "sha256": "68cff34aafa07b8845fc4a888e5361d2a91deb9108fb776f7da04cf1227eb3c4",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/chain-ethereum.png",
+      "bytes": 65961,
+      "sha256": "cc371e278c7af6dbc213d8ef7d95ced5fd35809ff4fa1f932bd53a20a7d94df7",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/chain-solana.png",
+      "bytes": 66668,
+      "sha256": "66c6953f6716ab4b04e31ad5f7fd76dbb4083478a0da46a1de040b29d82dfc41",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/chain-stacks.png",
+      "bytes": 66472,
+      "sha256": "051f7c28709e3acd9abde3cf99c26cf50d5267bb18c92dfa3f69e14de707352c",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-dashboard.png",
+      "bytes": 70759,
+      "sha256": "f4cdf56f6ddd91f7ce9fea2ae9ab59a02959b49b144aadcd86039e5da871a263",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-explanation.png",
+      "bytes": 66347,
+      "sha256": "543bd917c6cd18c2c1534b21cb24c7320aa2da8cab55970299a7df6e24f11a55",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-history.png",
+      "bytes": 59827,
+      "sha256": "a174aebd729ec8ea28a7a74985d10b4ec48058153d4f2d93283995169f71ec69",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-home.png",
+      "bytes": 66759,
+      "sha256": "c48337a99804867438fbf16b37bacc395b4841393c3365b3eca910f796b82c59",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-receipt.png",
+      "bytes": 73543,
+      "sha256": "6de6bde2912dad318fcc62775908c13fa285ebbc94e25e84e4e2250dc5096053",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-report-full.png",
+      "bytes": 465257,
+      "sha256": "f3e04d783f1278601a2965fa3f892baa1e018b10e4099f35dde268a51c5b585d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-report.png",
+      "bytes": 59971,
+      "sha256": "e330bbec3a3b052a4481a968f60457dfccfcdbe23683c2c4bb1d0e3f879c12bd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-session.webm",
+      "bytes": 14070803,
+      "sha256": "5ac3fb9ea2730a2e128195a9f676bbb3fbae7cf67838aba49dfb1126437506cd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-signals.png",
+      "bytes": 103160,
+      "sha256": "925a5236b9a115a1835c65235ef621e9f77c9765b79eccda8aaafac20458a6d2",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/desktop-sources.png",
+      "bytes": 71494,
+      "sha256": "9fba6819c7223f640bda1d72bf118657a59817c5243e82a58703243f91ac308e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/explorer-session.webm",
+      "bytes": 1150537,
+      "sha256": "fa76a6a8b6bcdff7c6edc3ffaafa1f48d15c888eb3f21ddfcfaf46c3696b54aa",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/first-take-evidence.json",
+      "bytes": 21260,
+      "sha256": "3e2bf2312a9a56118c0a65469cbce0d8e0c6f81831b47d956823a808cc27a334",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/source/live-probe.json",
+      "bytes": 3667,
+      "sha256": "762e7cc2007dbdb0405b69bf7823eca31ae433db701655cfb09405f62af4fcd9",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/source/live-probe.png",
+      "bytes": 287465,
+      "sha256": "e5c1fa99a4e721e7e207493e5db5893d227ed839d51b8ab2a11aac5827df235a",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/live-recheck.json",
+      "bytes": 4203,
+      "sha256": "11ae2016f816dcdb37849788e377042dc7eb02bb799b7f94a512466e818c59bb",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/source/live-recheck.png",
+      "bytes": 462085,
+      "sha256": "cc30465dc8fd6eed04d29f7e83b754c5d7bdde616d217cae3f3e51399eccd765",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/mobile-home.png",
+      "bytes": 39029,
+      "sha256": "2cfcdbe6a03222f44f4360c7e4308603d2245c604dd2c6632da935c0568c7aa7",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/mobile-report.png",
+      "bytes": 30920,
+      "sha256": "927ea7048226e8d3ffab666d01336bf6c64908b2ffc5957cba2e3a313d1f173b",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/mobile-session.webm",
+      "bytes": 1266979,
+      "sha256": "5ee111748b192465bdccc7eb69a96d520c7f329c54e24f4fb4f76a592816574e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/raw/page@318905149a7a7d1c78cab7a0f24d2185.webm",
+      "bytes": 1150537,
+      "sha256": "fa76a6a8b6bcdff7c6edc3ffaafa1f48d15c888eb3f21ddfcfaf46c3696b54aa",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/raw/page@46cadced7503fab01112c1b67a49b6ab.webm",
+      "bytes": 1189677,
+      "sha256": "933ce00623cc327894e71fd0938d59b8d76465b8cf784a1bf5e0a417bf296a0d",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/raw/page@57a1019cd821745b77cb1611e62577a9.webm",
+      "bytes": 12079770,
+      "sha256": "c87575f8143b84ad3a025463b31ab7dd824ac876c956a41c3d8f1f33c6959716",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/raw/page@6300c3375bec9516dbd215569f45af0c.webm",
+      "bytes": 1266979,
+      "sha256": "5ee111748b192465bdccc7eb69a96d520c7f329c54e24f4fb4f76a592816574e",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/raw/page@9d1071d185d9c221a8c23b6fd53c9aec.webm",
+      "bytes": 14070803,
+      "sha256": "5ac3fb9ea2730a2e128195a9f676bbb3fbae7cf67838aba49dfb1126437506cd",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/source/selector-capture.json",
+      "bytes": 263,
+      "sha256": "54dbfdeb63902d1d62ce1a3c7efebeb34147c3169fc1937246d4a2f4c5173b68",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/source/stacks-explorer.png",
+      "bytes": 103043,
+      "sha256": "0c9334ce4dc0d0bb6a84d5bc0d65a2fc661ab6c57fa3c8ec47034eb144ea3675",
+      "disposition": "preserved-locally-ignored"
+    },
+    {
+      "path": "media/txguard-demo/timeline.json",
+      "bytes": 4520,
+      "sha256": "a05c3cd04c8c23b19c1a5cdee5d5c127bc3b72a2eef65b1386484a7f7e61c84f",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/tooling/package-lock.json",
+      "bytes": 47050,
+      "sha256": "36737840193fbd7864c062412990c81f704a8558c938d9fb456a82d892a2aab1",
+      "disposition": "reviewed-for-source-control"
+    },
+    {
+      "path": "media/txguard-demo/tooling/package.json",
+      "bytes": 117,
+      "sha256": "1f638ded6b0efb966f1899d2baf97a0d2e2f94398c96633a04629fed08bc32ae",
+      "disposition": "reviewed-for-source-control"
+    }
+  ]
+}

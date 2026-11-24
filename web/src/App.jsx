@@ -4,6 +4,7 @@ import { CHAINS, isValidAddress, walletKey, formatTimestamp } from '../shared/ch
 import { request, loadWallets, loadHistory, persist, assessmentOf } from './client.js'
 import { makeExample } from './examples.js'
 import Icon from './Icon.jsx'
+import Brand from './Brand.jsx'
 const Report = lazy(() => import('./Report.jsx'))
 const Dashboard = lazy(() => import('./Dashboard.jsx'))
 const pageFromHash = () =>
@@ -32,6 +33,9 @@ export default function App() {
   const [history, setHistory] = useState(loadHistory)
   const [notice, setNotice] = useState('')
   const [refreshing, setRefreshing] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [section, setSection] = useState('scan')
+  const menuButton = useRef(null)
   const scanController = useRef(null)
   const refreshLock = useRef(false)
   const network = CHAINS.find((c) => c.id === chain)
@@ -39,9 +43,13 @@ export default function App() {
   useEffect(() => {
     const navigate = () => {
       setPage(pageFromHash())
+      setSection(location.hash.slice(1) || 'scan')
+      setMenuOpen(false)
       requestAnimationFrame(() => {
-        if (['#dashboard', '#history'].includes(location.hash)) window.scrollTo({ top: 0 })
-        else document.getElementById(location.hash.slice(1))?.scrollIntoView({ block: 'start' })
+        if (['#dashboard', '#history'].includes(location.hash)) {
+          window.scrollTo({ top: 0 })
+          document.getElementById('main')?.focus({ preventScroll: true })
+        } else document.getElementById(location.hash.slice(1))?.scrollIntoView({ block: 'start' })
       })
     }
     window.addEventListener('hashchange', navigate)
@@ -193,10 +201,10 @@ export default function App() {
       setRefreshing(false)
     }
   }
-  async function copy(value) {
+  async function copy(value, kind = 'Address') {
     try {
       await navigator.clipboard.writeText(value)
-      setNotice('Address copied.')
+      setNotice(`${kind} copied.`)
     } catch {
       setNotice('Clipboard unavailable. Select and copy the full address manually.')
     }
@@ -221,25 +229,61 @@ export default function App() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="site-header">
+      <header
+        className="site-header"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape' && menuOpen) {
+            setMenuOpen(false)
+            menuButton.current?.focus()
+          }
+        }}
+      >
         <div className="nav-inner">
           <a className="brand" href="#scan" aria-label="TxGuard home">
             <span className="brand-mark">
-              <Icon size={23} />
+              <Brand />
             </span>
-            txguard<span className="brand-version">2.0</span>
+            TxGuard<span className="brand-version">2.0</span>
           </a>
-          <nav aria-label="Main navigation">
-            <a href="#scan" aria-current={page === 'scan' ? 'page' : undefined}>
-              Scan Wallet
-            </a>
-            <a href="#dashboard" aria-current={page === 'dashboard' ? 'page' : undefined}>
-              Dashboard
-            </a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#history" aria-current={page === 'history' ? 'page' : undefined}>
-              History
-            </a>
+          <button
+            className="menu-toggle"
+            ref={menuButton}
+            disabled={!interactive}
+            aria-expanded={menuOpen}
+            aria-controls="main-navigation"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Icon name={menuOpen ? 'close' : 'menu'} size={20} />
+            <span>{menuOpen ? 'Close' : 'Menu'}</span>
+          </button>
+          <nav
+            id="main-navigation"
+            aria-label="Main navigation"
+            data-open={menuOpen}
+            onClick={(event) => {
+              if (event.target.closest('a')) setMenuOpen(false)
+            }}
+          >
+            <div className="nav-links">
+              <a
+                href="#scan"
+                aria-current={page === 'scan' && section !== 'how-it-works' ? 'page' : undefined}
+              >
+                Scan Wallet
+              </a>
+              <a href="#dashboard" aria-current={page === 'dashboard' ? 'page' : undefined}>
+                Dashboard
+              </a>
+              <a
+                href="#how-it-works"
+                aria-current={section === 'how-it-works' ? 'location' : undefined}
+              >
+                How It Works
+              </a>
+              <a href="#history" aria-current={page === 'history' ? 'page' : undefined}>
+                History
+              </a>
+            </div>
           </nav>
           <a href="#scan" className="nav-cta">
             Check an address
@@ -255,7 +299,7 @@ export default function App() {
         <span>No wallet connection</span>
         <span>Free recipient checks</span>
       </div>
-      <main id="main" className="container">
+      <main id="main" className="container" tabIndex={-1}>
         <div className="notice-area" aria-live="polite">
           {notice && (
             <div className="notice">
@@ -380,7 +424,7 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <div className="scan-card">
+              <div className="scan-card" id="scanner">
                 <div className="scan-card-heading">
                   <span className="scan-icon">
                     <Icon name="search" size={23} />
@@ -549,7 +593,7 @@ export default function App() {
             </section>
             {loading && (
               <div role="status" className="panel loading-panel">
-                <span className="spinner" />
+                <Brand size={28} className="loading-brand" />
                 <div>
                   <strong>Checking blockchain and security providers</strong>
                   <p>
@@ -787,9 +831,9 @@ export default function App() {
         <div className="container footer-main">
           <a className="brand" href="#scan">
             <span className="brand-mark">
-              <Icon />
+              <Brand />
             </span>
-            txguard
+            TxGuard
           </a>
           <p>
             Know Before You Send.

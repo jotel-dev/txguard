@@ -1,6 +1,7 @@
 import { formatUnits, walletKey, isValidAddress } from '../shared/chains.js'
 import { fetchJSON, createCache } from '../server/http.js'
 import { readEtherscan } from '../server/etherscan.js'
+import { bnbNativeBalance } from '../server/evm-rpc.js'
 
 /** @typedef {{hash:string,from:string|null,to:string|null,amount:string|null,asset:string,timestamp:number|null,status:string,kind?:string,statusDetails?:string}} Transaction */
 const historyCache = createCache(30000)
@@ -75,9 +76,12 @@ export function parseStacksTransaction(tx) {
     timestamp: timestamp(tx.burn_block_time || tx.receipt_time),
     status:
       tx.tx_status === 'success'
-        ? tx.is_unanchored === true
-          ? 'Unconfirmed'
-          : 'Confirmed'
+        ? tx.canonical === true &&
+          tx.is_unanchored === false &&
+          Number.isSafeInteger(tx.block_height) &&
+          tx.block_height > 0
+          ? 'Confirmed'
+          : 'Unconfirmed'
         : tx.tx_status === 'pending'
           ? 'Pending'
           : /^(abort_|dropped_)/.test(tx.tx_status || '')
@@ -271,8 +275,15 @@ export async function getWalletData(address, chain) {
   let totalTransactions = null
   let source
   if (chain === 'ethereum' || chain === 'bnb') {
-    balance = formatUnits(await etherscan(address, chain, 'balance'), 18)
-    source = 'Etherscan V2'
+    try {
+      balance = formatUnits(await etherscan(address, chain, 'balance'), 18)
+      source = 'Etherscan V2'
+    } catch (error) {
+      if (chain !== 'bnb' || !['NOT_CONFIGURED', 'PLAN_UNSUPPORTED'].includes(error.code))
+        throw error
+      balance = await bnbNativeBalance(address)
+      source = 'BNB Chain public mainnet RPC'
+    }
   } else if (chain === 'solana') {
     const data = await solana('getBalance', [address, { commitment: 'finalized' }])
     if (!Number.isSafeInteger(data?.value) || data.value < 0) throw new Error('Invalid balance')

@@ -1,5 +1,6 @@
 export default function Icon({ name = 'shield', size = 20, ...props }) {
   const paths = {
+    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
     shield: (
       <>
         <path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z" />

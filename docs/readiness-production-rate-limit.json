@@ -1,0 +1,90 @@
+﻿{
+    "method":  "21 sequential invalid registry IDs; validation occurs after quota and before any upstream request. No provider calls or scan quota consumed. Does not prove cross-instance coordination.",
+    "checkedAt":  "2026-11-23T20:32:17.5280684Z",
+    "observations":  [
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  null,
+                             "status":  400
+                         },
+                         {
+                             "retryAfter":  "53",
+                             "status":  429
+                         }
+                     ]
+}

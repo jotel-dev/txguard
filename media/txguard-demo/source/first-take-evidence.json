@@ -1,0 +1,484 @@
+{
+  "capturedAt": "2026-11-22T21:16:16.219Z",
+  "origin": "https://txguard-gules.vercel.app",
+  "noMocks": true,
+  "responses": [
+    {
+      "at": "2026-11-22T21:16:36.501Z",
+      "route": "/api/analyze",
+      "status": 200,
+      "body": {
+        "riskScore": 95,
+        "riskLabel": "High risk",
+        "alerts": [
+          {
+            "type": "danger",
+            "title": "Stealing attack report",
+            "text": "GoPlus address security supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.",
+            "evidence": "provider report"
+          },
+          {
+            "type": "danger",
+            "title": "Sanctions indicator (provider report)",
+            "text": "GoPlus address security supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.",
+            "evidence": "provider report"
+          },
+          {
+            "type": "warn",
+            "title": "Blacklist suspicion report (unconfirmed)",
+            "text": "GoPlus address security supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.",
+            "evidence": "provider context"
+          }
+        ],
+        "signals": [
+          {
+            "id": "stealing_attack",
+            "score": 90,
+            "title": "Stealing attack report",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "sanctioned",
+            "score": 95,
+            "title": "Sanctions indicator (provider report)",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "blacklist_doubt",
+            "score": 40,
+            "title": "Blacklist suspicion report (unconfirmed)",
+            "source": "GoPlus address security",
+            "evidence": "provider context"
+          }
+        ],
+        "policy": "txguard-evidence-v2",
+        "confidence": "Limited to retrieved provider evidence",
+        "summary": "High risk: the security provider returned 3 scored indicator(s). Verify the recipient independently before proceeding.",
+        "recommendations": [
+          "Verify the full address and network with your recipient through a trusted channel.",
+          "Do not share a seed phrase or private key. Independently inspect unexpected payment instructions.",
+          "Review coverage limits and explorer history. A small test transfer can still lose funds."
+        ],
+        "scanId": "cd725828-d7dd-4931-aaf1-cb83a6cf9d0a",
+        "wallet": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+        "chain": "ethereum",
+        "assessedAt": "2026-11-22T21:16:35.059Z",
+        "mode": "live",
+        "assessmentType": "Recipient risk assessment",
+        "balance": "101.808924992116117208 ETH",
+        "totalTransactions": "Not established",
+        "walletAge": "Not established",
+        "categories": [],
+        "explorerUrl": "https://etherscan.io/address/0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+        "sources": [
+          {
+            "name": "GoPlus address security",
+            "status": "available",
+            "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+          },
+          {
+            "name": "Etherscan V2",
+            "status": "available"
+          }
+        ],
+        "limitations": [
+          "This is an address-only assessment, not a transaction execution simulation.",
+          "No ownership verification, approval audit, token honeypot test or complete sanctions screening.",
+          "History and balance do not prove absence of fraud. An address can be compromised after this assessment."
+        ],
+        "explanation": {
+          "source": "deterministic",
+          "text": "High risk: the security provider returned 3 scored indicator(s). Verify the recipient independently before proceeding."
+        },
+        "commitment": "2b27f66b323e5683bcba17ca2e90f090bde262bf41a81551b8f765245faf1e5c",
+        "transferContext": {
+          "token": null,
+          "amount": null,
+          "note": "Optional context only; token ownership, balances and execution are not simulated."
+        }
+      }
+    },
+    {
+      "at": "2026-11-22T21:17:04.729Z",
+      "route": "/api/ask",
+      "status": 200,
+      "body": {
+        "answer": "High risk: the security provider returned 3 scored indicator(s). Verify the recipient independently before proceeding. This is an address-only assessment, not a transaction execution simulation. Verify the full address and network with your recipient through a trusted channel.",
+        "source": "deterministic",
+        "assessedAt": "2026-11-22T21:17:02.099Z"
+      }
+    },
+    {
+      "at": "2026-11-22T21:17:20.318Z",
+      "route": "/api/registry",
+      "status": 200,
+      "body": {
+        "status": "Confirmed registry call",
+        "verified": true,
+        "matches": true,
+        "txid": "0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082",
+        "submittedBy": "SP1906ZPQE20F1HX2JEKDMSD99YHB8G7Y7N7CW9ER",
+        "blockHeight": 8495105,
+        "arguments": [
+          {
+            "name": "chain",
+            "value": "\"solana\""
+          },
+          {
+            "name": "target",
+            "value": "\"DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm\""
+          },
+          {
+            "name": "risk-score",
+            "value": "u5"
+          }
+        ],
+        "explorerUrl": "https://explorer.hiro.so/txid/0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082?chain=mainnet",
+        "note": "Confirms an anchored successful call to the registry according to Hiro. Inspect its public arguments; this does not bind the entry to your current report or certify the score."
+      }
+    },
+    {
+      "at": "2026-11-22T21:17:51.272Z",
+      "route": "/api/transactions",
+      "status": 200,
+      "body": {
+        "transactions": [
+          {
+            "hash": "0xb753fee27851e4b9de034e212a196667af9a15f18ead551bba7c8e2836a1f755",
+            "from": "0xb699fc59cc8632906dbb391b40c625e8c3777777",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "1.002108",
+            "asset": "Token (0x6af9b9f049062df14e3df99e042653b656666666)",
+            "timestamp": 1794284471000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xfd721b32c54e0ebc441f87112f519ca57b204b5c916d96c717cb01bc82a335ef",
+            "from": "0x91d6cf4af9697ec95d9e1754e84d2b31c67a5ab7",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "15",
+            "asset": "Token (0x91d6cf4af9697ec95d9e1754e84d2b31c67a5ab7)",
+            "timestamp": 1791494555000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xbf3303f44341f139ac72182801588631d497bbadd3fdb999049b54b96b197205",
+            "from": "0xa607ee6aff1bc5c3605ac98b192664fa9fecdc80",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.010007",
+            "asset": "Token (0xdac17f958d2ee523a2206206994597c13d831ec7)",
+            "timestamp": 1791466055000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xc9617ba91041a5730856dab8464328d7d6b7f12f060927cf3e6aa74759018f2b",
+            "from": "0x36b4ed9dcdc9bc05c712a0b4d9b904dc9fb1de7a",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.006438208349061858",
+            "asset": "ETH",
+            "timestamp": 1790861651000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0xcdcf0d58fdde342e25daa97698a09212ded34e4f3924cada61d192343f37887b",
+            "from": "0x82563465d950423aa9039c753fc14eaa4467a6b6",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "50120.288692862870890136",
+            "asset": "Token (0x4f7b01009429154125a0f991f53e812dccf03333)",
+            "timestamp": 1789255787000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xf6e1dcef5d7bfb05a1cc26f3527e812053a6271a998f10dd3525cf2fd6e739b0",
+            "from": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "to": "0x4d511e05a88ddb5f5e960c68b54885364b4af8ef",
+            "amount": "5000000000000",
+            "asset": "Token (0x4d511e05a88ddb5f5e960c68b54885364b4af8ef)",
+            "timestamp": 1786651763000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x35609a1fdf6efa4f15b484420c9a5ec31082055f2c6047b8365c937dd2206115",
+            "from": "0x2767ae7e0c205425a7b7f7583c512513c527f482",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.00009",
+            "asset": "Token (0x6051c1354ccc51b4d561e43b02735deae64768b8)",
+            "timestamp": 1786254827000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x1b25e6ad8a3344a18a23cffeda2759e8e7d7848115d7196045a5cff0ad2c77fa",
+            "from": "0x087238209bac1d2985b12d7a4be5bd75daa17243",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.000011",
+            "asset": "ETH",
+            "timestamp": 1785147287000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0x3cfdaf8665cd71e80a565c849d6570960d7721de95b1202e586916d679581539",
+            "from": "0xef9bdf3ed535abeb41ec6dd005bf7d66defd77be",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "2004.610604390097223614",
+            "asset": "Token (0x91658ca584dec4daa908ac2e3fc6a4f27bf24958)",
+            "timestamp": 1782938099000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x48a446a503e82f6786a335ed330943f9c65878766509619e46095a0fe6934117",
+            "from": "0x9a7c6194a5860e2dea06ebc42a3d9f3b4ea32025",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.00000000001",
+            "asset": "Token (0x43e6228b5bf22eab754486082ca91fdd8585521a)",
+            "timestamp": 1778892275000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x6bb50ce3857882205c86407854b8a61e9e3741055414babd35df23b481e69cce",
+            "from": "0xd15fe25ed0dba12fe05e7029c88b10c25e8880e3",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "77866",
+            "asset": "Token (0x069aa45dd9fb8356c0d8603a43fc9347452a7a8c)",
+            "timestamp": 1776691775000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x7571b1053b2dca955506385bac170020e3ea65e1c9035e43405403baaef09b17",
+            "from": "0xd15fe25ed0dba12fe05e7029c88b10c25e8880e3",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "40000",
+            "asset": "Token (0x256eff6bca04c96b3224073637edde2d8dc9746b)",
+            "timestamp": 1776650987000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x3ea22b4718f60851bdf4e54a2529bf9759775a419d7d8343f1b4381b2e151796",
+            "from": "0x8c75ad518dce956b488ab65e36ab229d8664bf29",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.00004585",
+            "asset": "ETH",
+            "timestamp": 1775737295000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0xf8aa39432a84b0dc651a4eddcda5471fe67d83494068ad3bbcca22ef37c103ac",
+            "from": "0x10fd68ca747b648acd95d80aa9c195547988399f",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.000000003",
+            "asset": "Token (0x9d24364b97270961b2948734afe8d58832efd43a)",
+            "timestamp": 1774820891000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xc35f2e97f630b6163aea6ea9db9604d63f95e28a2c29a3bb7a5bf08c58bcbe6b",
+            "from": "0xdcaaaff8e9cef3f7fd37d3fbfa854b06569bbfa8",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "3.333333333333333333",
+            "asset": "Token (0x5a52b7c9ee14a6740f6a3563013054b3de4c6f65)",
+            "timestamp": 1773418523000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xa773d1d2155f8e7ec6686c4f688ac861d5d05a0133a189ec869d505bc2537a51",
+            "from": "0xbb30fb9fa731eee64772251327b7c2c8de781304",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.000002",
+            "asset": "Token (0x82866b4a71ba9d930fe338c386b6a45a7133eb36)",
+            "timestamp": 1773028271000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x8d94ec95bdef4d4a9465f379ab37583ad9b08fd6bc148dd22d530930b29f3ecd",
+            "from": "0x0934d7c6fa5eed7af6603ab3cb58f8d656abe5fe",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "2093071.86123",
+            "asset": "Token (0xa3e7833775a9cc022db2c72eb900378f90ce89b4)",
+            "timestamp": 1765623827000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x260aa4fa2bcdaab07c50ee89e18aeba1361273fdf09c78d173741462276afa05",
+            "from": "0x985409c0e4b1853a42800765bafcd9efc1c57d03",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.0000001",
+            "asset": "Token (0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2)",
+            "timestamp": 1757202767000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x260aa4fa2bcdaab07c50ee89e18aeba1361273fdf09c78d173741462276afa05",
+            "from": "0x2c3c4b7213ad8aaabefd8e4472719338a47f1610",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "2.7",
+            "asset": "Token (0x985409c0e4b1853a42800765bafcd9efc1c57d03)",
+            "timestamp": 1757202767000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x74f7fbfe5a0bd3ef2189619497d9c8445a0b8e6d5630e490534a3d2b6924ac33",
+            "from": "0xe546480138d50bb841b204691c39cc514858d101",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0",
+            "asset": "ETH",
+            "timestamp": 1740859967000,
+            "status": "Confirmed",
+            "kind": "Contract interaction (native value only)"
+          },
+          {
+            "hash": "0x6cbd30d24ef00f00763617f75ac1c56fc6d41320cb11326df9603cb73932aa55",
+            "from": "0xfc3ff9d9abd3abadda68821e443779beb1082f43",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.0005",
+            "asset": "ETH",
+            "timestamp": 1722968183000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0xb37bc24d865a8021425dff01cd6cc7673010cb7642cd7c73be728cea8fda0dae",
+            "from": "0x09564ac9288ed66bd32e793e76ce4336c1a9ed00",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.000011111111111111",
+            "asset": "ETH",
+            "timestamp": 1715643215000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0x7411f1ed289a955e91e5074c75d4af832517dc79e01a3d0530ceb7f2123cb26a",
+            "from": "0xbc25d517cc9d7ea453622ded3213302de34d29eb",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.000001001",
+            "asset": "ETH",
+            "timestamp": 1712199695000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0xceb93d896a12e23cf1dc13b7569bc82c9428cd978d2fe9735b6b0b4d7bfe4795",
+            "from": "0xdf225c04450504e9198569982c98de2e15b9df2a",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.00000174921564",
+            "asset": "ETH",
+            "timestamp": 1712198891000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0x229e7814c872cc447940e00bf5923cbbb95cf9975f8e24b1ea1c30f41d6a1956",
+            "from": "0xe129927cfc61ce2f0b2a0ca6d8f9482d4ee60c64",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "2",
+            "asset": "ETH",
+            "timestamp": 1708746647000,
+            "status": "Confirmed",
+            "kind": "Contract interaction (native value only)"
+          },
+          {
+            "hash": "0x62021b8d8384e3badca232a902b2ee8c47f23743a1591e147b278124134ca082",
+            "from": "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "1.7",
+            "asset": "Token (0x1d8911fe72cb117a36ab47f8b222edc6aa16920b)",
+            "timestamp": 1703306195000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x25e27694fe23b4e5ec01f0ca0ba4966bb4e7c9afd95174d3b80f98e54ad6b2b3",
+            "from": "0x4e5b2e1dc63f6b91cb6cd759936495434c7e972f",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0.0090648",
+            "asset": "ETH",
+            "timestamp": 1698202019000,
+            "status": "Confirmed",
+            "kind": "Native transfer"
+          },
+          {
+            "hash": "0xd76f389d6839819de94257a90e2d677445cbb9b161b5e2b43d177f92e45ef593",
+            "from": "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "1.4",
+            "asset": "Token (0xdeb5ec1624794d39591428dda8e446a522d4c584)",
+            "timestamp": 1695382559000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0x68e5d33c62d3a2af00b6f3d280e31fa00e116f0677e96fc856d6b701ee871f4e",
+            "from": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "3999.99",
+            "asset": "Token (0x3327506c4d1faeb6deccc6a956305c4259be5eba)",
+            "timestamp": 1694325023000,
+            "status": "Confirmed",
+            "kind": "Token transfer event"
+          },
+          {
+            "hash": "0xf597722f3619a0aae57e97e6c4b8adc1b354e8f966861b13c146b40b97d7d062",
+            "from": "0x9e40b3ecec1be687053326c0c3fe51aca69eb8dc",
+            "to": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+            "amount": "0",
+            "asset": "ETH",
+            "timestamp": 1691781683000,
+            "status": "Confirmed",
+            "kind": "Contract interaction (native value only)"
+          }
+        ],
+        "limitations": [
+          "Recent normal transactions only; internal calls and approvals are not decoded.",
+          "Token events use contract addresses; symbols are not trusted."
+        ],
+        "fetchedAt": "2026-11-22T21:17:50.027Z",
+        "mode": "live"
+      }
+    }
+  ],
+  "clips": {
+    "explorer": {
+      "file": "explorer-session.webm",
+      "ready": 6.181999999999999
+    }
+  },
+  "screenshots": [
+    "desktop-home.png",
+    "desktop-report.png",
+    "desktop-report-full.png",
+    "desktop-signals.png",
+    "desktop-sources.png",
+    "desktop-explanation.png",
+    "desktop-receipt.png",
+    "stacks-explorer.png",
+    "desktop-history.png"
+  ],
+  "actualCategory": "High risk",
+  "receiptText": "Confirmed registry call\n\nConfirms an anchored successful call to the registry according to Hiro. Inspect its public arguments; this does not bind the entry to your current report or certify the score.\n\nchain: \"solana\"\n\ntarget: \"DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm\"\n\nrisk-score: u5\n\nView transaction on Stacks explorer",
+  "explorer": {
+    "url": "https://explorer.hiro.so/txid/0x5b650d7c34b8784ec2f144244173cc2e23a1e69f1e41cd332e02a0f6dfd6c082?chain=mainnet",
+    "title": "STX Transaction - 0x5b650…6c082",
+    "source": "actual explorer page; not rewritten"
+  },
+  "historyCount": 30,
+  "error": "locator.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Scan', exact: true })\u001b[22m\n"
+}

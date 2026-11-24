@@ -252,7 +252,7 @@ html {
   background: var(--surface);
   border-bottom: 1px solid #eef0f3;
   padding: 11px 20px;
-  font-size: 10px;
+  font-size: 12px;
   color: #667085;
 }
 .trust-strip span {
@@ -291,7 +291,7 @@ html {
   padding: 82px 0 67px;
 }
 .hero-kicker {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.8px;
   font-weight: 750;
   display: flex;
@@ -375,7 +375,7 @@ html {
   padding: 5px 0;
   min-height: 36px;
   color: #1d4ed8;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
 }
 .hero-proof {
@@ -386,7 +386,7 @@ html {
   color: #667085;
 }
 .hero-proof p {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .hero-proof strong {
@@ -421,12 +421,12 @@ html {
   letter-spacing: -0.5px;
 }
 .scan-card-heading p {
-  font-size: 11px;
+  font-size: 12px;
   color: #667085;
   margin-top: 3px;
 }
 .live-label {
-  font-size: 7px;
+  font-size: 12px;
   letter-spacing: 1px;
   font-weight: 750;
   color: #3b5d49;
@@ -466,7 +466,7 @@ html {
   font-size: 12px;
 }
 .small {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
 }
 .muted {
@@ -475,7 +475,7 @@ html {
 .scan-card #address-help {
   margin-top: 7px;
   min-height: 35px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .optional-context {
   border-top: 1px solid #eef0f3;
@@ -483,13 +483,13 @@ html {
   padding-top: 10px;
 }
 .optional-context summary {
-  font-size: 11px;
+  font-size: 12px;
   color: #475467;
   padding: 6px 0;
   min-height: 36px;
 }
 .optional-context summary span {
-  font-size: 10px;
+  font-size: 12px;
   color: #667085;
   margin-left: 5px;
 }
@@ -514,7 +514,7 @@ html {
   justify-content: center;
   gap: 7px;
   color: #667085;
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 13px;
 }
 .scan-card-bottom {
@@ -524,7 +524,7 @@ html {
   background: #f9fafb;
   border-top: 1px solid #eef0f3;
   padding: 12px 25px;
-  font-size: 9px;
+  font-size: 12px;
   color: #667085;
 }
 .form-grid {
@@ -555,7 +555,7 @@ html {
 }
 .eyebrow {
   font-family: Manrope, sans-serif;
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.7;
   letter-spacing: 1.4px;
   font-weight: 750;
@@ -563,7 +563,7 @@ html {
 }
 .networks > .eyebrow {
   text-align: center;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1.6px;
 }
 .network-list {
@@ -590,7 +590,7 @@ html {
 }
 .network-detail {
   width: 100%;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 500;
   color: #667085;
   margin-top: 6px;
@@ -603,7 +603,7 @@ html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   color: #475467;
 }
 .bitcoin .coin-symbol {
@@ -630,7 +630,7 @@ html {
 }
 .why-section .eyebrow {
   color: #a7badb;
-  font-size: 8px;
+  font-size: 12px;
 }
 .why-section h2 {
   font-size: 34px;
@@ -648,7 +648,7 @@ html {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 9px;
+  font-size: 12px;
   color: #c5d6f7;
   border-top: 1px solid #354057;
   padding-top: 17px;
@@ -669,7 +669,7 @@ html {
   line-height: 1.2;
 }
 .section-top > p {
-  font-size: 11px;
+  font-size: 12px;
   color: #667085;
 }
 .steps {
@@ -707,7 +707,7 @@ html {
   color: #667085;
 }
 .limitation-note p {
-  font-size: 11px;
+  font-size: 12px;
 }
 .limitation-note svg {
   margin-top: 3px;
@@ -738,7 +738,7 @@ html {
   border-color: #2563eb;
 }
 .example-card .eyebrow {
-  font-size: 7px;
+  font-size: 12px;
   letter-spacing: 0.7px;
 }
 .example-card strong {
@@ -746,7 +746,7 @@ html {
   font-size: 15px;
 }
 .example-card > span:not(.eyebrow) {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
   color: #667085;
 }
@@ -819,7 +819,7 @@ html {
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: 10px;
+  font-size: 12px;
   color: #536074;
   min-height: 44px;
   text-decoration: none;
@@ -830,7 +830,7 @@ html {
   justify-content: space-between;
   gap: 20px;
   padding-block: 18px;
-  font-size: 9px;
+  font-size: 12px;
   color: #667085;
 }
 .panel {
@@ -895,7 +895,7 @@ html {
   flex-wrap: wrap;
 }
 .network-label {
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.6;
   font-weight: 650;
   border: 1px solid var(--border);
@@ -931,7 +931,7 @@ html {
   padding: 5px 0;
   min-height: 36px;
   font-family: ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: #536074;
   text-align: left;
 }
@@ -1025,7 +1025,7 @@ html {
   font-size: 13px;
 }
 .loading-panel p {
-  font-size: 11px;
+  font-size: 12px;
   color: #667085;
   margin-top: 5px;
 }
@@ -1042,7 +1042,7 @@ html {
   flex-wrap: wrap;
   gap: 20px;
   padding: 22px 28px 14px;
-  font-size: 10px;
+  font-size: 12px;
   color: #667085;
 }
 .report-address {
@@ -1099,7 +1099,7 @@ html {
 }
 .risk-number small {
   font-family: Manrope, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0;
   font-weight: 500;
   margin-left: 12px;
@@ -1134,7 +1134,7 @@ html {
   margin: 12px 0;
 }
 .risk-summary .small {
-  font-size: 10px;
+  font-size: 12px;
 }
 .compact {
   margin-bottom: 0;
@@ -1155,7 +1155,7 @@ html {
   overflow-wrap: anywhere;
 }
 .report-stats .eyebrow {
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1px;
 }
 .report-columns {
@@ -1197,11 +1197,11 @@ html {
   margin-bottom: 6px;
 }
 .indicator p {
-  font-size: 11px;
+  font-size: 12px;
   color: #667085;
 }
 .evidence-tag {
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.5px;
   color: #475467;
@@ -1221,7 +1221,7 @@ html {
   margin: 17px 0;
 }
 .precautions li {
-  font-size: 11px;
+  font-size: 12px;
   color: #475467;
   line-height: 1.9;
   padding-left: 6px;
@@ -1242,11 +1242,11 @@ html {
   gap: 16px;
   padding: 12px 0;
   border-bottom: 1px solid #eef0f3;
-  font-size: 11px;
+  font-size: 12px;
 }
 .source-status {
   text-transform: capitalize;
-  font-size: 9px;
+  font-size: 12px;
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 3px 8px;
@@ -1261,7 +1261,7 @@ html {
 .coverage-panel ul {
   padding-left: 17px;
   color: #667085;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
   margin-top: 20px;
 }
@@ -1274,7 +1274,7 @@ html {
   margin: 7px 0;
 }
 .chat-panel p {
-  font-size: 11px;
+  font-size: 12px;
   color: #667085;
 }
 .chat-panel label {
@@ -1304,7 +1304,7 @@ html {
   margin-top: 7px;
 }
 .answer .eyebrow {
-  font-size: 8px;
+  font-size: 12px;
 }
 .receipt-panel {
   padding: 25px 30px;
@@ -1316,7 +1316,7 @@ html {
   gap: 10px;
 }
 .receipt-panel > p {
-  font-size: 11px;
+  font-size: 12px;
   color: #667085;
   margin: 15px 0;
 }
@@ -1324,7 +1324,7 @@ html {
   border-top: 1px solid var(--border);
   margin-top: 20px;
   padding-top: 20px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
 }
 .receipt-tools > p {
@@ -1336,7 +1336,7 @@ html {
   background: #f7f8fa;
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .receipt-tools form {
   padding-top: 20px;
@@ -1371,12 +1371,12 @@ html {
   gap: 7px;
   align-items: center;
   color: #1d4ed8;
-  font-size: 11px;
+  font-size: 12px;
   text-decoration: none;
   min-height: 35px;
 }
 .transaction-status {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 650;
   padding: 5px 9px;
   border: 1px solid var(--border);
@@ -1393,13 +1393,13 @@ html {
   min-width: 0;
 }
 .transaction dt {
-  font-size: 9px;
+  font-size: 12px;
   color: #667085;
   margin-bottom: 5px;
 }
 .transaction dd {
   font-family: ui-monospace, monospace;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
   margin: 0;
   overflow-wrap: anywhere;
@@ -1463,7 +1463,7 @@ html {
     letter-spacing: -3.5px;
   }
   .hero-kicker {
-    font-size: 8px;
+    font-size: 12px;
     letter-spacing: 1px;
   }
   .scan-card-heading {
@@ -1476,7 +1476,7 @@ html {
     padding: 12px 20px;
   }
   .live-label {
-    font-size: 6px;
+    font-size: 12px;
   }
   .why-section {
     gap: 50px;
@@ -1513,7 +1513,7 @@ html {
     gap: 16px;
   }
   .site-header nav a {
-    font-size: 10px;
+    font-size: 12px;
   }
   .brand-version {
     display: none;
@@ -1528,7 +1528,7 @@ html {
     letter-spacing: -2.8px;
   }
   .hero-kicker {
-    font-size: 6px;
+    font-size: 12px;
     letter-spacing: 1px;
     gap: 5px;
   }
@@ -1545,17 +1545,17 @@ html {
     margin-top: 22px;
   }
   .hero-actions .button {
-    font-size: 10px;
+    font-size: 12px;
     padding: 12px;
   }
   .hero-actions .text-link {
-    font-size: 10px;
+    font-size: 12px;
   }
   .hero-proof {
     margin-top: 22px;
   }
   .hero-proof p {
-    font-size: 9px;
+    font-size: 12px;
   }
   .scan-card-heading {
     gap: 9px;
@@ -1565,7 +1565,7 @@ html {
     font-size: 15px;
   }
   .scan-card-heading p {
-    font-size: 9px;
+    font-size: 12px;
   }
   .scan-icon {
     width: 33px;
@@ -1578,29 +1578,29 @@ html {
     padding: 16px;
   }
   .scan-card label {
-    font-size: 10px;
+    font-size: 12px;
   }
   .scan-card #address-help {
-    font-size: 9px;
+    font-size: 12px;
   }
   .scan-footnote {
-    font-size: 8px;
+    font-size: 12px;
   }
   .scan-submit {
-    font-size: 10px;
+    font-size: 12px;
     padding-inline: 12px;
   }
   .network-option {
-    font-size: 11px;
+    font-size: 12px;
     column-gap: 5px;
   }
   .network-detail {
-    font-size: 7px;
+    font-size: 12px;
   }
   .coin-symbol {
     width: 18px;
     height: 18px;
-    font-size: 8px;
+    font-size: 12px;
   }
   .why-section {
     gap: 35px;
@@ -1611,10 +1611,10 @@ html {
     font-size: 26px;
   }
   .why-section > div > p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .why-signoff {
-    font-size: 8px;
+    font-size: 12px;
   }
   .section-top h2,
   .faq-section h2 {
@@ -1627,7 +1627,7 @@ html {
     font-size: 16px;
   }
   .steps p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .faq-section {
     gap: 35px;
@@ -1662,7 +1662,7 @@ html {
     text-align: right;
   }
   .footer-bottom {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 @media (max-width: 620px) {
@@ -1681,12 +1681,12 @@ html {
     gap: 12px;
   }
   .site-header nav a {
-    font-size: 10px;
+    font-size: 12px;
     min-height: 46px;
   }
   .trust-strip {
     gap: 13px;
-    font-size: 8px;
+    font-size: 12px;
     padding: 10px 12px;
   }
   .trust-strip span + span::before {
@@ -1708,7 +1708,7 @@ html {
     padding-bottom: 33px;
   }
   .hero-kicker {
-    font-size: 7px;
+    font-size: 12px;
     letter-spacing: 1.2px;
     margin-bottom: 20px;
   }
@@ -1730,17 +1730,17 @@ html {
     margin-top: 24px;
   }
   .hero-actions .button {
-    font-size: 11px;
+    font-size: 12px;
     padding: 13px 16px;
   }
   .hero-actions .text-link {
-    font-size: 11px;
+    font-size: 12px;
   }
   .hero-proof {
     margin-top: 21px;
   }
   .hero-proof p {
-    font-size: 9px;
+    font-size: 12px;
   }
   .scan-card-heading {
     padding: 21px;
@@ -1750,7 +1750,7 @@ html {
     font-size: 18px;
   }
   .scan-card-heading p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .scan-icon {
     width: 39px;
@@ -1758,23 +1758,23 @@ html {
   }
   .live-label {
     display: flex;
-    font-size: 6px;
+    font-size: 12px;
   }
   .scan-card form {
     padding: 20px;
   }
   .scan-card label {
-    font-size: 11px;
+    font-size: 12px;
   }
   .scan-card #address-help {
-    font-size: 10px;
+    font-size: 12px;
   }
   .scan-submit {
     font-size: 12px;
     min-height: 49px;
   }
   .scan-footnote {
-    font-size: 9px;
+    font-size: 12px;
   }
   .network-list {
     grid-template-columns: repeat(3, 1fr);
@@ -1785,7 +1785,7 @@ html {
     padding-bottom: 25px;
   }
   .networks > .eyebrow {
-    font-size: 7px;
+    font-size: 12px;
   }
   .why-section {
     grid-template-columns: 1fr;
@@ -1801,7 +1801,7 @@ html {
     font-size: 12px;
   }
   .why-signoff {
-    font-size: 9px;
+    font-size: 12px;
   }
   .section-top {
     align-items: flex-start;
@@ -1814,7 +1814,7 @@ html {
     font-size: 30px;
   }
   .section-top > p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .steps {
     grid-template-columns: 1fr;
@@ -1846,7 +1846,7 @@ html {
     gap: 10px;
   }
   .limitation-note p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .examples-grid {
     gap: 10px;
@@ -1860,11 +1860,11 @@ html {
     font-size: 15px;
   }
   .example-card .eyebrow {
-    font-size: 6px;
+    font-size: 12px;
     letter-spacing: 0.6px;
   }
   .example-card > span:not(.eyebrow) {
-    font-size: 10px;
+    font-size: 12px;
   }
   .examples-section {
     padding-bottom: 43px;
@@ -1883,10 +1883,10 @@ html {
     gap: 22px 10px;
   }
   .footer-main p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .footer-main .small {
-    font-size: 9px;
+    font-size: 12px;
   }
   .footer-main > div {
     gap: 20px;
@@ -1921,20 +1921,20 @@ html {
     padding-bottom: 32px;
   }
   .report-section .actions .button {
-    font-size: 10px;
+    font-size: 12px;
     padding: 10px 14px;
   }
   .report-meta {
     padding: 18px 18px 12px;
     gap: 10px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .report-address {
     padding: 0 18px 16px;
     gap: 5px;
   }
   .report-address code {
-    font-size: 11px;
+    font-size: 12px;
   }
   .report-address .icon-button {
     min-width: 35px;
@@ -1944,7 +1944,7 @@ html {
     gap: 25px;
   }
   .report-tabs button {
-    font-size: 11px;
+    font-size: 12px;
   }
   .risk-overview {
     grid-template-columns: 1fr;
@@ -1976,7 +1976,7 @@ html {
   }
   .compact .text-button {
     white-space: nowrap;
-    font-size: 9px;
+    font-size: 12px;
   }
   .report-stats {
     grid-template-columns: 1fr;
@@ -1996,7 +1996,7 @@ html {
     max-width: 60%;
   }
   .report-stats .eyebrow {
-    font-size: 7px;
+    font-size: 12px;
   }
   .report-columns {
     grid-template-columns: 1fr;
@@ -2031,14 +2031,14 @@ html {
     gap: 8px;
   }
   .transaction dd {
-    font-size: 9px;
+    font-size: 12px;
   }
   .transaction dt {
-    font-size: 8px;
+    font-size: 12px;
     margin: 0;
   }
   .transaction-status {
-    font-size: 8px;
+    font-size: 12px;
   }
   .history-panel > .compact {
     flex-direction: column;
@@ -2049,7 +2049,7 @@ html {
     align-items: flex-start;
   }
   .notice {
-    font-size: 11px;
+    font-size: 12px;
   }
   .receipt-panel > div:first-child h3 {
     font-size: 16px;
@@ -2058,7 +2058,7 @@ html {
     padding: 20px;
   }
   .source-row {
-    font-size: 10px;
+    font-size: 12px;
   }
   .form-grid {
     gap: 10px;
@@ -2073,11 +2073,11 @@ html {
     gap: 9px;
   }
   .site-header nav a {
-    font-size: 9px;
+    font-size: 12px;
   }
   .trust-strip {
     gap: 8px;
-    font-size: 7px;
+    font-size: 12px;
     padding-inline: 8px;
   }
   .scan-card-heading,
@@ -2088,14 +2088,14 @@ html {
     font-size: 17px;
   }
   .live-label {
-    font-size: 5px;
+    font-size: 12px;
     letter-spacing: 0.6px;
   }
   .hero h1 {
     font-size: 49px;
   }
   .hero-kicker {
-    font-size: 6px;
+    font-size: 12px;
     letter-spacing: 0.9px;
   }
   .hero-actions {
@@ -2103,10 +2103,10 @@ html {
   }
   .hero-actions .button {
     padding: 12px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .hero-actions .text-link {
-    font-size: 10px;
+    font-size: 12px;
   }
   .why-section {
     padding: 25px 20px;
@@ -2125,10 +2125,10 @@ html {
     gap: 12px;
   }
   .report-stats strong {
-    font-size: 11px;
+    font-size: 12px;
   }
   .tx-hash {
-    font-size: 10px;
+    font-size: 12px;
   }
   .source-row {
     gap: 8px;
@@ -2138,6 +2138,373 @@ html {
   }
   .footer-main p {
     text-align: left;
+  }
+}
+/* Product controls retain readable type and full touch targets at every size. */
+.menu-toggle {
+  display: none;
+}
+.address-copy {
+  width: 100%;
+}
+.address-copy span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.transaction .card-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  gap: 4px 8px;
+}
+.transaction .transaction-status {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.tx-hash {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.icon-button,
+.text-button,
+.address-copy,
+.optional-context summary {
+  min-width: 44px;
+  min-height: 44px;
+}
+.site-header nav a {
+  min-width: 44px;
+  justify-content: center;
+}
+.brand-mark {
+  width: 36px;
+  height: 40px;
+}
+.loading-brand {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.button,
+.icon-button,
+.text-button,
+.nav-cta,
+.example-card,
+.wallet-card {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.button:active,
+.icon-button:active,
+.text-button:active {
+  transform: translateY(1px);
+}
+.wallet-card:hover {
+  border-color: #a9bde3;
+  box-shadow: 0 4px 16px #10182806;
+}
+.report-address code,
+.commitment,
+.wallet-metrics strong,
+.report-stats strong,
+.answer,
+.transaction dd {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.receipt-tools form {
+  display: grid;
+  gap: 12px;
+}
+.receipt-tools .button {
+  white-space: normal;
+  text-align: center;
+}
+.source-row > div {
+  min-width: 0;
+}
+.source-status {
+  flex-shrink: 0;
+}
+.scan-card-heading {
+  flex-wrap: wrap;
+}
+.live-label {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.scan-card-bottom {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.loading-panel {
+  position: relative;
+  overflow: hidden;
+}
+.loading-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 30%;
+  background: var(--accent);
+  animation: scan-progress 1.8s ease-in-out infinite;
+}
+@keyframes scan-progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(440%);
+  }
+}
+@media (max-width: 800px) {
+  .nav-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0 16px;
+    min-height: 76px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: 10px;
+    justify-content: normal;
+  }
+  .nav-inner .brand {
+    justify-self: start;
+    font-size: 25px;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    min-width: 88px;
+    padding: 8px 12px;
+    color: #344054;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .site-header nav {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows 180ms ease,
+      opacity 140ms ease,
+      visibility 180ms;
+    width: 100%;
+  }
+  .site-header nav[data-open='true'] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+  }
+  .nav-links {
+    overflow: hidden;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+  }
+  .site-header nav a {
+    min-height: 48px;
+    padding: 8px 12px;
+    font-size: 14px;
+    justify-content: flex-start;
+    border-radius: 7px;
+  }
+  .site-header nav a[aria-current='page'] {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .nav-cta {
+    display: none;
+  }
+  .container,
+  .nav-inner {
+    width: auto;
+    margin-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+  }
+  input,
+  select,
+  #wallet {
+    font-size: 16px;
+  }
+  label,
+  .scan-card label {
+    font-size: 14px;
+  }
+  .scan-card #address-help,
+  .risk-summary > p,
+  .indicator p,
+  .precautions li,
+  .coverage-panel li,
+  .chat-panel > div > p,
+  .receipt-panel > p,
+  .answer p,
+  .steps p,
+  .why-section > div > p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .small,
+  .risk-summary .small,
+  .report-meta,
+  .source-row,
+  .transaction dd,
+  .transaction dt,
+  .transaction-status,
+  .evidence-tag {
+    font-size: 12px;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 32px;
+    gap: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(46px, 12.5vw, 72px);
+    letter-spacing: -0.055em;
+  }
+  .hero-description {
+    max-width: 560px;
+    font-size: 15px;
+  }
+  .hero-kicker {
+    line-height: 1.6;
+    letter-spacing: 0.09em;
+    font-size: 12px;
+  }
+  .hero-actions {
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+  .hero-actions .button,
+  .hero-actions .text-link,
+  .report-section .actions .button,
+  .scan-submit {
+    min-height: 48px;
+    font-size: 14px;
+  }
+  .text-link {
+    min-height: 44px;
+    align-items: center;
+  }
+  .scan-card-heading,
+  .scan-card form {
+    padding: 20px;
+  }
+  .scan-card-heading h2 {
+    font-size: 20px;
+  }
+  .live-label {
+    margin-left: 0;
+  }
+  .trust-strip {
+    gap: 8px 16px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 10px 16px;
+  }
+  .trust-strip span + span::before {
+    display: none;
+  }
+  .network-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .network-list > * {
+    min-width: 0;
+  }
+  .network-name {
+    font-size: 13px;
+  }
+  .report-address {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .report-address .icon-button {
+    min-width: 44px;
+  }
+  .report-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-inline: 20px;
+  }
+  .report-tabs button {
+    min-height: 52px;
+    padding: 12px 0;
+    font-size: 13px;
+    white-space: normal;
+  }
+  .risk-overview {
+    grid-template-columns: 1fr;
+  }
+  .score-block {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 20px;
+  }
+  .report-columns {
+    grid-template-columns: 1fr;
+  }
+  .report-stats {
+    grid-template-columns: 1fr;
+  }
+  .report-stats > div {
+    gap: 16px;
+  }
+  .report-stats strong {
+    max-width: 60%;
+    font-size: 14px;
+  }
+  .compact {
+    flex-wrap: wrap;
+  }
+  .compact .text-button {
+    font-size: 13px;
+  }
+  .transaction dl {
+    grid-template-columns: 1fr;
+  }
+  .transaction dl div {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .transaction .tx-hash {
+    font-size: 13px;
+  }
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .footer-main p {
+    text-align: left;
+    font-size: 14px;
+  }
+  .footer-main > div {
+    flex-wrap: wrap;
+    gap: 12px 24px;
+  }
+  .footer-main a:not(.brand) {
+    min-height: 44px;
+  }
+  .footer-bottom {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
   }
 }
 @media (prefers-reduced-motion: reduce) {

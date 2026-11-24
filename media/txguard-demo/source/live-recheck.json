@@ -1,0 +1,101 @@
+{
+  "checkedAt": "2026-11-22T21:14:02.767Z",
+  "responses": [
+    {
+      "route": "/api/analyze",
+      "status": 200,
+      "body": {
+        "riskScore": 95,
+        "riskLabel": "High risk",
+        "alerts": [
+          {
+            "type": "danger",
+            "title": "Stealing attack report",
+            "text": "GoPlus address security supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.",
+            "evidence": "provider report"
+          },
+          {
+            "type": "danger",
+            "title": "Sanctions indicator (provider report)",
+            "text": "GoPlus address security supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.",
+            "evidence": "provider report"
+          },
+          {
+            "type": "warn",
+            "title": "Blacklist suspicion report (unconfirmed)",
+            "text": "GoPlus address security supplied this indicator. Reports may be incomplete or incorrect; review the evidence independently.",
+            "evidence": "provider context"
+          }
+        ],
+        "signals": [
+          {
+            "id": "stealing_attack",
+            "score": 90,
+            "title": "Stealing attack report",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "sanctioned",
+            "score": 95,
+            "title": "Sanctions indicator (provider report)",
+            "source": "GoPlus address security",
+            "evidence": "provider report"
+          },
+          {
+            "id": "blacklist_doubt",
+            "score": 40,
+            "title": "Blacklist suspicion report (unconfirmed)",
+            "source": "GoPlus address security",
+            "evidence": "provider context"
+          }
+        ],
+        "policy": "txguard-evidence-v2",
+        "confidence": "Limited to retrieved provider evidence",
+        "summary": "High risk: the security provider returned 3 scored indicator(s). Verify the recipient independently before proceeding.",
+        "recommendations": [
+          "Verify the full address and network with your recipient through a trusted channel.",
+          "Do not share a seed phrase or private key. Independently inspect unexpected payment instructions.",
+          "Review coverage limits and explorer history. A small test transfer can still lose funds."
+        ],
+        "scanId": "c6fb169a-f23d-47fd-8e7f-ab8fa035084d",
+        "wallet": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+        "chain": "ethereum",
+        "assessedAt": "2026-11-22T21:13:59.984Z",
+        "mode": "live",
+        "assessmentType": "Recipient risk assessment",
+        "balance": "101.808924992116117208 ETH",
+        "totalTransactions": "Not established",
+        "walletAge": "Not established",
+        "categories": [],
+        "explorerUrl": "https://etherscan.io/address/0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+        "sources": [
+          {
+            "name": "GoPlus address security",
+            "status": "available",
+            "note": "Available address-security fields retrieved; database coverage is not comprehensive."
+          },
+          {
+            "name": "Etherscan V2",
+            "status": "available"
+          }
+        ],
+        "limitations": [
+          "This is an address-only assessment, not a transaction execution simulation.",
+          "No ownership verification, approval audit, token honeypot test or complete sanctions screening.",
+          "History and balance do not prove absence of fraud. An address can be compromised after this assessment."
+        ],
+        "explanation": {
+          "source": "deterministic",
+          "text": "High risk: the security provider returned 3 scored indicator(s). Verify the recipient independently before proceeding."
+        },
+        "commitment": "dc6f77dd6df2d2d187dcfed8e4f8a98f10f474368a5191e60b9244930dbce7a9",
+        "transferContext": {
+          "token": null,
+          "amount": null,
+          "note": "Optional context only; token ownership, balances and execution are not simulated."
+        }
+      }
+    }
+  ]
+}

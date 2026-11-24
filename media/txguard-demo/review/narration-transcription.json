@@ -1,0 +1,126 @@
+{
+  "engine": "Whisper tiny.en ONNX q8, independent of the speech generator",
+  "method": "Each real generated phrase decoded to 16 kHz and transcribed separately. Proper-name spellings normalized; ASR is a review aid, not a human listening claim.",
+  "checks": [
+    {
+      "scene": 1,
+      "file": "audio/scene-1-1.wav",
+      "expected": "Every day, people send cryptocurrency to wallets they know little about.",
+      "recognized": "Every day, people send cryptocurrency to wallets. They know little about.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 1,
+      "file": "audio/scene-1-2.wav",
+      "expected": "And when something goes wrong, getting that money back may be impossible.",
+      "recognized": "And when something goes wrong, getting that money back may be impossible.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 2,
+      "file": "audio/scene-2-1.wav",
+      "expected": "Meet TxGuard.",
+      "recognized": "Meet TXGuard.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 2,
+      "file": "audio/scene-2-2.wav",
+      "expected": "A Web3 recipient-checking tool that helps you understand available wallet risk evidence before sending your crypto.",
+      "recognized": "a Web 3 recipient checking tool that helps you understand available wallet-risk evidence before sending your crypto.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 3,
+      "file": "audio/scene-3-1.wav",
+      "expected": "Choose a blockchain, enter a public wallet address, and run a scan.",
+      "recognized": "Choose a blockchain, enter a public wallet address, and run a scan.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 3,
+      "file": "audio/scene-3-2.wav",
+      "expected": "TxGuard retrieves available security intelligence and blockchain activity, with missing coverage kept visible.",
+      "recognized": "TX Guard retrieves available security intelligence and blockchain activity, with missing coverage kept visible.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 4,
+      "file": "audio/scene-4-1.wav",
+      "expected": "Review the findings, their sources, and the limits of the check in plain English.",
+      "recognized": "review the findings, their sources, and the limits of the check in plain English.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 4,
+      "file": "audio/scene-4-2.wav",
+      "expected": "Available explanations stay grounded in retrieved evidence.",
+      "recognized": "available explanations stay grounded in retrieved evidence.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 4,
+      "file": "audio/scene-4-3.wav",
+      "expected": "No assessment can guarantee safety.",
+      "recognized": "No assessment can guarantee safety.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 5,
+      "file": "audio/scene-5-1.wav",
+      "expected": "Five networks: Ethereum, BNB Chain, Solana, Bitcoin, and Stacks.",
+      "recognized": "5 networks, Ethereum, BNB chains, Solana, Bitcoin and stacks.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 5,
+      "file": "audio/scene-5-2.wav",
+      "expected": "Security coverage varies by network.",
+      "recognized": "Security coverage varies by network.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 6,
+      "file": "audio/scene-6-1.wav",
+      "expected": "Inspect an existing scan record on Stacks Mainnet.",
+      "recognized": "Inspect an existing scan, record on stacks main net.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 6,
+      "file": "audio/scene-6-2.wav",
+      "expected": "A public receipt records an assertion; it does not certify the score.",
+      "recognized": "A public receipt records an assertion. It does not certify the score.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 7,
+      "file": "audio/scene-7-1.wav",
+      "expected": "Built for P2P traders, freelancers, and everyday crypto users.",
+      "recognized": "Built for P2P traders, freelancers, and everyday crypto users.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    },
+    {
+      "scene": 8,
+      "file": "audio/scene-8-1.wav",
+      "expected": "TxGuard. Know before you send.",
+      "recognized": "TX Guard, no before you send.",
+      "normalizedWordErrorRate": 0,
+      "needsReview": false
+    }
+  ]
+}

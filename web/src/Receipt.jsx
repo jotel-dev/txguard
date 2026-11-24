@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { request } from './client.js'
 import Icon from './Icon.jsx'
+import { prepareReceipt } from '../shared/receipt.js'
 const contract = 'SP3QKY6WR398BJHPP23VKKEQXQ0T1H1HAQ1BKQFKM.registry'
 
 export default function Receipt({ report }) {
@@ -9,6 +10,24 @@ export default function Receipt({ report }) {
   const [registry, setRegistry] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  function downloadPrivateReceipt() {
+    try {
+      const nonce = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) =>
+        b.toString(16).padStart(2, '0'),
+      ).join('')
+      const bundle = prepareReceipt(report, nonce)
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' }),
+      )
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `txguard-private-receipt-${report.scanId}.json`
+      anchor.click()
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    } catch (e) {
+      setError(e.message)
+    }
+  }
   async function check(event) {
     event.preventDefault()
     setBusy(true)
@@ -37,6 +56,18 @@ export default function Receipt({ report }) {
     <div className="receipt-tools">
       <p className="small muted">Local SHA-256 evidence commitment (not signed):</p>
       <code className="commitment">{report.commitment}</code>
+      {report.mode === 'live' && (
+        <>
+          <button className="button secondary" onClick={downloadPrivateReceipt}>
+            Prepare private receipt package
+          </button>
+          <p className="small muted">
+            Creates a salted commitment locally. Keep the downloaded package private: it contains
+            the assessment and secret nonce needed for independent verification. Nothing is
+            submitted onchain. Registration requires a separately approved new contract deployment.
+          </p>
+        </>
+      )}
       <p>
         The existing registry publishes the chain, full recipient address, score and submitting
         principal. Entries are public user assertions and can be duplicated. It does not store the
