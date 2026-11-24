@@ -1,5 +1,7 @@
 # Post-submission engineering and release readiness
 
+Historical Web3 readiness stage. Subsequent owner-approved branding, mobile refinements, 125-test validation and newer matched performance evidence are documented in the [brand/mobile report](brand-mobile-refinement.md). The 4920ms sample and 116-test totals below retain their historical meaning.
+
 Audit date: November 23, 2026, Africa/Lagos. Development branch: `feat/txguard-demo-readiness`. Submitted source baseline: `d210ec2fcfa535cd8b187d28d66f1dd504255690`. Production was not changed. No merge, deployment, contract publication, payment, paid infrastructure or mainnet transaction was performed.
 
 ## Repository and production audit

@@ -8,6 +8,8 @@ TxGuard is a free recipient risk assessment tool for everyday crypto users, free
 
 The submitted 2.0 baseline is `d210ec2` on `main` (PR #6 merged). Post-submission improvements are isolated on `feat/txguard-demo-readiness`; they have not been promoted to production. Existing GitHub automation may create protected previews on pushes. See the [current audit, capability matrix and release gates](docs/readiness-report.md) and [demo script, eight-slide deck and technical Q&A](docs/demo-day-package.md). Competition eligibility and explicit approval are required before modifying the submitted deployment.
 
+The owner-approved T/G identity, mobile refinements and matched performance evidence are described in the [brand and mobile report](docs/brand-mobile-refinement.md). See the [brand asset package](docs/brand/README.md) for vector and transparent PNG exports, icons and social preview assets.
+
 ## What is implemented
 
 - Shared mainnet address validation: EIP-55 EVM checksums, Solana 32-byte Base58 keys, Bitcoin Base58Check / SegWit / Taproot checksums, Stacks c32 principals and contract principals.

@@ -1,0 +1,47 @@
+{
+  "note": "UI fixtures; browser emulation; screenshot files remain in ignored .cache/brand-mobile. Sampled labels and controls only; not a universal accessibility certification.",
+  "before": {
+    "layoutStates": 198,
+    "widths": [
+      320,
+      360,
+      375,
+      390,
+      414,
+      428,
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "overflowingStates": 0,
+    "statesWithSmallLabels": 198,
+    "statesWithSmallTargets": 198,
+    "runtimeErrors": []
+  },
+  "after": {
+    "layoutStates": 206,
+    "widths": [
+      320,
+      360,
+      375,
+      390,
+      414,
+      428,
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "overflowingStates": 0,
+    "statesWithSmallLabels": 0,
+    "statesWithSmallTargets": 0,
+    "runtimeErrors": []
+  },
+  "screenshots": {
+    "before": 90,
+    "after": 94
+  }
+}

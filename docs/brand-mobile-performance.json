@@ -1,0 +1,1222 @@
+{
+  "measuredAt": "2026-11-24T15:49:10.421Z",
+  "browser": "158.0.4370.33",
+  "method": "Three cold contexts per revision; alternating order, same local static server/browser; 390x1000, 4x CPU, 150ms, 1.6Mbps down / 750kbps up, cache disabled, reduced motion, external fonts blocked. Metrics precede interactions. EventTiming is a small lab sample, not field INP. No other benchmark intentionally run concurrently.",
+  "samples": [
+    {
+      "revision": "submitted",
+      "run": 1,
+      "lcp": 2376,
+      "cls": 0,
+      "longTasks": [
+        {
+          "start": 467.5,
+          "duration": 67
+        },
+        {
+          "start": 2249.5,
+          "duration": 56
+        }
+      ],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 64,
+          "id": 4225
+        },
+        {
+          "name": "pointerup",
+          "duration": 64,
+          "id": 4225
+        },
+        {
+          "name": "click",
+          "duration": 64,
+          "id": 4225
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 4232
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 4232
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 4239
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 4239
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 4246
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 4246
+        },
+        {
+          "name": "keydown",
+          "duration": 24,
+          "id": 4253
+        },
+        {
+          "name": "keypress",
+          "duration": 24,
+          "id": 4253
+        },
+        {
+          "name": "keydown",
+          "duration": 16,
+          "id": 4260
+        },
+        {
+          "name": "keypress",
+          "duration": 16,
+          "id": 4260
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 4267
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 4267
+        },
+        {
+          "name": "keyup",
+          "duration": 24,
+          "id": 4267
+        }
+      ],
+      "htmlBytes": 17095,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 278.3999999910593,
+          "duration": 448.6000000089407,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-Ci8RZMJv.js",
+          "start": 285.8999999910593,
+          "duration": 268,
+          "bytes": 3180
+        },
+        {
+          "name": "/assets/index-D0thse4y.css",
+          "start": 288.29999999701977,
+          "duration": 481.09999999403954,
+          "bytes": 28262
+        }
+      ],
+      "maxObservedInteractionMs": 64
+    },
+    {
+      "revision": "before",
+      "run": 1,
+      "lcp": 1328,
+      "cls": 0,
+      "longTasks": [
+        {
+          "start": 1347.1000000089407,
+          "duration": 51
+        },
+        {
+          "start": 2980.9000000059605,
+          "duration": 133
+        },
+        {
+          "start": 3117.9000000059605,
+          "duration": 82
+        }
+      ],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 64,
+          "id": 1254
+        },
+        {
+          "name": "pointerup",
+          "duration": 64,
+          "id": 1254
+        },
+        {
+          "name": "click",
+          "duration": 64,
+          "id": 1254
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 1261
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 1261
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1261
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1268
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1268
+        },
+        {
+          "name": "keydown",
+          "duration": 24,
+          "id": 1275
+        },
+        {
+          "name": "keypress",
+          "duration": 24,
+          "id": 1275
+        },
+        {
+          "name": "keydown",
+          "duration": 16,
+          "id": 1282
+        },
+        {
+          "name": "keypress",
+          "duration": 16,
+          "id": 1282
+        },
+        {
+          "name": "keydown",
+          "duration": 16,
+          "id": 1289
+        },
+        {
+          "name": "keypress",
+          "duration": 16,
+          "id": 1289
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1296
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1296
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1296
+        }
+      ],
+      "htmlBytes": 45291,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 204,
+          "duration": 329.29999999701977,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-C4qpdsk8.js",
+          "start": 206.90000000596046,
+          "duration": 232.5,
+          "bytes": 3187
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "start": 465.40000000596046,
+          "duration": 1159.7000000029802,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/bootstrap-DoS-LPHc.js",
+          "start": 1413.2999999970198,
+          "duration": 1554,
+          "bytes": 207536
+        },
+        {
+          "name": "/assets/jsx-runtime-gqTVR8tn.js",
+          "start": 1415.7999999970198,
+          "duration": 741.8000000119209,
+          "bytes": 50022
+        },
+        {
+          "name": "/favicon.svg",
+          "start": 1700.7000000029802,
+          "duration": 332.40000000596046,
+          "bytes": 9522
+        }
+      ],
+      "maxObservedInteractionMs": 64
+    },
+    {
+      "revision": "after",
+      "run": 1,
+      "lcp": 1688,
+      "cls": 0,
+      "longTasks": [],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 96,
+          "id": 2686
+        },
+        {
+          "name": "pointerup",
+          "duration": 96,
+          "id": 2686
+        },
+        {
+          "name": "click",
+          "duration": 96,
+          "id": 2686
+        },
+        {
+          "name": "keydown",
+          "duration": 96,
+          "id": 2693
+        },
+        {
+          "name": "keypress",
+          "duration": 96,
+          "id": 2693
+        },
+        {
+          "name": "keyup",
+          "duration": 48,
+          "id": 2693
+        },
+        {
+          "name": "keydown",
+          "duration": 80,
+          "id": 2700
+        },
+        {
+          "name": "keypress",
+          "duration": 80,
+          "id": 2700
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 2707
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 2707
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 2707
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 2714
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 2714
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 2714
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 2721
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 2721
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 2721
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 2728
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 2728
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 2728
+        }
+      ],
+      "htmlBytes": 18728,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 255.90000000596046,
+          "duration": 551.5999999940395,
+          "bytes": 22288
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "start": 259.1000000089407,
+          "duration": 588.3999999910593,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/index-Bvm_J5rB.js",
+          "start": 259.70000000298023,
+          "duration": 294.79999999701977,
+          "bytes": 3187
+        },
+        {
+          "name": "/assets/index-YmMZ0UXH.css",
+          "start": 260.5,
+          "duration": 643.3000000119209,
+          "bytes": 33193
+        },
+        {
+          "name": "/favicon.svg",
+          "start": 1807.1000000089407,
+          "duration": 179.3999999910593,
+          "bytes": 218
+        }
+      ],
+      "maxObservedInteractionMs": 96
+    },
+    {
+      "revision": "after",
+      "run": 2,
+      "lcp": 1288,
+      "cls": 0,
+      "longTasks": [
+        {
+          "start": 1262,
+          "duration": 51
+        }
+      ],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 72,
+          "id": 1756
+        },
+        {
+          "name": "pointerup",
+          "duration": 72,
+          "id": 1756
+        },
+        {
+          "name": "click",
+          "duration": 72,
+          "id": 1756
+        },
+        {
+          "name": "keydown",
+          "duration": 64,
+          "id": 1763
+        },
+        {
+          "name": "keypress",
+          "duration": 64,
+          "id": 1763
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1763
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1770
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1770
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1777
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1777
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1784
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1784
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1791
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1791
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 1798
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 1798
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1798
+        }
+      ],
+      "htmlBytes": 18728,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 226,
+          "duration": 528.4000000059605,
+          "bytes": 22288
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "start": 229.70000000298023,
+          "duration": 567.7999999970198,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/index-Bvm_J5rB.js",
+          "start": 230.79999999701977,
+          "duration": 276.70000000298023,
+          "bytes": 3187
+        },
+        {
+          "name": "/assets/index-YmMZ0UXH.css",
+          "start": 231.5,
+          "duration": 617.0999999940395,
+          "bytes": 33193
+        }
+      ],
+      "maxObservedInteractionMs": 72
+    },
+    {
+      "revision": "before",
+      "run": 2,
+      "lcp": 1804,
+      "cls": 0,
+      "longTasks": [
+        {
+          "start": 1830.1000000089407,
+          "duration": 65
+        },
+        {
+          "start": 2067.1000000089407,
+          "duration": 50
+        },
+        {
+          "start": 2464,
+          "duration": 65
+        },
+        {
+          "start": 3470.2000000029802,
+          "duration": 172
+        },
+        {
+          "start": 3647.300000011921,
+          "duration": 99
+        }
+      ],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 80,
+          "id": 6498
+        },
+        {
+          "name": "pointerup",
+          "duration": 80,
+          "id": 6498
+        },
+        {
+          "name": "click",
+          "duration": 80,
+          "id": 6498
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 6505
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 6505
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 6505
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 6512
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 6512
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 6519
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 6519
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 6526
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 6526
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 6533
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 6533
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 6540
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 6540
+        }
+      ],
+      "htmlBytes": 45291,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 232.90000000596046,
+          "duration": 329.5,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-C4qpdsk8.js",
+          "start": 236.40000000596046,
+          "duration": 247.79999999701977,
+          "bytes": 3187
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "start": 534.2000000029802,
+          "duration": 1525.1000000089407,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/bootstrap-DoS-LPHc.js",
+          "start": 1916.7000000029802,
+          "duration": 1529.2000000029802,
+          "bytes": 207536
+        },
+        {
+          "name": "/assets/jsx-runtime-gqTVR8tn.js",
+          "start": 1919.5,
+          "duration": 742,
+          "bytes": 50022
+        },
+        {
+          "name": "/favicon.svg",
+          "start": 2147.6000000089407,
+          "duration": 314.09999999403954,
+          "bytes": 9522
+        }
+      ],
+      "maxObservedInteractionMs": 80
+    },
+    {
+      "revision": "submitted",
+      "run": 2,
+      "lcp": 1748,
+      "cls": 0,
+      "longTasks": [],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 80,
+          "id": 1282
+        },
+        {
+          "name": "pointerup",
+          "duration": 80,
+          "id": 1282
+        },
+        {
+          "name": "click",
+          "duration": 80,
+          "id": 1282
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 1289
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 1289
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 1296
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 1296
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 1303
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 1303
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1310
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1310
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1310
+        },
+        {
+          "name": "keydown",
+          "duration": 64,
+          "id": 1317
+        },
+        {
+          "name": "keypress",
+          "duration": 64,
+          "id": 1317
+        },
+        {
+          "name": "keyup",
+          "duration": 32,
+          "id": 1317
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 1324
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 1324
+        },
+        {
+          "name": "keyup",
+          "duration": 24,
+          "id": 1324
+        }
+      ],
+      "htmlBytes": 17095,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 231.30000001192093,
+          "duration": 445.19999998807907,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-Ci8RZMJv.js",
+          "start": 236.30000001192093,
+          "duration": 256,
+          "bytes": 3180
+        },
+        {
+          "name": "/assets/index-D0thse4y.css",
+          "start": 238.70000000298023,
+          "duration": 481.90000000596046,
+          "bytes": 28262
+        }
+      ],
+      "maxObservedInteractionMs": 80
+    },
+    {
+      "revision": "submitted",
+      "run": 3,
+      "lcp": 1628,
+      "cls": 0,
+      "longTasks": [],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 72,
+          "id": 2003
+        },
+        {
+          "name": "pointerup",
+          "duration": 72,
+          "id": 2003
+        },
+        {
+          "name": "click",
+          "duration": 72,
+          "id": 2003
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 2010
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 2010
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 2017
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 2017
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 2024
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 2024
+        },
+        {
+          "name": "keydown",
+          "duration": 24,
+          "id": 2031
+        },
+        {
+          "name": "keypress",
+          "duration": 24,
+          "id": 2031
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 2038
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 2038
+        },
+        {
+          "name": "keyup",
+          "duration": 24,
+          "id": 2038
+        },
+        {
+          "name": "keydown",
+          "duration": 56,
+          "id": 2045
+        },
+        {
+          "name": "keypress",
+          "duration": 56,
+          "id": 2045
+        },
+        {
+          "name": "keyup",
+          "duration": 24,
+          "id": 2045
+        }
+      ],
+      "htmlBytes": 17095,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 238.3999999910593,
+          "duration": 429.70000000298023,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-Ci8RZMJv.js",
+          "start": 242,
+          "duration": 252,
+          "bytes": 3180
+        },
+        {
+          "name": "/assets/index-D0thse4y.css",
+          "start": 243.09999999403954,
+          "duration": 469.20000000298023,
+          "bytes": 28262
+        }
+      ],
+      "maxObservedInteractionMs": 72
+    },
+    {
+      "revision": "before",
+      "run": 3,
+      "lcp": 1856,
+      "cls": 0,
+      "longTasks": [
+        {
+          "start": 328.1000000089407,
+          "duration": 51
+        },
+        {
+          "start": 1877.6000000089407,
+          "duration": 64
+        },
+        {
+          "start": 2118,
+          "duration": 51
+        },
+        {
+          "start": 2519.6000000089407,
+          "duration": 51
+        },
+        {
+          "start": 3554.9000000059605,
+          "duration": 174
+        },
+        {
+          "start": 3733.7000000029802,
+          "duration": 99
+        }
+      ],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 88,
+          "id": 1851
+        },
+        {
+          "name": "pointerup",
+          "duration": 88,
+          "id": 1851
+        },
+        {
+          "name": "click",
+          "duration": 88,
+          "id": 1851
+        },
+        {
+          "name": "keydown",
+          "duration": 72,
+          "id": 1858
+        },
+        {
+          "name": "keypress",
+          "duration": 72,
+          "id": 1858
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 1865
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 1865
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1865
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1872
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1872
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 1879
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 1879
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 1879
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1886
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1886
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 1893
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 1893
+        }
+      ],
+      "htmlBytes": 45291,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 260.90000000596046,
+          "duration": 340.59999999403954,
+          "bytes": 22288
+        },
+        {
+          "name": "/assets/index-C4qpdsk8.js",
+          "start": 267.1000000089407,
+          "duration": 243.59999999403954,
+          "bytes": 3187
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "start": 640.7000000029802,
+          "duration": 1470.5,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/bootstrap-DoS-LPHc.js",
+          "start": 1962.1000000089407,
+          "duration": 1553.0999999940395,
+          "bytes": 207536
+        },
+        {
+          "name": "/assets/jsx-runtime-gqTVR8tn.js",
+          "start": 1965.2000000029802,
+          "duration": 746.5,
+          "bytes": 50022
+        },
+        {
+          "name": "/favicon.svg",
+          "start": 2213.1000000089407,
+          "duration": 304.59999999403954,
+          "bytes": 9522
+        }
+      ],
+      "maxObservedInteractionMs": 88
+    },
+    {
+      "revision": "after",
+      "run": 3,
+      "lcp": 1412,
+      "cls": 0,
+      "longTasks": [],
+      "interactions": [
+        {
+          "name": "pointerdown",
+          "duration": 64,
+          "id": 2905
+        },
+        {
+          "name": "pointerup",
+          "duration": 64,
+          "id": 2905
+        },
+        {
+          "name": "click",
+          "duration": 64,
+          "id": 2905
+        },
+        {
+          "name": "keydown",
+          "duration": 72,
+          "id": 2912
+        },
+        {
+          "name": "keypress",
+          "duration": 72,
+          "id": 2912
+        },
+        {
+          "name": "keyup",
+          "duration": 24,
+          "id": 2912
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 2919
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 2919
+        },
+        {
+          "name": "keydown",
+          "duration": 40,
+          "id": 2926
+        },
+        {
+          "name": "keypress",
+          "duration": 40,
+          "id": 2926
+        },
+        {
+          "name": "keydown",
+          "duration": 48,
+          "id": 2933
+        },
+        {
+          "name": "keypress",
+          "duration": 48,
+          "id": 2933
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 2940
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 2940
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 2940
+        },
+        {
+          "name": "keydown",
+          "duration": 32,
+          "id": 2947
+        },
+        {
+          "name": "keypress",
+          "duration": 32,
+          "id": 2947
+        },
+        {
+          "name": "keyup",
+          "duration": 16,
+          "id": 2947
+        }
+      ],
+      "htmlBytes": 18728,
+      "resources": [
+        {
+          "name": "/fonts/space-grotesk-latin.woff2",
+          "start": 247.5,
+          "duration": 543.3999999910593,
+          "bytes": 22288
+        },
+        {
+          "name": "/fonts/manrope-latin.woff2",
+          "start": 251.19999998807907,
+          "duration": 569.7000000029802,
+          "bytes": 24532
+        },
+        {
+          "name": "/assets/index-Bvm_J5rB.js",
+          "start": 252.59999999403954,
+          "duration": 281.70000000298023,
+          "bytes": 3187
+        },
+        {
+          "name": "/assets/index-YmMZ0UXH.css",
+          "start": 253.8999999910593,
+          "duration": 621.7000000029802,
+          "bytes": 33193
+        }
+      ],
+      "maxObservedInteractionMs": 72
+    }
+  ],
+  "medians": {
+    "submitted": 1748,
+    "before": 1804,
+    "after": 1412
+  }
+}
